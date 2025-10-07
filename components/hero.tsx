@@ -40,13 +40,13 @@ const Hero = () => {
   return (
     <div className=" h-[calc(100vh-160px)] md:h-[calc(100vh-176px)] overflow-hidden">
       <div
-        className="w-max h-full flex transition-all ease-in-out duration-1000 "
+        className="w-max h-full flex transition-all ease-in-out duration-1000 relative"
         style={{ transform: `translateX(-${index * 100}vw)` }}
       >
         {banner.map((b, i) => (
           <div
             key={i}
-            className="w-screen h-full relative bg-neutral-600/10 flex flex-col md:flex-row "
+            className="w-screen h-full  bg-neutral-600/10 flex flex-col md:flex-row relative"
           >
             <div className=" w-full h-1/2 md:h-full md:w-1/2 p-3 flex-col flex  items-center justify-center md:items-start px-10 lg:px-16">
               <h1 className="font-bold text-2xl my-5 text-center text-blue-800 capitalize md:text-4xl md:text-left lg:text-6xl">
@@ -76,7 +76,7 @@ const Hero = () => {
           </div>
         ))}
       </div>
-      <div className="absolute m-auto left-1/2 -translate-x-1/2 bottom-8 gap-4 flex items-center">
+      <div className="absolute  left-1/2 -translate-x-1/2 bottom-3 gap-4 flex items-center">
         {banner.map((f, i) => (
           <div
             key={i}
