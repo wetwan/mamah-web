@@ -13,13 +13,16 @@ const MenuLink = () => {
     { name: "about", link: "/about" },
     { name: "contact", link: "/contact" },
   ];
+
   return (
     <div className="flex  gap-10 mt-3 uppercase  font-normal ">
       {menu.map((m) => (
         <nav key={m.name}>
           <Link
             href={m.link}
-            className={`link ${pathname === m.link ? "text-blue-900" : "text-gray-500"}`}
+            className={`link ${
+              pathname === m.link ? "text-blue-900" : "text-gray-500"
+            }`}
           >
             {m.name}
           </Link>

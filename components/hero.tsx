@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import image1 from "@/public/image1.png";
 import image2 from "@/public/image2.png";
 import image3 from "@/public/image3.png";
@@ -30,6 +30,13 @@ const Hero = () => {
 
   const [index, setIndex] = useState(0);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev === banner.length - 1 ? 0 : prev + 1));
+    }, 5500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className=" h-[calc(100vh-160px)] md:h-[calc(100vh-176px)] overflow-hidden">
       <div
@@ -55,17 +62,16 @@ const Hero = () => {
             </div>
 
             <div className="w-full h-1/2 md:h-full md:w-1/2  flex items-center justify-center">
-            <div className="">
+              <div className="">
                 <Image
-                src={b.image}
-                alt="banner"
-                width={500}
-                height={500}
-                priority
-                className="object-cover w-full h-full"
-              />
-            </div>
-            
+                  src={b.image}
+                  alt="banner"
+                  width={500}
+                  height={500}
+                  priority
+                  className="object-cover w-full h-full"
+                />
+              </div>
             </div>
           </div>
         ))}
@@ -75,7 +81,9 @@ const Hero = () => {
           <div
             key={i}
             className={`w-3 h-3 rounded-full ring-1 ring-neutral-600 cursor-pointer  ${
-              index === i ? "scale-150 flex flex-col items-center  justify-center" : ""
+              index === i
+                ? "scale-150 flex flex-col items-center  justify-center"
+                : ""
             }`}
             onClick={() => setIndex(i)}
           >
