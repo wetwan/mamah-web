@@ -3,6 +3,7 @@ import React from "react";
 import image1 from "@/public/image1.png";
 import image2 from "@/public/image3.png";
 import { shopdataProp } from "@/constant";
+import Link from "next/link";
 
 const ProductItem = () => {
   const products: shopdataProp[] = [
@@ -74,7 +75,11 @@ const ProductItem = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8">
       {products.map((product) => (
-        <div key={product._id} className=" shadow-2xl flex flex-col  pb-10">
+        <Link
+          href={`/${product._id}`}
+          key={product._id}
+          className=" shadow-2xl flex flex-col  pb-10"
+        >
           <div className="relative w-full h-[350px] group overflow-hidden">
             <div className=" h-full w-full overflow-hidden group-hover:opacity-0 transition duration-300 ease-in-out">
               <img
@@ -101,7 +106,7 @@ const ProductItem = () => {
               ${product.price}
             </h3>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );
