@@ -12,7 +12,7 @@ const Nav = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="h-56 md:h-44 px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 ">
+    <header className="h-40 md:h-44 px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 ">
       <div className="mt-14 sm:hidden border-b ">
         <div className="flex items-center mb-5 justify-center">
           <Logo />
