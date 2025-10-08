@@ -103,7 +103,7 @@ const ProductItem = () => {
             </h3>
             <h3 className="text-gray-400 mb-4 ">{product.description}</h3>
             <h3 className="text-blue-700 font-medium capitalize">
-              ${product.price}
+              ₦{product.price}
             </h3>
           </div>
         </Link>

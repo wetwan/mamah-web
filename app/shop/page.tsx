@@ -1,7 +1,5 @@
-"use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Metadata } from "next";
-import Link from "next/link";
 import React from "react";
 import {
   Select,
@@ -14,7 +12,10 @@ import {
 } from "@/components/ui/select";
 import ProductItem from "@/components/productItem";
 
-const Shop = () => {
+const Shop = async ({ searchParams }: { searchParams: any }) => {
+  const params = await searchParams;
+  console.log("category:", params.cat);
+
   function Category() {
     return (
       <Select>
@@ -89,6 +90,7 @@ const Shop = () => {
       </Select>
     );
   }
+
   return (
     <section className="w-full p-4 ">
       <div className="flex justify-between lg:items-center lg:flex-row flex-col gap-4">

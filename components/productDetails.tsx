@@ -22,6 +22,11 @@ const ProductDetails = () => {
         _id: "68e58702e92cfa1ef8121245",
       },
       {
+        name: "green",
+        available: true,
+        _id: "68e58702e92gjhj1ef8121245",
+      },
+      {
         name: "blue",
         available: false,
         _id: "68e58702e92cfa1ef8121246",
@@ -51,14 +56,27 @@ const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState(0);
   const [addQuanitity, setAddQuanitity] = useState(0);
 
+  const add = () => {
+    try {
+      console.log({
+        productId: item._id,
+        color: selectedcolor.name,
+        size: item.sizes[selectedSize],
+        quantity: addQuanitity,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     item && (
-      <div className="flex flex-col gap-5 mt-5">
-        <h1 className="font-bold capitalize text-2xl mt-5 py-3 ">
+      <div className="flex flex-col gap-5">
+        <h1 className="font-bold capitalize text-2xl lg:text-3xl ">
           {item.name}
         </h1>
         <hr />
-        <p className="text-gray-500 w-4/6 whitespace-pre-wrap break-all  h-auto p-1">
+        <p className="text-gray-500 w-4/6 whitespace-pre-wrap break-all  h-auto ">
           {item.description}
         </p>
         <hr />
@@ -79,7 +97,9 @@ const ProductDetails = () => {
         {/* colors  */}
 
         <div>
-          <h5 className="">Choose a color</h5>
+          <h5 className="font-semibold uppercase text-gray-500">
+            Choose a color
+          </h5>
 
           <div className="flex items-center mt-5 gap-5">
             {item.colors.map((color, i) => (
@@ -113,10 +133,12 @@ const ProductDetails = () => {
         </div>
 
         {/* size  */}
-        <div className="">
-          <h5 className="">choose a size</h5>
+        <div className="mt-4 w-full">
+          <h5 className="font-semibold uppercase text-gray-500">
+            choose a size
+          </h5>
 
-          <div className="flex items-center mt-5 gap-5 capitalize">
+          <div className="flex items-center mt-5 gap-5 capitalize border-dashed">
             {item.sizes.map((size, i) => (
               <Button
                 className={`uppercase hover:bg-transparent cursor-pointer ${
@@ -134,31 +156,41 @@ const ProductDetails = () => {
         </div>
 
         {/* count  */}
-        <div className="">
-          <h5 className="">choose a Quantity</h5>
+        <div className="mt-4">
+          <h5 className="font-semibold uppercase text-gray-500">
+            choose a Quantity
+          </h5>
 
-          <div className="flex items-center mt-5 gap-5 capitalize w-full justify-between">
+          <div className="flex lg:items-center mt-5 max-lg:gap-7 flex-col lg:flex-row capitalize w-full justify-between">
             <div className="flex items-center gap-5">
               <div className="flex items-center border w-max px-4 rounded-full  gap-10 justify-between py-1 bg-gray-200 text-lg ">
                 <button
-                  className="text-2xl font-semibold text-blue-600 p-1 cursor-pointer"
+                  className={`text-2xl font-semibold p-1 transition-colors ${
+                    addQuanitity === 0
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-blue-600 hover:text-blue-700"
+                  }`}
                   disabled={addQuanitity === 0}
-                  onClick={() => setAddQuanitity(addQuanitity - 1)}
+                  onClick={() => setAddQuanitity((prev) => prev - 1)}
                 >
                   -
                 </button>
                 <span>{addQuanitity}</span>
                 <button
-                  className="text-2xl font-semibold text-blue-600 p-1 cursor-pointer"
+                  className={`text-2xl font-semibold p-1 transition-colors ${
+                    addQuanitity === item.stock
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-blue-600 hover:text-blue-700"
+                  }`}
                   disabled={addQuanitity === item.stock}
-                  onClick={() => setAddQuanitity(addQuanitity + 1)}
+                  onClick={() => setAddQuanitity((prev) => prev + 1)}
                 >
                   +
                 </button>
               </div>
               <div className="">
                 {item.stock < 40 && (
-                  <p className="text-gray-400 font-light ">
+                   <p className="text-gray-400 text-sm leading-tight">
                     only{" "}
                     <span className="text-blue-600 ">{item.stock} items </span>
                     left in stock <br /> dont miss out
@@ -168,8 +200,9 @@ const ProductDetails = () => {
             </div>
 
             <Button
+              onClick={add}
               variant="outline"
-              className="uppercase hover:bg-transparent hover:text-none bg-transparent shadow-none border-blue-500 text-blue-500 rounded-full px-7 py-5"
+              className="uppercase hover:bg-transparent hover:text-none bg-transparent shadow-none border-blue-500 text-blue-500 rounded-full px-7 py-5 max-lg:w-fit"
             >
               add to cart
             </Button>

@@ -21,7 +21,7 @@ const MenuLink = () => {
           <Link
             href={m.link}
             className={`link ${
-              pathname === m.link ? "text-blue-900" : "text-gray-500"
+              pathname === m.link ? "text-[#a071eb]" : "text-gray-500"
             }`}
           >
             {m.name}

@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import image1 from "@/public/image1.png";
-import image2 from "@/public/image2.png";
-import image3 from "@/public/image3.png";
-import image4 from "@/public/mamah.png";
+
 import Image from "next/image";
 
 const ProductPageImage = () => {
-  const images = [image1, image2, image3, image4];
+  const images = [
+    "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872767/products/lwedxvsdptgdroroltpz.jpg",
+    "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872768/products/igsvdsdkfoniewca8jkc.png",
+    "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872769/products/elljrct6murffzjuquws.jpg",
+  ];
   const [index, setIndex] = useState(0);
   return (
     <div>
@@ -19,6 +20,7 @@ const ProductPageImage = () => {
           fill
           sizes="50vw"
           className="object-contain rounded-md"
+          priority
         />
       </div>
       {images.length > 1 && (

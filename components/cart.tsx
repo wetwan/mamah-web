@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React from "react";
@@ -7,8 +6,13 @@ import image2 from "@/public/image3.png";
 import { ShoppingCart, X } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-const Cart = () => {
+const Cart = ({
+  setOpenCart,
+}: {
+  setOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   //   const cartProducts: any[] = [];
   const cartProducts = [
     {
@@ -31,8 +35,9 @@ const Cart = () => {
   const total = cartProducts.reduce((sum, item) => {
     return sum + item.price * item.quantity;
   }, 0);
+  const router = useRouter();
   return (
-    <div className="z-50 absolute right-6 top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 ">
+    <div className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 ">
       <h2 className="text-lg font-semibold mb-2">Shopping Cart</h2>
 
       {cartProducts.length === 0 && (
@@ -52,7 +57,9 @@ const Cart = () => {
 
       {cartProducts.length !== 0 && (
         <>
-          <h3>you have {cartProducts.length} in your cart</h3>
+          <h3 className="uppercase font-semibold text-gray-400">
+            you have {cartProducts.length} in your cart
+          </h3>
           <div className="">
             {cartProducts.map((item) => (
               <div key={item._id} className="">
@@ -87,6 +94,10 @@ const Cart = () => {
             <p className="font-bold text-lg">${total.toFixed(2)}</p>
           </div>
           <Button
+            onClick={() => {
+              router.push("/cart");
+              setOpenCart(false);
+            }}
             variant="outline"
             className="uppercase bg-transparent cursor-pointer font-bold border-black w-full mt-4 rounded-none py-7  hover:bg-neutral-600 hover:text-white transition-all duration-300"
           >

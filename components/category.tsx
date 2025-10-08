@@ -9,7 +9,7 @@ const Category = () => {
     <div className="flex w-full overflow-scroll  scrollbar-hide  ">
       {cat.map((category) => (
         <div key={category._id} className=" p-4 flex flex-col items-center">
-          <Link
+          <Link as={`/shop?cat=${category.slug}`}
             href={`/shop?cat=${category.slug}`}
             className="h-[200px] w-[200px]        "
           >
