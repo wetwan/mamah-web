@@ -44,7 +44,7 @@ const CartPage = () => {
   return (
     <div className="min-h-screen">
       <div className="w-full py-6 bg-[#f8f9fa] px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 flex items-center gap-2 capitalize font-medium">
-        <Link href="/" className="text-[#a071eb]  ">
+        <Link href="/" className="text-[#7971ea]  ">
           Home
         </Link>
         <span>/</span>
@@ -100,7 +100,7 @@ const CartPage = () => {
                   placeholder="Promo code"
                   className="flex-1 bg-transparent outline-none pl-3 py-2 placeholder:text-gray-500"
                 />
-                <button className="bg-[#a071eb] text-white px-5 py-2 hover:bg-blue-700">
+                <button className="bg-[#7971ea] text-white px-5 py-2 hover:bg-[#7971ea]">
                   Apply
                 </button>
               </div>
@@ -124,7 +124,7 @@ const CartPage = () => {
                 <p>₦{total.toFixed(2)}</p>
               </div>
               <button
-                className="w-full bg-[#a071eb] text-white py-3 mt-4 rounded hover:bg-blue-700 uppercase tracking-wide"
+                className="w-full bg-[#7971ea] text-white py-3 mt-4 rounded hover:bg-[#7971ea] uppercase tracking-wide"
                 onClick={() => {
                   alert("Proceeding to checkout...");
                   router.push("/checkout");

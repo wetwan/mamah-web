@@ -98,11 +98,11 @@ const ProductItem = () => {
           </div>
 
           <div className="flex-1 p-4 flex flex-col justify-between items-center text-center">
-            <h3 className="text-blue-700 my-3 font-medium capitalize">
+            <h3 className="text-[#7971ea] my-3 font-medium capitalize">
               {product.name}
             </h3>
             <h3 className="text-gray-400 mb-4 ">{product.description}</h3>
-            <h3 className="text-blue-700 font-medium capitalize">
+            <h3 className="text-[#7971ea] font-medium capitalize">
               ₦{product.price}
             </h3>
           </div>

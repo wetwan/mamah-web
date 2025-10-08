@@ -168,7 +168,7 @@ const ProductDetails = () => {
                   className={`text-2xl font-semibold p-1 transition-colors ${
                     addQuanitity === 0
                       ? "text-gray-400 cursor-not-allowed"
-                      : "text-blue-600 hover:text-blue-700"
+                      : "text-blue-600 hover:text-[#7971ea]"
                   }`}
                   disabled={addQuanitity === 0}
                   onClick={() => setAddQuanitity((prev) => prev - 1)}
@@ -180,7 +180,7 @@ const ProductDetails = () => {
                   className={`text-2xl font-semibold p-1 transition-colors ${
                     addQuanitity === item.stock
                       ? "text-gray-400 cursor-not-allowed"
-                      : "text-blue-600 hover:text-blue-700"
+                      : "text-blue-600 hover:text-[#7971ea]"
                   }`}
                   disabled={addQuanitity === item.stock}
                   onClick={() => setAddQuanitity((prev) => prev + 1)}
@@ -190,7 +190,7 @@ const ProductDetails = () => {
               </div>
               <div className="">
                 {item.stock < 40 && (
-                   <p className="text-gray-400 text-sm leading-tight">
+                  <p className="text-gray-400 text-sm leading-tight">
                     only{" "}
                     <span className="text-blue-600 ">{item.stock} items </span>
                     left in stock <br /> dont miss out

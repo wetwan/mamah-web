@@ -1,4 +1,3 @@
-
 /* eslint-disable @next/next/no-img-element */
 import { cat } from "@/constant";
 import Link from "next/link";
@@ -9,7 +8,8 @@ const Category = () => {
     <div className="flex w-full overflow-scroll  scrollbar-hide  ">
       {cat.map((category) => (
         <div key={category._id} className=" p-4 flex flex-col items-center">
-          <Link as={`/shop?cat=${category.slug}`}
+          <Link
+            as={`/shop?cat=${category.slug}`}
             href={`/shop?cat=${category.slug}`}
             className="h-[200px] w-[200px]        "
           >
@@ -20,7 +20,7 @@ const Category = () => {
             />
           </Link>
 
-          <h3 className="text-blue-700 my-3 font-medium capitalize">
+          <h3 className="text-[#7971ea] my-3 font-medium capitalize">
             {category.name}
           </h3>
         </div>

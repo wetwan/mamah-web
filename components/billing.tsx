@@ -16,7 +16,7 @@ const Billing = () => {
               type="text"
               name="country"
               id="country"
-              className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+              className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
               required
               aria-label="country"
               placeholder="enter your country"
@@ -29,7 +29,7 @@ const Billing = () => {
                 type="text"
                 name="firstname"
                 id="firstname"
-                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
                 aria-label="firstname"
                 placeholder="enter your firstname"
@@ -41,7 +41,7 @@ const Billing = () => {
                 type="text"
                 name="lastname"
                 id="lastname"
-                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
                 aria-label="lastname"
                 placeholder="enter your lastname"
@@ -55,7 +55,7 @@ const Billing = () => {
                 type="text"
                 name="address"
                 id="address"
-                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
                 aria-label="address"
                 placeholder="street address"
@@ -65,7 +65,7 @@ const Billing = () => {
                 type="text"
                 name="address2"
                 id="address2"
-                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
                 aria-label="address2"
                 placeholder="enter your apartment, suite, unit etc. (optional)"
@@ -79,7 +79,7 @@ const Billing = () => {
                 type="text"
                 name="state"
                 id="state"
-                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
                 aria-label="state"
                 placeholder="enter your state"
@@ -91,7 +91,7 @@ const Billing = () => {
                 type="text"
                 name="poster/zip"
                 id="poster/zip"
-                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
                 aria-label="poster/zip"
                 placeholder="enter your poster / zip"
@@ -105,7 +105,7 @@ const Billing = () => {
                 type="email"
                 name="email"
                 id="email"
-                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
                 aria-label="email"
                 placeholder="enter your email"
@@ -117,7 +117,7 @@ const Billing = () => {
                 type="text"
                 name="phone"
                 id="phone"
-                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
                 aria-label="phone"
                 placeholder="enter your phone"
@@ -142,7 +142,7 @@ const Billing = () => {
                   type="password"
                   name="password"
                   id="password"
-                  className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#a071eb] transition-all duration-300 ease-in"
+                  className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                   required
                   aria-label="password"
                   placeholder="enter your password"

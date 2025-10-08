@@ -48,7 +48,7 @@ const Cart = ({
           </p>
           <Link
             href={"/shop"}
-            className="bg-blue-700 text-white py-3 px-12 font-light capitalize "
+            className="bg-[#7971ea] text-white py-3 px-12 font-light capitalize "
           >
             vist shop
           </Link>
@@ -78,7 +78,7 @@ const Cart = ({
                       {item.name}
                     </p>
                     <p className="text-gray-600 font-medium">
-                      {item.quantity} × ${item.price.toFixed(2)}
+                      {item.quantity} × ₦{item.price.toFixed(2)}
                     </p>
                   </div>
                   <div className="justify-end mr-auto absolute top-0 right-3">
@@ -91,7 +91,7 @@ const Cart = ({
           </div>
           <div className="flex w-full mt-4 items-center justify-between">
             <p className="font-medium text-lg">Subtotal:</p>
-            <p className="font-bold text-lg">${total.toFixed(2)}</p>
+            <p className="font-bold text-lg">₦{total.toFixed(2)}</p>
           </div>
           <Button
             onClick={() => {
