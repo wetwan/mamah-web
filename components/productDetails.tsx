@@ -1,56 +1,58 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
+import { ShopdataProp } from "@/constant";
 
-const ProductDetails = () => {
-  const item = {
-    name: "testetstetste testststs",
-    images: [
-      "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872767/products/lwedxvsdptgdroroltpz.jpg",
-      "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872768/products/igsvdsdkfoniewca8jkc.png",
-      "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872769/products/elljrct6murffzjuquws.jpg",
-    ],
-    colors: [
-      {
-        name: "white",
-        available: true,
-        _id: "68e58702e92cfa1ef8121244",
-      },
-      {
-        name: "yellow",
-        available: true,
-        _id: "68e58702e92cfa1ef8121245",
-      },
-      {
-        name: "green",
-        available: true,
-        _id: "68e58702e92gjhj1ef8121245",
-      },
-      {
-        name: "blue",
-        available: false,
-        _id: "68e58702e92cfa1ef8121246",
-      },
-    ],
-    sizes: ["s", "m", "l", "xl"],
-    price: 300,
-    discount: 20,
-    category: "testing",
-    stock: 20,
-    description:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9. eyJpZCI6 IjY4ZTM3 NzY2MWRjYTA2MjlmODV jMDhhNSIsImlhdCI6 MTc1OTg3MjA3NC wiZX hwIjoxNzYyNDY0MDc 0fQ.dP47TZCu0EIOTWaJR4MTqmh_ 5e4GvfZ_W3Uk_4rL0Cc",
-    postedby: "68e377661dca0629f85c08a5",
-    averageRating: 0,
-    numOfReviews: 0,
-    _id: "68e58702e92cfa1ef8121243",
-    reviews: [],
-    createdAt: "2025-10-07T21:32:50.230Z",
-    updatedAt: "2025-10-07T21:32:50.230Z",
-    __v: 0,
-    finalPrice: 240,
-    inStock: true,
-    id: "68e58702e92cfa1ef8121243",
-  };
+
+const ProductDetails = ({item}:{item: ShopdataProp}) => {
+  // const item = {
+  //   name: "testetstetste testststs",
+  //   images: [
+  //     "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872767/products/lwedxvsdptgdroroltpz.jpg",
+  //     "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872768/products/igsvdsdkfoniewca8jkc.png",
+  //     "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872769/products/elljrct6murffzjuquws.jpg",
+  //   ],
+  //   colors: [
+  //     {
+  //       name: "white",
+  //       available: true,
+  //       _id: "68e58702e92cfa1ef8121244",
+  //     },
+  //     {
+  //       name: "yellow",
+  //       available: true,
+  //       _id: "68e58702e92cfa1ef8121245",
+  //     },
+  //     {
+  //       name: "green",
+  //       available: true,
+  //       _id: "68e58702e92gjhj1ef8121245",
+  //     },
+  //     {
+  //       name: "blue",
+  //       available: false,
+  //       _id: "68e58702e92cfa1ef8121246",
+  //     },
+  //   ],
+  //   sizes: ["s", "m", "l", "xl"],
+  //   price: 300,
+  //   discount: 20,
+  //   category: "testing",
+  //   stock: 20,
+  //   description:
+  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9. eyJpZCI6 IjY4ZTM3 NzY2MWRjYTA2MjlmODV jMDhhNSIsImlhdCI6 MTc1OTg3MjA3NC wiZX hwIjoxNzYyNDY0MDc 0fQ.dP47TZCu0EIOTWaJR4MTqmh_ 5e4GvfZ_W3Uk_4rL0Cc",
+  //   postedby: "68e377661dca0629f85c08a5",
+  //   averageRating: 0,
+  //   numOfReviews: 0,
+  //   _id: "68e58702e92cfa1ef8121243",
+  //   reviews: [],
+  //   createdAt: "2025-10-07T21:32:50.230Z",
+  //   updatedAt: "2025-10-07T21:32:50.230Z",
+  //   __v: 0,
+  //   finalPrice: 240,
+  //   inStock: true,
+  //   id: "68e58702e92cfa1ef8121243",
+  // };
 
   const [selectedcolor, setSelectedcolor] = useState(item.colors[0]);
   const [selectedSize, setSelectedSize] = useState(0);
@@ -189,7 +191,7 @@ const ProductDetails = () => {
                 </button>
               </div>
               <div className="">
-                {item.stock < 40 && (
+                {item.stock < 10 && (
                   <p className="text-gray-400 text-sm leading-tight">
                     only{" "}
                     <span className="text-blue-600 ">{item.stock} items </span>

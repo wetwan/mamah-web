@@ -4,12 +4,12 @@ import React, { useState } from "react";
 
 import Image from "next/image";
 
-const ProductPageImage = () => {
-  const images = [
-    "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872767/products/lwedxvsdptgdroroltpz.jpg",
-    "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872768/products/igsvdsdkfoniewca8jkc.png",
-    "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872769/products/elljrct6murffzjuquws.jpg",
-  ];
+const ProductPageImage = ({ images }: { images: string[] }) => {
+  // const images = [
+  //   "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872767/products/lwedxvsdptgdroroltpz.jpg",
+  //   "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872768/products/igsvdsdkfoniewca8jkc.png",
+  //   "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872769/products/elljrct6murffzjuquws.jpg",
+  // ];
   const [index, setIndex] = useState(0);
   return (
     <div>
@@ -19,7 +19,7 @@ const ProductPageImage = () => {
           alt="product-image1"
           fill
           sizes="50vw"
-          className="object-contain rounded-md"
+          className="object-cover rounded-md"
           priority
         />
       </div>
@@ -36,7 +36,7 @@ const ProductPageImage = () => {
                 alt="product-image1"
                 fill
                 sizes="30vw"
-                className="object-contain rounded-md w-full h-full"
+                className="object-cover rounded-md w-full h-full"
               />
             </div>
           ))}

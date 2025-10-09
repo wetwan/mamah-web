@@ -5,6 +5,7 @@ import Link from "next/link";
 
 const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
   if (!products || products.length === 0) {
+    console.log(products.map((i) => i._id));
     return (
       <p className="text-gray-500 mt-10 text-center">No products found.</p>
     );
@@ -29,7 +30,7 @@ const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
               <img
                 src={product.images[1]}
                 alt={product.name}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
