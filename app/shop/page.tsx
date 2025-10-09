@@ -1,16 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import ProductItem from "@/components/productItem";
 import { products } from "@/constant";
+import { Category, SortSelect } from "@/components/filter";
 
 type SearchParams = {
   cat?: string;
@@ -18,63 +10,43 @@ type SearchParams = {
   size?: string;
   min?: string;
   max?: string;
+  sort?: string;
 };
 
 export default function Shop({ searchParams }: { searchParams: SearchParams }) {
-  const { cat, color, size, min, max } = searchParams;
+  const { cat, color, size, min, max, sort } = searchParams;
 
   // --- filter logic ---
-  const filteredProducts = products.filter((item) => {
+  let filteredProducts = products.filter((item) => {
     const matchCategory = cat ? item.category === cat : true;
     const matchColor = color ? item.colors?.includes(color as any) : true;
     const matchSize = size ? item.sizes?.includes(size as any) : true;
-
     const matchMin = min ? item.price >= Number(min) : true;
     const matchMax = max ? item.price <= Number(max) : true;
 
     return matchCategory && matchColor && matchSize && matchMin && matchMax;
   });
 
-  // --- helpers for sorting dropdowns (you can add real logic later) ---
-  function Category() {
-    return (
-      <Select>
-        <SelectTrigger className="w-[200px] bg-gray border border-gray-300 shadow-sm hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-all duration-200">
-          <SelectValue placeholder="Least" />
-        </SelectTrigger>
-        <SelectContent className="bg-white border border-gray-200 shadow-lg">
-          <SelectGroup>
-            <SelectLabel className="text-gray-500 text-sm font-medium px-2 py-1">
-              Least ▼
-            </SelectLabel>
-            <SelectItem value="women">Women</SelectItem>
-            <SelectItem value="men">Men</SelectItem>
-            <SelectItem value="children">Children</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    );
-  }
-
-  function Size() {
-    return (
-      <Select>
-        <SelectTrigger className="w-[200px] bg-white border border-gray-300 shadow-sm hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-all duration-200">
-          <SelectValue placeholder="Relevance" />
-        </SelectTrigger>
-        <SelectContent className="bg-white border border-gray-200 shadow-lg">
-          <SelectGroup>
-            <SelectLabel className="text-gray-500 text-sm font-medium px-2 py-1">
-              Relevance
-            </SelectLabel>
-            <SelectItem value="a-z">Name, A to Z</SelectItem>
-            <SelectItem value="-z-a">Name, Z to A</SelectItem>
-            <SelectItem value="low-high">Price, low to high</SelectItem>
-            <SelectItem value="high">Price, high to low</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    );
+  // --- sort logic ---
+  if (sort) {
+    switch (sort) {
+      case "a-z":
+        filteredProducts = [...filteredProducts].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        break;
+      case "z-a":
+        filteredProducts = [...filteredProducts].sort((a, b) =>
+          b.name.localeCompare(a.name)
+        );
+        break;
+      case "low-high":
+        filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
+        break;
+      case "high-low":
+        filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
+        break;
+    }
   }
 
   // --- header text ---
@@ -91,7 +63,7 @@ export default function Shop({ searchParams }: { searchParams: SearchParams }) {
         </h3>
         <div className="flex p-4 gap-4">
           <Category />
-          <Size />
+          <SortSelect />
         </div>
       </div>
 

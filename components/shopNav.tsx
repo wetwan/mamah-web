@@ -1,47 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Checkbox } from "./ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
+import { products } from "@/constant"; // ✅ import your dummy products
 
 const ShopNav = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // state for min and max price
+  // states for min/max
   const [min, setMin] = useState(searchParams.get("min") || "");
   const [max, setMax] = useState(searchParams.get("max") || "");
 
-  const category = [
-    { name: "women", number: 4345 },
-    { name: "men", number: 5376 },
-    { name: "children", number: 5376 },
-  ];
-  const size = [
-    { name: "small", number: 4345 },
-    { name: "medium", number: 5376 },
-    { name: "large", number: 5376 },
-  ];
-  const color = [
-    { name: "red", number: 4345 },
-    { name: "blue", number: 5376 },
-    { name: "green", number: 5376 },
-    { name: "pink", number: 5976 },
-    { name: "purple", number: 2376 },
-  ];
-
-  // helper to update a specific query param
+  // helper: update query param in URL
   const updateQuery = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
+    if (value) params.set(key, value);
+    else params.delete(key);
     router.push(`/shop?${params.toString()}`);
   };
 
-  // auto-update query when price inputs change
+  // debounce price filter
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (min || max) {
@@ -54,36 +34,81 @@ const ShopNav = () => {
       }
     }, 500);
     return () => clearTimeout(timeout);
-  }, [min, max]);
+  }, [min, max, router, searchParams]);
+
+  // ✅ Dynamically compute counts from products
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    products.forEach((p) => {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    return counts;
+  }, []);
+
+  // const colorCounts = useMemo(() => {
+  //   const counts: Record<string, number> = {};
+  //   products.forEach((p) => {
+  //     p.colors?.forEach((c) => {
+  //       counts[String(c)] = (counts[String(c)] || 0) + 1;
+  //     });
+  //   });
+  //   return counts;
+  // }, []);
+
+  // const sizeCounts = useMemo(() => {
+  //   const counts: Record<string, number> = {};
+  //   products.forEach((p) => {
+  //     p.sizes?.forEach((s: string) => {
+  //       counts[s] = (counts[s] || 0) + 1;
+  //     });
+  //   });
+  //   return counts;
+  // }, []);
+
+  // Extract unique categories/colors/sizes for display
+  const categories = Object.keys(categoryCounts);
+  // const colors = Object.keys(colorCounts);
+  // const sizes = Object.keys(sizeCounts);
 
   return (
     <div className="lg:w-[250px] w-full p-4">
-      {/* CATEGORY */}
+      {/* CATEGORY FILTER */}
       <div className="p-5 border shadow rounded w-full">
         <h4 className="uppercase font-bold mt-4">Categories</h4>
         <div className="mt-6">
-          {category.map((item, index) => (
+          <div
+            onClick={() => updateQuery("cat", null)}
+            className={`flex mt-2 justify-between py-2 cursor-pointer ${
+              !searchParams.get("cat") ? "text-[#7971ea] font-medium" : ""
+            }`}
+          >
+            <p className="capitalize font-light">All</p>
+            <p>({products.length})</p>
+          </div>
+          {categories.map((cat) => (
             <div
-              key={index}
-              onClick={() => updateQuery("cat", item.name)}
+              key={cat}
+              onClick={() =>
+                updateQuery("cat", searchParams.get("cat") === cat ? null : cat)
+              }
               className="flex mt-2 justify-between py-2 cursor-pointer"
             >
               <p
                 className={`capitalize font-light ${
-                  searchParams.get("cat") === item.name
+                  searchParams.get("cat") === cat
                     ? "text-[#7971ea] font-medium"
                     : ""
                 }`}
               >
-                {item.name}
+                {cat}
               </p>
-              <p>({item.number})</p>
+              <p>({categoryCounts[cat]})</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* PRICE */}
+      {/* PRICE FILTER */}
       <div className="p-5 border shadow rounded w-full mt-10">
         <h4 className="uppercase font-bold mt-4">Price</h4>
         <div className="mt-6">
@@ -105,58 +130,58 @@ const ShopNav = () => {
           </div>
         </div>
 
-        {/* SIZE */}
-        <h4 className="uppercase font-bold mt-4">Size</h4>
+        {/* SIZE FILTER */}
+        {/* <h4 className="uppercase font-bold mt-4">Size</h4>
         <div className="mt-6">
-          {size.map((item, index) => (
+          {sizes.map((size) => (
             <div
-              key={index}
+              key={size}
               className="flex mt-2 gap-3 py-2 items-center cursor-pointer"
-              onClick={() => updateQuery("size", item.name)}
+              onClick={() => updateQuery("size", size)}
             >
-              <Checkbox checked={searchParams.get("size") === item.name} />
+              <Checkbox checked={searchParams.get("size") === size} />
               <p
                 className={`capitalize font-light ${
-                  searchParams.get("size") === item.name
+                  searchParams.get("size") === size
                     ? "text-[#7971ea] font-medium"
                     : ""
                 }`}
               >
-                {item.name}
+                {size}
               </p>
-              <p>({item.number})</p>
+              <p>({sizeCounts[size]})</p>
             </div>
           ))}
-        </div>
+        </div> */}
 
-        {/* COLOR */}
-        <div className="mt-10">
+        {/* COLOR FILTER */}
+        {/* <div className="mt-10">
           <h4 className="uppercase font-bold">Color</h4>
           <div className="mt-4">
-            {color.map((item, index) => (
+            {colors.map((color) => (
               <div
-                key={index}
+                key={color}
                 className="flex mt-2 gap-3 py-2 items-center cursor-pointer"
-                onClick={() => updateQuery("color", item.name)}
+                onClick={() => updateQuery("color", color)}
               >
                 <div
                   className="w-[12px] h-[12px] rounded-full border"
-                  style={{ backgroundColor: item.name }}
+                  style={{ backgroundColor: color }}
                 />
                 <p
                   className={`capitalize font-light ${
-                    searchParams.get("color") === item.name
+                    searchParams.get("color") === color
                       ? "text-[#7971ea] font-medium"
                       : ""
                   }`}
                 >
-                  {item.name}
+                  {color}
                 </p>
-                <p>({item.number})</p>
+                <p>({colorCounts[color]})</p>
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
