@@ -57,7 +57,7 @@ const Promo = () => {
   ];
   return (
     <>
-      <div className="h-screen lg:h-[calc(100vh-250px)] p-4 bg-white flex items-center justify-center">
+      <div className="h-screen lg:h-[calc(100vh-250px)] p-4 bg-white flex items-center justify-center max-sm:mt-10">
         <div className="flex flex-col lg:flex-row w-full max-w-6xl rounded-2xl shadow-2xl overflow-hidden bg-white">
           <div className="w-full lg:w-1/2 min-h-[300px] lg:min-h-[600px] flex items-center justify-center bg-red-200">
             <Image
