@@ -4,13 +4,13 @@ import React from "react";
 import Logo from "./logo";
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
 import Image from "next/image";
-import { shopdata } from "@/constant";
+import { products } from "@/constant";
 import image1 from "@/public/image3.png";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
 const Footer = () => {
-  const item = shopdata[0];
+  const item = products[0];
   return (
     <footer className="max-sm:pb-20">
       <div className="px-10 md:px-8 lg:px-16 xl:32 2xl:px-64 mt-20 flex justify-between items-start flex-col lg:flex-row gap-10 ">
@@ -68,7 +68,7 @@ const Footer = () => {
           <div className="flex lg:flex-col max-sm:items-center  justify-center gap-1.5">
             <div className="w-[100px] bg-slate-300 p-2 h-[100px]">
               <Image
-                src={image1}
+                src={item.images[0]}
                 width={500}
                 height={500}
                 className="w-full h-full"
