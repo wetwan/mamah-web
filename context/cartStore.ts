@@ -1,7 +1,7 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { ShopdataProp } from "@/constant";
 
-// Define store shape
 type CartItem = {
     product: ShopdataProp;
     quantity: number;
@@ -17,42 +17,48 @@ type CartStore = {
         selectedSize: string,
         quantity: number
     ) => void;
-    resetCart: () => void
     removeProduct: (productId: string) => void;
+    resetCart: () => void;
 };
 
-// Create store with correct types
-export const useCart = create<CartStore>((set) => ({
-    item: [],
+// ✅ Persisted cart store
+export const useCart = create<CartStore>()(
+    persist(
+        (set) => ({
+            item: [],
 
-    addProduct: (product, selectedColor, selectedSize, quantity) =>
-        set((state) => {
-            const existingIndex = state.item.findIndex(
-                (i) =>
-                    i.product.id === product.id &&
-                    i.selectedColor === selectedColor &&
-                    i.selectedSize === selectedSize
-            );
+            addProduct: (product, selectedColor, selectedSize, quantity) =>
+                set((state) => {
+                    const existingIndex = state.item.findIndex(
+                        (i) =>
+                            i.product.id === product.id &&
+                            i.selectedColor === selectedColor &&
+                            i.selectedSize === selectedSize
+                    );
 
-            if (existingIndex !== -1) {
-                // update existing item quantity
-                const updatedItem = [...state.item];
-                updatedItem[existingIndex].quantity += quantity;
-                return { item: updatedItem };
-            }
+                    if (existingIndex !== -1) {
+                        const updatedItem = [...state.item];
+                        updatedItem[existingIndex].quantity += quantity;
+                        return { item: updatedItem };
+                    }
 
-            // add as new item
-            return {
-                item: [
-                    ...state.item,
-                    { product, quantity, selectedColor, selectedSize },
-                ],
-            };
+                    return {
+                        item: [
+                            ...state.item,
+                            { product, quantity, selectedColor, selectedSize },
+                        ],
+                    };
+                }),
+
+            removeProduct: (productId) =>
+                set((state) => ({
+                    item: state.item.filter((i) => i.product.id !== productId),
+                })),
+
+            resetCart: () => set({ item: [] }),
         }),
-    resetCart: () => set({ item: [] }),
-
-    removeProduct: (productId) =>
-        set((state) => ({
-            item: state.item.filter((i) => i.product.id !== productId),
-        })),
-}));
+        {
+            name: "cart-storage", // key in localStorage
+        }
+    )
+);

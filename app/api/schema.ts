@@ -6,5 +6,15 @@ export const loginSchema = z.object({
     password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+export const signUpSchema = z.object({
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    firstName: z.string().min(3, 'First name most have atleast 3 characters'),
+    lastName: z.string().min(3, 'First name most have atleast 3 characters'),
+    address: z.string().min(3, 'First name most have atleast 3 characters'),
+    phone: z.string().min(3, 'First name most have atleast 3 characters'),
+});
 
-export type LoginData = z.infer<typeof loginSchema>; 
+
+export type LoginData = z.infer<typeof loginSchema>;
+export type singUpData = z.infer<typeof signUpSchema>; 

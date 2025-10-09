@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,13 +10,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/userStore";
 import { User } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function ProfileDropdown() {
-  const loggedIn = false; 
+  const isLoggedIn = useAuth((s) => !!s.token);
+  const isLoggedOut = useAuth((s) => s.logout);
+  const router = useRouter();
   return (
     <>
-      {loggedIn ? (
+      {isLoggedIn ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -33,12 +39,18 @@ export function ProfileDropdown() {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuGroup>
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Cart</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/cart");
+                }}
+              >
+                Cart
+              </DropdownMenuItem>
               <DropdownMenuItem>Order History</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem onClick={isLoggedOut}>Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (

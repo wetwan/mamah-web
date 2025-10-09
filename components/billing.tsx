@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { Checkbox } from "./ui/checkbox";
+import { useAuth } from "@/context/userStore";
 
 const Billing = () => {
+  const isLoggedIn = useAuth((s) => !!s.token);
   const [newUser, setNewUser] = useState(false);
   return (
     <div className="w-full">
@@ -125,32 +127,34 @@ const Billing = () => {
             </div>
           </div>
         </div>
-        <div className="mt-5">
-          <div className="flex items-center gap-3">
-            <Checkbox onClick={() => setNewUser(!newUser)} />{" "}
-            <p className="font-light">Create an account?</p>
-          </div>
-          {newUser && (
-            <div className="">
-              <p className="leading-relaxed text-sm my-3 text-gray-500">
-                Create an account by entering the information below. If you are
-                a returning customer please login at the top of the page.
-              </p>
-              <div className="w-full mb-4 capitalize">
-                <label htmlFor="password">password</label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
-                  required
-                  aria-label="password"
-                  placeholder="enter your password"
-                />
-              </div>
+        {!isLoggedIn && (
+          <div className="mt-5">
+            <div className="flex items-center gap-3">
+              <Checkbox onClick={() => setNewUser(!newUser)} />{" "}
+              <p className="font-light">Create an account?</p>
             </div>
-          )}
-        </div>
+            {newUser && (
+              <div className="">
+                <p className="leading-relaxed text-sm my-3 text-gray-500">
+                  Create an account by entering the information below. If you
+                  are a returning customer please login at the top of the page.
+                </p>
+                <div className="w-full mb-4 capitalize">
+                  <label htmlFor="password">password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
+                    required
+                    aria-label="password"
+                    placeholder="enter your password"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

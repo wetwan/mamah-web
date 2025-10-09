@@ -12,6 +12,7 @@ const MenuIcons = () => {
 
   const cartnumber = cartItems.length;
   // const [openProfile, setOpenProfile] = useState(false);
+  
   return (
     <>
       <ul className="flex items-center gap-3 md:w-1/3 justify-end">
@@ -46,9 +47,11 @@ const MenuIcons = () => {
             />
           </Button>
 
-          <div className="absolute -top-4 -right-1 bg-green-500 w-6 h-6 text-center flex items-center justify-center rounded-full group-hover:-translate-x-3 transition-all   ">
-            {cartnumber}
-          </div>
+          {cartnumber !== 0 && (
+            <div className="absolute -top-4 -right-1 bg-green-500 w-6 h-6 text-center flex items-center justify-center rounded-full group-hover:-translate-x-3 transition-all text- ">
+              {cartnumber}
+            </div>
+          )}
         </li>
       </ul>
 
