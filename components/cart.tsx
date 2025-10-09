@@ -7,6 +7,7 @@ import { ShoppingCart, X } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/context/cartStore";
 
 const Cart = ({
   setOpenCart,
@@ -14,26 +15,27 @@ const Cart = ({
   setOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   //   const cartProducts: any[] = [];
-  const cartProducts = [
-    {
-      _id: "prod1",
-      name: "Elegant Dress",
-      images: [image1.src],
-      price: 45,
-      quantity: 5,
-    },
-    {
-      _id: "prod2",
-      name: "Sporty Sneakers",
-      images: [image2.src],
-      sizes: ["M", "L"],
-      price: 60,
-      quantity: 5,
-    },
-  ];
+  // const cartProducts = [
+  //   {
+  //     _id: "prod1",
+  //     name: "Elegant Dress",
+  //     images: [image1.src],
+  //     price: 45,
+  //     quantity: 5,
+  //   },
+  //   {
+  //     _id: "prod2",
+  //     name: "Sporty Sneakers",
+  //     images: [image2.src],
+  //     sizes: ["M", "L"],
+  //     price: 60,
+  //     quantity: 5,
+  //   },
+  // ];
+  const cartProducts = useCart((state) => state.item);
 
   const total = cartProducts.reduce((sum, item) => {
-    return sum + item.price * item.quantity;
+    return sum + item.product.finalPrice * item.quantity;
   }, 0);
   const router = useRouter();
   return (
@@ -62,12 +64,12 @@ const Cart = ({
           </h3>
           <div className="">
             {cartProducts.map((item) => (
-              <div key={item._id} className="">
+              <div key={item.product._id} className="">
                 <div className="flex items-start gap-4 my-4 relative">
                   <div className="h-[60px] w-[60px] bg-amber-200 p-2 rounded">
                     <img
-                      src={item.images[0]}
-                      alt={item.name}
+                      src={item.product.images[0]}
+                      alt={item.product.name}
                       height={500}
                       width={500}
                       className="w-full h-full object-contain"
@@ -75,10 +77,10 @@ const Cart = ({
                   </div>
                   <div className="">
                     <p className="capitalize font-medium text-lg tracking-wide">
-                      {item.name}
+                      {item.product.name}
                     </p>
                     <p className="text-gray-600 font-medium">
-                      {item.quantity} × ₦{item.price.toFixed(2)}
+                      {item.quantity} × ₦{item.product.finalPrice.toFixed(2)}
                     </p>
                   </div>
                   <div className="justify-end mr-auto absolute top-0 right-3">

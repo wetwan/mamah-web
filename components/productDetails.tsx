@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { ShopdataProp } from "@/constant";
+import { useCart } from "@/context/cartStore";
+import { useRouter } from "next/navigation";
 
-
-const ProductDetails = ({item}:{item: ShopdataProp}) => {
+const ProductDetails = ({ item }: { item: ShopdataProp }) => {
   // const item = {
   //   name: "testetstetste testststs",
   //   images: [
@@ -58,14 +60,23 @@ const ProductDetails = ({item}:{item: ShopdataProp}) => {
   const [selectedSize, setSelectedSize] = useState(0);
   const [addQuanitity, setAddQuanitity] = useState(0);
 
+  const addProduct = useCart((state) => state.addProduct);
+  const cartItems = useCart((state) => state.item);
+  const router = useRouter()
+
   const add = () => {
     try {
-      console.log({
-        productId: item._id,
-        color: selectedcolor.name,
-        size: item.sizes[selectedSize],
-        quantity: addQuanitity,
-      });
+      addProduct(
+        item,
+        selectedcolor.name,
+        item.sizes[selectedSize],
+        addQuanitity
+      );
+      router.push('/cart')
+      setSelectedSize(0);
+      setAddQuanitity(0);
+      setSelectedcolor(item.colors[0]);
+      console.log(JSON.stringify(cartItems, null, 2));
     } catch (error) {
       console.log(error);
     }

@@ -1,35 +1,18 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import image1 from "@/public/image1.png";
-import image2 from "@/public/image3.png";
+
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/context/cartStore";
 
 const CheckoutDeatils = () => {
   const router = useRouter();
-  const cartProducts = useMemo(
-    () => [
-      {
-        _id: "prod1",
-        name: "Elegant Dress",
-        images: [image1.src],
-        price: 45,
-        quantity: 5,
-      },
-      {
-        _id: "prod2",
-        name: "Sporty Sneakers",
-        images: [image2.src],
-        price: 60,
-        quantity: 2,
-      },
-    ],
-    []
-  );
+
+    const cartProducts = useCart((state) => state.item);
 
   const subtotal = useMemo(() => {
     return cartProducts.reduce(
-      (acc, item) => acc + item.price * item.quantity,
+      (acc, item) => acc + item.product.finalPrice * item.quantity,
       0
     );
   }, [cartProducts]);
@@ -73,16 +56,16 @@ const CheckoutDeatils = () => {
             {cartProducts.map((item) => (
               <div
                 className="border-b mb-3 pb-2 flex justify-between"
-                key={item._id}
+                key={item.product._id}
               >
                 <div className="">
                   <p>
-                    {item.name} {"  "} x {"  "}
+                    {item.product.name} {"  "} x {"  "}
                     {item.quantity}
                   </p>
                 </div>
                 <div className="">
-                  ₦{(item.price * item.quantity).toFixed(2)}
+                  ₦{(item.product.finalPrice * item.quantity).toFixed(2)}
                 </div>
               </div>
             ))}

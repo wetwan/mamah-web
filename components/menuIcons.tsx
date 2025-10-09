@@ -4,9 +4,13 @@ import React, { useState } from "react";
 import Cart from "./cart";
 import ProfileDropdown from "./profiledropdown";
 import { Button } from "./ui/button";
+import { useCart } from "@/context/cartStore";
 
 const MenuIcons = () => {
   const [openCart, setOpenCart] = useState(false);
+  const cartItems = useCart((state) => state.item);
+
+  const cartnumber = cartItems.length;
   // const [openProfile, setOpenProfile] = useState(false);
   return (
     <>
@@ -43,7 +47,7 @@ const MenuIcons = () => {
           </Button>
 
           <div className="absolute -top-4 -right-1 bg-green-500 w-6 h-6 text-center flex items-center justify-center rounded-full group-hover:-translate-x-3 transition-all   ">
-            2
+            {cartnumber}
           </div>
         </li>
       </ul>

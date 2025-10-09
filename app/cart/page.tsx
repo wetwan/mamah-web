@@ -1,34 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
-import image1 from "@/public/image1.png";
-import image2 from "@/public/image3.png";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/context/cartStore";
 
 const CartPage = () => {
-  const [cartProducts, setCartProducts] = useState([
-    {
-      _id: "prod1",
-      name: "Elegant Dress",
-      images: [image1.src],
-      price: 45,
-      quantity: 5,
-    },
-    {
-      _id: "prod2",
-      name: "Sporty Sneakers",
-      images: [image2.src],
-      price: 60,
-      quantity: 2,
-    },
-  ]);
+  const cartProducts = useCart((state) => state.item);
 
-  // ✅ Calculate totals efficiently
   const subtotal = useMemo(() => {
     return cartProducts.reduce(
-      (acc, item) => acc + item.price * item.quantity,
+      (acc, item) => acc + item.product.finalPrice * item.quantity,
       0
     );
   }, [cartProducts]);
@@ -36,9 +19,6 @@ const CartPage = () => {
   const delivery = 10;
   const total = subtotal + delivery;
 
-  const removeItem = (id: string) => {
-    setCartProducts((prev) => prev.filter((item) => item._id !== id));
-  };
   const router = useRouter();
 
   return (
@@ -64,22 +44,22 @@ const CartPage = () => {
 
           {cartProducts.map((item) => (
             <div
-              key={item._id}
+              key={item.product._id}
               className="grid max-sm:grid-cols-5 grid-cols-6  md:gap-0 gap-4 items-center border-b py-4 text-gray-700 relative"
             >
               <Image
-                src={item.images[0]}
-                alt={item.name}
+                src={item.product.images[0]}
+                alt={item.product.name}
                 width={64}
                 height={64}
                 className="w-16 h-16 object-cover rounded-md"
               />
-              <p className="capitalize max-sm:hidden">{item.name}</p>
-              <p>₦{item.price.toFixed(2)}</p>
+              <p className="capitalize max-sm:hidden">{item.product.name}</p>
+              <p>₦{item.product.finalPrice.toFixed(2)}</p>
               <p>{item.quantity}</p>
-              <p>₦{(item.price * item.quantity).toFixed(2)}</p>
+              <p>₦{(item.product.finalPrice * item.quantity).toFixed(2)}</p>
               <button
-                onClick={() => removeItem(item._id)}
+                onClick={() => {}}
                 className="text-red-500 hover:text-red-700 text-lg font-semibold"
               >
                 ×
