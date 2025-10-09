@@ -8,10 +8,10 @@ import { useRouter } from "next/navigation";
 const ProductDetails = ({ item }: { item: ShopdataProp }) => {
   const [selectedcolor, setSelectedcolor] = useState(item.colors[0]);
   const [selectedSize, setSelectedSize] = useState(0);
-  const [addQuanitity, setAddQuanitity] = useState(0);
+  const [addQuanitity, setAddQuanitity] = useState(1);
 
   const addProduct = useCart((state) => state.addProduct);
-  const cartItems = useCart((state) => state.item);
+ 
   const router = useRouter();
 
   const add = () => {
@@ -27,9 +27,8 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
       );
       router.push("/cart");
       setSelectedSize(0);
-      setAddQuanitity(0);
+      setAddQuanitity(1);
       setSelectedcolor(item.colors[0]);
-      console.log(JSON.stringify(cartItems, null, 2));
     } catch (error) {
       console.log(error);
     }
