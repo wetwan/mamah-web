@@ -3,10 +3,16 @@
 import React, { useState } from "react";
 import { Checkbox } from "./ui/checkbox";
 import { useAuth } from "@/context/userStore";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { shippingData, shippingSchema } from "@/app/api/schema";
 
 const Billing = () => {
   const isLoggedIn = useAuth((s) => !!s.token);
   const [newUser, setNewUser] = useState(false);
+  const form = useForm<shippingData>({
+    resolver: zodResolver(shippingSchema),
+  });
   return (
     <div className="w-full">
       <h2 className="my-3 capitalize font-medium text-2xl"> Billing details</h2>
@@ -16,12 +22,12 @@ const Billing = () => {
             <label htmlFor="">country</label>
             <input
               type="text"
-              name="country"
               id="country"
               className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
               required
               aria-label="country"
               placeholder="enter your country"
+              {...form.register("country")}
             />
           </div>
           <div className="flex flex-col md:flex-row gap-4">
@@ -29,7 +35,7 @@ const Billing = () => {
               <label htmlFor="firstname">first name</label>
               <input
                 type="text"
-                name="firstname"
+                {...form.register("firstName")}
                 id="firstname"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -41,7 +47,7 @@ const Billing = () => {
               <label htmlFor="lastname">last name</label>
               <input
                 type="text"
-                name="lastname"
+                {...form.register("lastName")}
                 id="lastname"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -55,7 +61,7 @@ const Billing = () => {
               <label htmlFor="address">address</label>
               <input
                 type="text"
-                name="address"
+                {...form.register("address1")}
                 id="address"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -65,7 +71,7 @@ const Billing = () => {
 
               <input
                 type="text"
-                name="address2"
+                {...form.register("address2")}
                 id="address2"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -79,7 +85,7 @@ const Billing = () => {
               <label htmlFor="state">state</label>
               <input
                 type="text"
-                name="state"
+                {...form.register("state")}
                 id="state"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -91,7 +97,7 @@ const Billing = () => {
               <label htmlFor="poster/zip">poster / zip</label>
               <input
                 type="text"
-                name="poster/zip"
+                {...form.register("poster")}
                 id="poster/zip"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -105,7 +111,7 @@ const Billing = () => {
               <label htmlFor="email">email address</label>
               <input
                 type="email"
-                name="email"
+                {...form.register("email")}
                 id="email"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -117,7 +123,7 @@ const Billing = () => {
               <label htmlFor="phone">phone</label>
               <input
                 type="text"
-                name="phone"
+                {...form.register("phone")}
                 id="phone"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required

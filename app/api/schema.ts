@@ -24,9 +24,11 @@ export const shippingSchema = z.object({
     phone: z.string().min(3, 'First name most have atleast 3 characters'),
     country: z.string().min(3, 'First name most have atleast 3 characters'),
     state: z.string().min(3, 'First name most have atleast 3 characters'),
+    poster: z.string().min(3, 'First name most have atleast 3 characters'),
 
 });
 
 
 export type LoginData = z.infer<typeof loginSchema>;
 export type singUpData = z.infer<typeof signUpSchema>; 
+export type shippingData = z.infer<typeof shippingSchema>; 
