@@ -8,7 +8,8 @@ import { useCart } from "@/context/cartStore";
 const CheckoutDeatils = () => {
   const router = useRouter();
 
-    const cartProducts = useCart((state) => state.item);
+  const cartProducts = useCart((state) => state.item);
+  const resetCart = useCart((state) => state.resetCart);
 
   const subtotal = useMemo(() => {
     return cartProducts.reduce(
@@ -21,6 +22,11 @@ const CheckoutDeatils = () => {
   const total = subtotal + delivery;
 
   const [option, setOption] = useState("cash");
+
+  const reset = async () => {
+    resetCart();
+    router.push("/success");
+  };
   return (
     <div className="w-full">
       {/* coupon code  */}
@@ -104,7 +110,7 @@ const CheckoutDeatils = () => {
           variant={option === "" ? "outline" : "default"}
           disabled={option === ""}
           className=" border mb-4 bg-[#7971ea] w-full font-light py-7 text-xl mt-5 px-2 text-white hover:bg-[#7971ea] uppercase"
-          onClick={() => router.push("/success")}
+          onClick={reset}
         >
           {" "}
           place order

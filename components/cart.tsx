@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React from "react";
-import image1 from "@/public/image1.png";
-import image2 from "@/public/image3.png";
 import { ShoppingCart, X } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
@@ -14,25 +12,8 @@ const Cart = ({
 }: {
   setOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  //   const cartProducts: any[] = [];
-  // const cartProducts = [
-  //   {
-  //     _id: "prod1",
-  //     name: "Elegant Dress",
-  //     images: [image1.src],
-  //     price: 45,
-  //     quantity: 5,
-  //   },
-  //   {
-  //     _id: "prod2",
-  //     name: "Sporty Sneakers",
-  //     images: [image2.src],
-  //     sizes: ["M", "L"],
-  //     price: 60,
-  //     quantity: 5,
-  //   },
-  // ];
   const cartProducts = useCart((state) => state.item);
+  const removeItem = useCart((state) => state.removeProduct);
 
   const total = cartProducts.reduce((sum, item) => {
     return sum + item.product.finalPrice * item.quantity;
@@ -50,6 +31,7 @@ const Cart = ({
           </p>
           <Link
             href={"/shop"}
+            onClick={() => setOpenCart(false)}
             className="bg-[#7971ea] text-white py-3 px-12 font-light capitalize "
           >
             vist shop
@@ -83,7 +65,10 @@ const Cart = ({
                       {item.quantity} × ₦{item.product.finalPrice.toFixed(2)}
                     </p>
                   </div>
-                  <div className="justify-end mr-auto absolute top-0 right-3">
+                  <div
+                    className="justify-end mr-auto absolute top-0 right-3"
+                    onClick={() => removeItem(item.product._id)}
+                  >
                     <X size={16} />
                   </div>
                 </div>

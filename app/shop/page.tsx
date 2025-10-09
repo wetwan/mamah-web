@@ -13,8 +13,13 @@ type SearchParams = {
   sort?: string;
 };
 
-export default function Shop({ searchParams }: { searchParams: SearchParams }) {
-  const { cat, color, size, min, max, sort } = searchParams;
+export default async function Shop({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const { cat, color, size, min, max, sort } = params;
 
   // --- filter logic ---
   let filteredProducts = products.filter((item) => {
@@ -41,10 +46,14 @@ export default function Shop({ searchParams }: { searchParams: SearchParams }) {
         );
         break;
       case "low-high":
-        filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
+        filteredProducts = [...filteredProducts].sort(
+          (a, b) => a.price - b.price
+        );
         break;
       case "high-low":
-        filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
+        filteredProducts = [...filteredProducts].sort(
+          (a, b) => b.price - a.price
+        );
         break;
     }
   }

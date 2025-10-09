@@ -6,11 +6,15 @@ import { products } from "@/constant";
 import Link from "next/link";
 import React from "react";
 
-const ProductPage = ({ params }: { params: { slug: string } }) => {
-  const product = products.find(
-    (p) => p._id === params.slug || p._id === params.slug
-  );
-  console.log(params.slug, "slug");
+const ProductPage = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+
+  const product = products.find((p) => p._id === slug);
 
   if (!product) {
     return (
