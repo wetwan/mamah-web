@@ -5,12 +5,11 @@ import Logo from "./logo";
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
 import Image from "next/image";
 import { products } from "@/constant";
-import image1 from "@/public/image3.png";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
 const Footer = () => {
-  const item = products[0];
+  const item = [...products].sort(() => Math.random() - 0.5)[0];
   return (
     <footer className="max-sm:pb-20">
       <div className="px-10 md:px-8 lg:px-16 xl:32 2xl:px-64 mt-20 flex justify-between items-start flex-col lg:flex-row gap-10 ">

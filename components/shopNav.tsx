@@ -58,7 +58,7 @@ const ShopNav = () => {
               <div key={index} className="flex mt-2 gap-3 py-2  items-center">
                 <Checkbox className="" />
                 <Link
-                  href={"/shop?cat=" + item.name}
+                  href={"/shop?size=" + item.name}
                   className=" capitalize font-light"
                 >
                   {item.name}
@@ -73,7 +73,7 @@ const ShopNav = () => {
           <div className="mt-4">
             {color.map((item, index) => (
               <Link
-                href={"/shop?cat=" + item.name}
+                href={"/shop?color=" + item.name}
                 key={index}
                 className="flex mt-2 gap-3 py-2  items-center"
               >

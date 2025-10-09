@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 
-import { products } from "@/constant";
+import { products, ShopdataProp } from "@/constant";
 import Link from "next/link";
 
-const ProductItem = () => {
+const ProductItem = ({products}:{products :ShopdataProp[]}) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8">
       {products.map((product) => (

@@ -3,6 +3,7 @@ import H2 from "@/components/h2";
 import Hero from "@/components/hero";
 import ProductItem from "@/components/productItem";
 import Promo from "@/components/promo";
+import { products } from "@/constant";
 import React from "react";
 
 const Home = () => {
@@ -10,11 +11,17 @@ const Home = () => {
     <div>
       <Hero />
       <div className=" px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 mt-20">
-        <H2 text="new fashion" className="mx-auto mb-5 flex flex-col items-center" />
-        <ProductItem />
+        <H2
+          text="new fashion"
+          className="mx-auto mb-5 flex flex-col items-center"
+        />
+        <ProductItem products={products.slice(0, 4)} />
       </div>
       <div className=" px-4  mt-20">
-        <H2 text="shop category" className="mx-auto mb-5 flex flex-col items-center" />
+        <H2
+          text="shop category"
+          className="mx-auto mb-5 flex flex-col items-center"
+        />
         <Category />
       </div>
       <div className=" px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 mt-20 ">
@@ -22,10 +29,15 @@ const Home = () => {
           text="shop popular "
           className="mx-auto mb-5 flex flex-col items-center "
         />
-        <ProductItem />
+        <ProductItem
+          products={[...products].sort(() => Math.random() - 0.5).slice(0, 4)}
+        />
       </div>
       <div className=" px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 mt-20">
-        <H2 text="shop promo! " className="mx-auto mb-5 flex flex-col items-center" />
+        <H2
+          text="shop promo! "
+          className="mx-auto mb-5 flex flex-col items-center"
+        />
         <Promo />
       </div>
     </div>

@@ -11,10 +11,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ProductItem from "@/components/productItem";
+import { products } from "@/constant";
 
-const Shop = async ({ searchParams }: { searchParams: any }) => {
-  const params = await searchParams;
-  console.log("category:", params.cat);
+
+function Shop({
+  searchParams,
+}: {
+  searchParams: { cat?: string; color?: string; size?: string; price?: string };
+}) {
+  const { cat, color, size, price } = searchParams;
+
 
   function Category() {
     return (
@@ -91,17 +97,31 @@ const Shop = async ({ searchParams }: { searchParams: any }) => {
     );
   }
 
+    const filteredProducts = products.filter((item) => {
+    const matchCategory = cat ? item.category === cat : true;
+    const matchColor = color ? item.colors?.includes(color as any) : true;
+    const matchSize = size ? item.sizes?.includes(size as any) : true;
+    const matchPrice = price ? item.price <= Number(price) : true;
+
+    return matchCategory && matchColor && matchSize && matchPrice;
+  });
+
+
   return (
     <section className="w-full p-4 ">
       <div className="flex justify-between lg:items-center lg:flex-row flex-col gap-4">
-        <h3 className="font-bold capitalize text-xl">shop all</h3>
+        <h3 className="font-bold capitalize text-xl">
+          {cat || "shop all"}
+        </h3>
         <div className="flex p-4 gap-4">
           <Category />
           <Size />
         </div>
       </div>
       <div className="">
-        <ProductItem />
+        {filteredProducts.map((product) => (
+          <ProductItem key={product._id} products={[product]} />
+        ))}
       </div>
     </section>
   );

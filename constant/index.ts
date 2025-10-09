@@ -15,7 +15,7 @@ interface Review {
   updatedAt: number;
 }
 
-interface ShopdataProp {
+export interface ShopdataProp {
   _id: string;
   name: string;
   images: string[];
@@ -45,10 +45,6 @@ interface ShopdataProp {
 // Helper constants for mock data consistency
 const NOW = 1759755000000;
 const getTime = (offset: number) => NOW + offset;
-const PLACEHOLDER_IMG =
-  "https://placehold.co/400x400/101010/ffffff?text=Product+Image";
-const CLOUDINARY_PLACEHOLDER =
-  "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759738848/products/placeholder.png";
 
 export const products: ShopdataProp[] = [
   // 1. Clothing Product
