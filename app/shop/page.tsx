@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from "react";
 import {
   Select,
@@ -13,19 +12,34 @@ import {
 import ProductItem from "@/components/productItem";
 import { products } from "@/constant";
 
+type SearchParams = {
+  cat?: string;
+  color?: string;
+  size?: string;
+  min?: string;
+  max?: string;
+};
 
-function Shop({
-  searchParams,
-}: {
-  searchParams: { cat?: string; color?: string; size?: string; price?: string };
-}) {
-  const { cat, color, size, price } = searchParams;
+export default function Shop({ searchParams }: { searchParams: SearchParams }) {
+  const { cat, color, size, min, max } = searchParams;
 
+  // --- filter logic ---
+  const filteredProducts = products.filter((item) => {
+    const matchCategory = cat ? item.category === cat : true;
+    const matchColor = color ? item.colors?.includes(color as any) : true;
+    const matchSize = size ? item.sizes?.includes(size as any) : true;
 
+    const matchMin = min ? item.price >= Number(min) : true;
+    const matchMax = max ? item.price <= Number(max) : true;
+
+    return matchCategory && matchColor && matchSize && matchMin && matchMax;
+  });
+
+  // --- helpers for sorting dropdowns (you can add real logic later) ---
   function Category() {
     return (
       <Select>
-        <SelectTrigger className="w-[200px]  bg-gray border border-gray-300 shadow-sm hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-all duration-200">
+        <SelectTrigger className="w-[200px] bg-gray border border-gray-300 shadow-sm hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-all duration-200">
           <SelectValue placeholder="Least" />
         </SelectTrigger>
         <SelectContent className="bg-white border border-gray-200 shadow-lg">
@@ -33,29 +47,15 @@ function Shop({
             <SelectLabel className="text-gray-500 text-sm font-medium px-2 py-1">
               Least ▼
             </SelectLabel>
-            <SelectItem
-              className="cursor-pointer text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg px-2 py-2"
-              value="apple"
-            >
-              Women
-            </SelectItem>
-            <SelectItem
-              className="cursor-pointer text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg px-2 py-2"
-              value="banana"
-            >
-              Men
-            </SelectItem>
-            <SelectItem
-              className="cursor-pointer text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg px-2 py-2"
-              value="blueberry"
-            >
-              Children
-            </SelectItem>
+            <SelectItem value="women">Women</SelectItem>
+            <SelectItem value="men">Men</SelectItem>
+            <SelectItem value="children">Children</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
     );
   }
+
   function Size() {
     return (
       <Select>
@@ -67,64 +67,41 @@ function Shop({
             <SelectLabel className="text-gray-500 text-sm font-medium px-2 py-1">
               Relevance
             </SelectLabel>
-            <SelectItem
-              className="cursor-pointer text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg px-2 py-2"
-              value="a-z"
-            >
-              Name, A to Z
-            </SelectItem>
-            <SelectItem
-              className="cursor-pointer text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg px-2 py-2"
-              value="-z-a"
-            >
-              Name, Z to A
-            </SelectItem>
-            <SelectItem
-              className="cursor-pointer text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg px-2 py-2"
-              value="low-high"
-            >
-              Price, low to high
-            </SelectItem>
-            <SelectItem
-              className="cursor-pointer text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg px-2 py-2"
-              value="high"
-            >
-              Price, high to low
-            </SelectItem>
+            <SelectItem value="a-z">Name, A to Z</SelectItem>
+            <SelectItem value="-z-a">Name, Z to A</SelectItem>
+            <SelectItem value="low-high">Price, low to high</SelectItem>
+            <SelectItem value="high">Price, high to low</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
     );
   }
 
-    const filteredProducts = products.filter((item) => {
-    const matchCategory = cat ? item.category === cat : true;
-    const matchColor = color ? item.colors?.includes(color as any) : true;
-    const matchSize = size ? item.sizes?.includes(size as any) : true;
-    const matchPrice = price ? item.price <= Number(price) : true;
-
-    return matchCategory && matchColor && matchSize && matchPrice;
-  });
-
+  // --- header text ---
+  const activeFilters = [cat, color, size].filter(Boolean).join(" • ");
+  const priceRange = min || max ? `₦${min || "0"} - ₦${max || "∞"}` : "";
 
   return (
-    <section className="w-full p-4 ">
+    <section className="w-full p-4">
       <div className="flex justify-between lg:items-center lg:flex-row flex-col gap-4">
         <h3 className="font-bold capitalize text-xl">
-          {cat || "shop all"}
+          {activeFilters || priceRange
+            ? `${activeFilters} ${priceRange}`
+            : "Shop All"}
         </h3>
         <div className="flex p-4 gap-4">
           <Category />
           <Size />
         </div>
       </div>
-      <div className="">
-        {filteredProducts.map((product) => (
-          <ProductItem key={product._id} products={[product]} />
-        ))}
+
+      <div>
+        {filteredProducts.length > 0 ? (
+          <ProductItem products={filteredProducts} />
+        ) : (
+          <p className="text-gray-500 mt-10 text-center">No products found.</p>
+        )}
       </div>
     </section>
   );
-};
-
-export default Shop;
+}
