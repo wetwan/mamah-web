@@ -104,6 +104,10 @@ const Cart = ({
             view Cart
           </Button>
           <Button
+            onClick={() => {
+              router.push("/checkout");
+              setOpenCart(false);
+            }}
             variant="default"
             className="uppercase cursor-pointer font-bold border-black w-full mt-4 rounded-none py-7 text-sm hover:bg-blue-600 hover:text-white transition-all duration-300"
           >

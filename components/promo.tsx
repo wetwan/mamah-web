@@ -122,9 +122,12 @@ const Promo = () => {
               )}
             </div>
 
-            <Link href='/shop' className="flex items-center justify-center w-full py-4 text-xl font-bold text-red-600 bg-yellow-300 rounded-lg shadow-xl hover:bg-yellow-400 transition duration-300 transform hover:scale-[1.02]">
+            <Link
+              href="/shop"
+              className="flex items-center justify-center w-full lg:py-4 py-2 cursor-pointer text-xl font-bold text-red-600 bg-yellow-300 rounded-lg shadow-xl hover:bg-yellow-400 transition duration-300 transform hover:scale-[1.02] text-center"
+            >
               Shop Now & Claim Your Discount
-              <Timer className="w-5 h-5 ml-2" />
+              <Timer className="w-5 h-5 ml-2 hidden md:block" />
             </Link>
           </div>
         </div>
