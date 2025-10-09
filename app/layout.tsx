@@ -6,7 +6,7 @@ import Footer from "@/components/footer";
 
 const geistSans = Poppins({
   subsets: ["latin"],
-  weight: "100",
+  weight: "300",
 });
 
 const geistMono = Roboto({

@@ -35,7 +35,7 @@ const About = () => {
         <Link href={"/"} className="text-[#7971ea]">
           home
         </Link>
-        / <p>sucees</p>
+        / <p>about</p>
       </div>
       <div className="md:px-8 lg:px-16 xl:32 2xl:px-64 px-4 mt-20 flex flex-col lg:flex-row lg:h-[calc(100vh-300px)] border gap-10 py-5">
         <div className="w-full md:w-1/2 mx-auto  max-lg:h-[400px] lg:w-1/2  relative">
