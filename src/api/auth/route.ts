@@ -14,6 +14,7 @@ export const loginUser = async (info: LoginData) => {
     );
     return data;
 };
+
 export const signUpUser = async (info: singUpData) => {
     const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}user/register`, // ✅ remove extra /api/

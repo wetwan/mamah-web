@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ShopdataProp } from "@/constant";
 
-type CartItem = {
+export type CartItem = {
     product: ShopdataProp;
     quantity: number;
     selectedColor: string;
