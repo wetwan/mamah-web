@@ -11,8 +11,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeClosed, Lock, Mail, User } from "lucide-react";
 import { useAuth } from "@/context/userStore";
-import { signUpUser } from "@/src/api/route";
+
 import { signUpSchema, singUpData } from "@/src/api/auth/schema";
+import { signUpUser } from "@/src/api/auth/route";
 
 const Login = () => {
   const router = useRouter();
