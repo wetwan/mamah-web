@@ -5,12 +5,13 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpUser } from "@/app/api/route";
+
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeClosed, Lock, Mail, User } from "lucide-react";
 import { useAuth } from "@/context/userStore";
+import { signUpUser } from "@/app/api/route";
 
 const Login = () => {
   const router = useRouter();
