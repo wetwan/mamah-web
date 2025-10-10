@@ -69,10 +69,13 @@ export default async function Shop({
             ? `${activeFilters} ${priceRange}`
             : "Shop All"}
         </h3>
-        <div className="flex p-4 gap-4">
-          <Category />
-          <SortSelect />
-        </div>
+
+        <Suspense fallback={<div> lodding ..</div>}>
+          <div className="flex p-4 gap-4">
+            <Category />
+            <SortSelect />
+          </div>
+        </Suspense>
       </div>
       <Suspense fallback={<div> lodding ..</div>}>
         <div>

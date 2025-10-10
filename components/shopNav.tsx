@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { products } from "@/constant"; // ✅ import your dummy products
 
@@ -44,25 +44,6 @@ const ShopNav = () => {
     return counts;
   }, []);
 
-  // const colorCounts = useMemo(() => {
-  //   const counts: Record<string, number> = {};
-  //   products.forEach((p) => {
-  //     p.colors?.forEach((c) => {
-  //       counts[String(c)] = (counts[String(c)] || 0) + 1;
-  //     });
-  //   });
-  //   return counts;
-  // }, []);
-
-  // const sizeCounts = useMemo(() => {
-  //   const counts: Record<string, number> = {};
-  //   products.forEach((p) => {
-  //     p.sizes?.forEach((s: string) => {
-  //       counts[s] = (counts[s] || 0) + 1;
-  //     });
-  //   });
-  //   return counts;
-  // }, []);
 
   // Extract unique categories/colors/sizes for display
   const categories = Object.keys(categoryCounts);
@@ -72,7 +53,8 @@ const ShopNav = () => {
   return (
     <div className="lg:w-[250px] w-full p-4">
       {/* CATEGORY FILTER */}
-      <div className="p-5 border shadow rounded w-full">
+     <Suspense fallback={<div> lodding ..</div>}>
+  <div className="p-5 border shadow rounded w-full">
         <h4 className="uppercase font-bold mt-4">Categories</h4>
         <div className="mt-6">
           <div
@@ -182,6 +164,10 @@ const ShopNav = () => {
           </div>
         </div> */}
       </div>
+
+     </Suspense>
+
+    
     </div>
   );
 };
