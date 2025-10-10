@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { LoginData, loginSchema } from "@/src/api/schema";
+
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Eye, EyeClosed, Lock, Mail } from "lucide-react";
 import { useAuth } from "@/context/userStore";
 import { loginUser } from "@/src/api/route";
+import { LoginData, loginSchema } from "@/src/api/auth/schema";
 
 const Login = () => {
   const router = useRouter();

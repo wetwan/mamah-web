@@ -1,5 +1,6 @@
-import { LoginData, singUpData } from "./schema";
+
 import axios from "axios";
+import { LoginData, singUpData } from "./schema";
 
 
 
