@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { Checkbox } from "./ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
 import { products } from "@/constant"; // ✅ import your dummy products
 
