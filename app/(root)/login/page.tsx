@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { LoginData, loginSchema } from "@/app/api/schema";
+import { LoginData, loginSchema } from "@/src/api/schema";
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeClosed, Lock, Mail } from "lucide-react";
 import { useAuth } from "@/context/userStore";
-import { loginUser } from "@/app/api/route";
+import { loginUser } from "@/src/api/route";
 
 const Login = () => {
   const router = useRouter();

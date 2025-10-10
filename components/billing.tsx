@@ -5,7 +5,7 @@ import { Checkbox } from "./ui/checkbox";
 import { useAuth } from "@/context/userStore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { shippingData, shippingSchema } from "@/app/api/schema";
+import { shippingData, shippingSchema } from "@/src/api/schema";
 
 const Billing = () => {
   const isLoggedIn = useAuth((s) => !!s.token);
