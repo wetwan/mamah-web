@@ -70,24 +70,21 @@ export default async function Shop({
             : "Shop All"}
         </h3>
 
-        <Suspense fallback={<div> lodding ..</div>}>
-          <div className="flex p-4 gap-4">
+        <div className="flex p-4 gap-4">
+          <Suspense fallback={<div> lodding ..</div>}>
             <Category />
             <SortSelect />
-          </div>
-        </Suspense>
-      </div>
-      <Suspense fallback={<div> lodding ..</div>}>
-        <div>
-          {filteredProducts.length > 0 ? (
-            <ProductItem products={filteredProducts} />
-          ) : (
-            <p className="text-gray-500 mt-10 text-center">
-              No products found.
-            </p>
-          )}
+          </Suspense>
         </div>
-      </Suspense>
+      </div>
+
+      <div>
+        {filteredProducts.length > 0 ? (
+          <ProductItem products={filteredProducts} />
+        ) : (
+          <p className="text-gray-500 mt-10 text-center">No products found.</p>
+        )}
+      </div>
     </section>
   );
 }

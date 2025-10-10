@@ -24,36 +24,39 @@ export function Category() {
     router.push(`/shop?${params.toString()}`);
   };
 
-    const categoryCounts = useMemo(() => {
-        const counts: Record<string, number> = {};
-        products.forEach((p) => {
-            counts[p.category] = (counts[p.category] || 0) + 1;
-        });
-        return ["all", ...Object.keys(counts)]; // Add "all" option
-    }, []);
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    products.forEach((p) => {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    return ["all", ...Object.keys(counts)]; // Add "all" option
+  }, []);
 
-    return (
-        <Select
-            onValueChange={(value) => updateQuery("cat", value === "all" ? "" : value)}
-            defaultValue={searchParams.get("cat") || "all"}
-        >
-            <SelectTrigger className="w-[200px] bg-gray border border-gray-300 shadow-sm hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-all duration-200">
-                <SelectValue placeholder="Select Category" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border border-gray-200 shadow-lg capitalize">
-                <SelectGroup>
-                    <SelectLabel className="text-gray-500 text-sm font-medium px-2 py-1">
-                        Category
-                    </SelectLabel>
-                    {categoryCounts.map((cat) => (
-                        <SelectItem key={cat} value={cat}>
-                            {cat === "all" ? "All" : cat}
-                        </SelectItem>
-                    ))}
-                </SelectGroup>
-            </SelectContent>
-        </Select>
-    );
+  return (
+    
+    <Select
+      onValueChange={(value) =>
+        updateQuery("cat", value === "all" ? "" : value)
+      }
+      defaultValue={searchParams.get("cat") || "all"}
+    >
+      <SelectTrigger className="w-[200px] bg-gray border border-gray-300 shadow-sm hover:border-blue-400 focus:ring-2 focus:ring-blue-300 transition-all duration-200">
+        <SelectValue placeholder="Select Category" />
+      </SelectTrigger>
+      <SelectContent className="bg-white border border-gray-200 shadow-lg capitalize">
+        <SelectGroup>
+          <SelectLabel className="text-gray-500 text-sm font-medium px-2 py-1">
+            Category
+          </SelectLabel>
+          {categoryCounts.map((cat) => (
+            <SelectItem key={cat} value={cat}>
+              {cat === "all" ? "All" : cat}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
 }
 
 export function SortSelect() {
