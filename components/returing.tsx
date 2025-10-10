@@ -12,7 +12,7 @@ const Returing = () => {
         <div className="mt-10 border py-7 px-3">
           <p className="font-light">
             Returning customer?{" "}
-            <Link className="text-[#7971ea]" href={"/"}>
+            <Link className="text-[#7971ea]" href={"/login"}>
               Click here{" "}
             </Link>{" "}
             to login

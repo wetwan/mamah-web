@@ -70,7 +70,7 @@ export function ProfileDropdown() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="start">
             <DropdownMenuGroup>
-              <DropdownMenuItem className="capitalize ">
+              <DropdownMenuItem className="capitalize " onClick={()=> router.push('/login')}>
                 log in
               </DropdownMenuItem>
             </DropdownMenuGroup>
