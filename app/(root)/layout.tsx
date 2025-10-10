@@ -3,7 +3,6 @@ import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Providers } from "@/components/providers";
 
 const geistSans = Poppins({
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
   title: "UAM CLOSETS",
   description: "WHEN ELEGANCE",
 };
-const queryClient = new QueryClient();
+
 export default function RootLayout({
   children,
 }: Readonly<{
