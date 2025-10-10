@@ -5,13 +5,14 @@ import { Checkbox } from "./ui/checkbox";
 import { useAuth } from "@/context/userStore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { shippingData, shippingSchema } from "@/src/api/schema";
+import { shippingData, shippingSchema } from "@/src/api/auth/schema";
+
 
 const Billing = () => {
   const isLoggedIn = useAuth((s) => !!s.token);
   const [newUser, setNewUser] = useState(false);
   const form = useForm<shippingData>({
-    resolver: zodResolver(shippingSchema),
+    resolver: zodResolver(shippingSchema ),
   });
   return (
     <div className="w-full">
