@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { Suspense } from "react";
 import ProductItem from "@/components/productItem";
 import { products } from "@/constant";
 import { Category, SortSelect } from "@/components/filter";
@@ -16,10 +16,9 @@ type SearchParams = {
 export default async function Shop({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>;
+  searchParams?: SearchParams;
 }) {
-  const params = await searchParams;
-  const { cat, color, size, min, max, sort } = params;
+  const { cat, color, size, min, max, sort } = searchParams || {};
 
   // --- filter logic ---
   let filteredProducts = products.filter((item) => {
@@ -75,14 +74,17 @@ export default async function Shop({
           <SortSelect />
         </div>
       </div>
-
-      <div>
-        {filteredProducts.length > 0 ? (
-          <ProductItem products={filteredProducts} />
-        ) : (
-          <p className="text-gray-500 mt-10 text-center">No products found.</p>
-        )}
-      </div>
+      <Suspense fallback={<div> lodding ..</div>}>
+        <div>
+          {filteredProducts.length > 0 ? (
+            <ProductItem products={filteredProducts} />
+          ) : (
+            <p className="text-gray-500 mt-10 text-center">
+              No products found.
+            </p>
+          )}
+        </div>
+      </Suspense>
     </section>
   );
 }
