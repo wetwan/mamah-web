@@ -1,7 +1,7 @@
 import ShopNav from "@/components/shopNav";
 import { Metadata } from "next";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "UAM SHOP",
@@ -22,8 +22,10 @@ export default function RootLayout({
         / <p>Shop</p>
       </div>
       <div className="md:px-8 lg:px-16 xl:32 2xl:px-64 flex items-start flex-col lg:flex-row gap-20 mt-20">
-        <ShopNav />
-        {children}
+        <Suspense fallback={<div>Loading shop...</div>}>
+          <ShopNav />
+          {children}
+        </Suspense>
       </div>
     </div>
   );
