@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import React, { useMemo, useState, } from "react";
+// import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "./ui/button";
 import { redirect, useRouter } from "next/navigation";
 import { useCart } from "@/context/cartStore";
 
-import { CheckoutForm } from "./stripe"; // must handle stripe.confirmPayment inside
+// import { CheckoutForm } from "./stripe"; // must handle stripe.confirmPayment inside
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-);
+// const stripePromise = loadStripe(
+//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+// );
 
 const CheckoutDetails = () => {
   const router = useRouter();
@@ -34,7 +34,7 @@ const CheckoutDetails = () => {
 
   if (cartProducts.length === 0) {
     // router.back();
-    redirect('/shop')
+    redirect("/shop");
   }
 
   // ⚙️ Create Stripe payment intent when user selects "card"
