@@ -38,7 +38,13 @@ export function ProfileDropdown() {
           <DropdownMenuContent className="w-56" align="start">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuGroup>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/profile");
+                }}
+              >
+                Profile
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   router.push("/cart");
@@ -46,7 +52,13 @@ export function ProfileDropdown() {
               >
                 Cart
               </DropdownMenuItem>
-              <DropdownMenuItem>Order History</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/order");
+                }}
+              >
+                Order History
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
 
@@ -70,7 +82,10 @@ export function ProfileDropdown() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="start">
             <DropdownMenuGroup>
-              <DropdownMenuItem className="capitalize " onClick={()=> router.push('/login')}>
+              <DropdownMenuItem
+                className="capitalize "
+                onClick={() => router.push("/login")}
+              >
                 log in
               </DropdownMenuItem>
             </DropdownMenuGroup>
