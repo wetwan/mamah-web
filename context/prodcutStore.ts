@@ -1,21 +1,22 @@
 import { ShopdataProp } from "@/constant";
-import { create } from "domain";
+import { create } from "zustand";
+
 import { persist } from "zustand/middleware";
 
-type CartStore = {
+type ProductStore = {
     items: ShopdataProp[];
-    setProdcuts: (items: ShopdataProp) => unknown
+    setProducts: (items: ShopdataProp[]) => void;
 };
 
 
-export const useProduct = create<CartStore>()(
+export const useProduct = create<ProductStore>()(
     persist(
         (set) => ({
             items: [],
 
-            setProdcuts: (items: ShopdataProp) => set({ items }),
+            setProducts: (items) => set({ items }),
 
-            resetCart: () => set({ item: [] }),
+
         }),
         {
             name: "product-storage",

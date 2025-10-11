@@ -1,4 +1,5 @@
 import ShopNav from "@/components/shopNav";
+import ShopSkeleton from "@/components/skeleton";
 import { Metadata } from "next";
 import Link from "next/link";
 import React, { Suspense } from "react";
@@ -22,7 +23,7 @@ export default function RootLayout({
         / <p>Shop</p>
       </div>
       <div className="md:px-8 lg:px-16 xl:32 2xl:px-64 flex items-start flex-col lg:flex-row gap-20 mt-20">
-        <Suspense fallback={<div>Loading shop...</div>}>
+        <Suspense fallback={<ShopSkeleton />}>
           <ShopNav />
           {children}
         </Suspense>
