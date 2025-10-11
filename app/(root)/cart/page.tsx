@@ -3,15 +3,19 @@
 import Link from "next/link";
 import React, { useMemo } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useCart } from "@/context/cartStore";
 import { X } from "lucide-react";
 
 const CartPage = () => {
   const cartProducts = useCart((state) => state.item);
-    const removeItem = useCart((state) => state.removeProduct);
+  const removeItem = useCart((state) => state.removeProduct);
 
   const subtotal = useMemo(() => {
+  if (cartProducts.length === 0) {
+    redirect('/shop')
+  }
+
     return cartProducts.reduce(
       (acc, item) => acc + item.product.finalPrice * item.quantity,
       0
@@ -111,6 +115,7 @@ const CartPage = () => {
                   alert("Proceeding to checkout...");
                   router.push("/checkout");
                 }}
+                disabled={cartProducts.length === 0}
               >
                 Proceed to Checkout
               </button>

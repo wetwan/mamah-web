@@ -44,7 +44,7 @@ const Footer = () => {
         </div>
         <div className="">
           <h4 className="font-bold uppercase text-lg mb-5">Follow Us</h4>
-          <ul className="max-sm:pl-3 max-sm:flex items-center gap-5">
+          <ul className="max-sm:pl-3 flex flex-row items-center gap-5">
             <li className="py-2 font-medium ">
               <Link className="" href="/">
                 <FacebookIcon />

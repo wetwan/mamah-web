@@ -4,9 +4,9 @@ import React, { useMemo, useState, useEffect } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useCart } from "@/context/cartStore";
-import axios from "axios";
+
 import { CheckoutForm } from "./stripe"; // must handle stripe.confirmPayment inside
 
 const stripePromise = loadStripe(
@@ -18,7 +18,7 @@ const CheckoutDetails = () => {
   const cartProducts = useCart((state) => state.item);
   const resetCart = useCart((state) => state.resetCart);
   const [option, setOption] = useState<"cash" | "card" | "">("");
-  const [clientSecret, setClientSecret] = useState<string>("");
+  // const [clientSecret, setClientSecret] = useState<string>("");
 
   // 🧮 Calculate totals
   const subtotal = useMemo(
@@ -32,53 +32,58 @@ const CheckoutDetails = () => {
   const delivery = 10;
   const total = subtotal + delivery;
 
-  // ⚙️ Create Stripe payment intent when user selects "card"
-  useEffect(() => {
-    const createPaymentIntent = async () => {
-      if (option === "card") {
-        try {
-          const token = localStorage.getItem("token");
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}stripe/create-payment`,
-            { amount: total * 100 }, // in kobo (cents)
-            {
-              headers: {
-                "Content-Type": "application/json",
-                token,
-              },
-            }
-          );
-          if (res.data.clientSecret) setClientSecret(res.data.clientSecret);
-        } catch (err) {
-          console.error("❌ Error creating payment intent:", err);
-        }
-      }
-    };
+  if (cartProducts.length === 0) {
+    // router.back();
+    redirect('/shop')
+  }
 
-    createPaymentIntent();
-  }, [option, total]);
+  // ⚙️ Create Stripe payment intent when user selects "card"
+  // useEffect(() => {
+  //   const createPaymentIntent = async () => {
+  //     if (option === "card") {
+  //       try {
+  //         const token = localStorage.getItem("token");
+  //         const res = await axios.post(
+  //           `${process.env.NEXT_PUBLIC_API_URL}stripe/create-payment`,
+  //           { amount: total * 100 }, // in kobo (cents)
+  //           {
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //               token,
+  //             },
+  //           }
+  //         );
+  //         if (res.data.clientSecret) setClientSecret(res.data.clientSecret);
+  //       } catch (err) {
+  //         console.error("❌ Error creating payment intent:", err);
+  //       }
+  //     }
+  //   };
+
+  //   createPaymentIntent();
+  // }, [option, total]);
 
   // Stripe UI styles
-  const appearance = {
-    theme: "stripe" as const,
-    variables: {
-      colorPrimary: "#7971ea",
-      colorBackground: "#ffffff",
-      colorText: "#30313d",
-    },
-  };
+  // const appearance = {
+  //   theme: "stripe" as const,
+  //   variables: {
+  //     colorPrimary: "#7971ea",
+  //     colorBackground: "#ffffff",
+  //     colorText: "#30313d",
+  //   },
+  // };
 
-  const options = { clientSecret, appearance };
+  // const options = { clientSecret, appearance };
 
   const handlePlaceOrder = async () => {
-    if (option === "cash") {
-      // ✅ Cash on Delivery flow
-      resetCart();
-      router.push("/success");
-    } else if (option === "card") {
-      // ✅ Card Payment flow handled inside CheckoutForm
-      alert("Please complete card payment first.");
-    }
+    // if (option === "cash") {
+    //   // ✅ Cash on Delivery flow
+    // } else if (option === "card") {
+    //   // ✅ Card Payment flow handled inside CheckoutForm
+    //   alert("Please complete card payment first.");
+    // }
+    resetCart();
+    router.push("/success");
   };
 
   return (
@@ -152,7 +157,7 @@ const CheckoutDetails = () => {
           >
             Pay with Card
           </div>
-
+          {/* 
           {option === "card" && clientSecret && (
             <div className="border p-3 rounded">
               <Elements options={options} stripe={stripePromise}>
@@ -164,7 +169,7 @@ const CheckoutDetails = () => {
                 />
               </Elements>
             </div>
-          )}
+          )} */}
         </div>
 
         <Button
