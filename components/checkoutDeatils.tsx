@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, } from "react";
+import React, { useMemo, useState } from "react";
 // import { Elements } from "@stripe/react-stripe-js";
 // import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "./ui/button";
@@ -82,8 +82,12 @@ const CheckoutDetails = () => {
     //   // ✅ Card Payment flow handled inside CheckoutForm
     //   alert("Please complete card payment first.");
     // }
-    resetCart();
-    router.push("/success");
+    try {
+      resetCart();
+      router.push("/success");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -121,7 +125,7 @@ const CheckoutDetails = () => {
               key={item.product._id}
             >
               <p>
-                {item.product.name} × {item.quantity}
+                {item.product.name} * {item.quantity}
               </p>
               <p>₦{(item.product.finalPrice * item.quantity).toFixed(2)}</p>
             </div>

@@ -16,9 +16,11 @@ type SearchParams = {
 export default async function Shop({
   searchParams,
 }: {
-  searchParams?: SearchParams;
+  searchParams: SearchParams;
 }) {
-  const { cat, color, size, min, max, sort } = searchParams || {};
+
+  const  params = await searchParams
+  const { cat, color, size, min, max, sort } = params || {};
 
   // --- filter logic ---
   let filteredProducts = products.filter((item) => {

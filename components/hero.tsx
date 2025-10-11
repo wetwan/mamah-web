@@ -6,6 +6,7 @@ import image2 from "@/public/image2.png";
 import image3 from "@/public/image3.png";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { redirect } from "next/navigation";
 
 const Hero = () => {
   const banner = [
@@ -55,6 +56,7 @@ const Hero = () => {
               </h1>
               <p className="font-light my-2 md:text-2xl lg:text-4xl">{b.des}</p>
               <Button
+                onClick={() => redirect(b.link)}
                 variant="outline"
                 className="my-4 py-6 px-10 hover:bg-blue-600 hover:text-white transition-all duration-300 ease-in shadow-none hover:shadow-2xs md:py-8 md:text-2xl capitalize md:px-16 lg:text-3xl lg:py-12 lg:px-20"
               >
