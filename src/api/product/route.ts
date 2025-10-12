@@ -2,7 +2,6 @@ import axios from "axios";
 import { Order } from "./schema";
 
 
-const token = localStorage.getItem("token");
 
 
 export const getProducts = async () => {
@@ -10,8 +9,10 @@ export const getProducts = async () => {
         `${process.env.NEXT_PUBLIC_API_URL}product/all`,
     );
 
-    return data
+    return data.products || data.prodcuts || [];
 }
+
+
 export const getProduct = async (id: string) => {
 
     const { data } = await axios.get(
@@ -26,20 +27,20 @@ export const getorder = async () => {
     const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}order/my-orders`,
         {
-            headers: {
-                token,
-            },
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+
         }
     );
     return data;
 };
+
 export const makePayment = async (id: string) => {
     const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}order/my-orders`,
         id, {
-        headers: {
-            token,
-        },
+
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+
     }
     );
     return data;
@@ -48,14 +49,14 @@ export const makePayment = async (id: string) => {
 
 
 export const createOrder = async (order: Order, token: string) => {
-  const { data } = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}order/create`,
-    order,
-    {
-      headers: {
-        token,
-      },
-    }
-  );
-  return data;
+    const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}order/create`,
+        order,
+        {
+            headers: {
+                token,
+            },
+        }
+    );
+    return data;
 };

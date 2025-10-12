@@ -412,3 +412,14 @@ export const cat = [
     name: "shoes",
   },
 ];
+
+
+export interface CategoryProp {
+  _id: string;
+  name: string;
+  slug: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}

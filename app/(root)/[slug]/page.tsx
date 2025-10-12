@@ -3,18 +3,17 @@ import ProductDetails from "@/components/productDetails";
 import ProductItem from "@/components/productItem";
 import ProductPageImage from "@/components/productPageImage";
 import { products } from "@/constant";
+import axios from "axios";
 import Link from "next/link";
 import React from "react";
 
-const ProductPage = async ({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) => {
-  const resolvedParams = await params;
-  const { slug } = resolvedParams;
+const ProductPage = async ({ params }: { params: { slug: string } }) => {
+  const { slug } = params;
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}product/${slug}`
+  );
 
-  const product = products.find((p) => p._id === slug);
+  const { product } = data;
 
   if (!product) {
     return (
@@ -44,7 +43,10 @@ const ProductPage = async ({
         </div>
       </div>{" "}
       <div className="my-20 lg:w-full w-full md:px-8 lg:px-16 xl:32 2xl:px-64 px-4 flex flex-col items-center gap-10">
-        <H2 text="related product" className="" />
+        <H2
+          text="shop popular "
+          className="mx-auto mb-5 flex flex-col items-center "
+        />
         <ProductItem products={products} />
       </div>
     </div>

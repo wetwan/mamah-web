@@ -11,6 +11,15 @@ const ProductPageImage = ({ images }: { images: string[] }) => {
   //   "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872769/products/elljrct6murffzjuquws.jpg",
   // ];
   const [index, setIndex] = useState(0);
+
+  if (!images || images.length === 0) {
+    return (
+      <div className="h-[500px] w-full bg-gray-100 flex items-center justify-center">
+        <p>No image available</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="h-[500px] w-full relative">

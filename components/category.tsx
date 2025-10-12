@@ -1,12 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
-import { cat } from "@/constant";
+
+import { CategoryProp } from "@/constant";
+import axios from "axios";
+
 import Link from "next/link";
 import React from "react";
 
-const Category = () => {
+const Category = async () => {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}category/`
+  );
+  const { categories: cat } = data;
+  console.log(cat);
   return (
     <div className="flex w-full overflow-scroll  scrollbar-hide  ">
-      {cat.map((category) => (
+      {cat.map((category: CategoryProp) => (
         <div key={category._id} className=" p-4 flex flex-col items-center">
           <Link
             as={`/shop?cat=${category.slug}`}
@@ -15,8 +23,8 @@ const Category = () => {
           >
             <img
               src={category.image}
-              className="w-full h-full"
-              alt={category.image}
+              className="w-full h-full object-cover"
+              alt={category.name}
             />
           </Link>
 
