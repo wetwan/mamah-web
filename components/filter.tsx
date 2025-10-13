@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -9,13 +10,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { products } from "@/constant";
+import { ShopdataProp } from "@/constant";
+import { getProducts } from "@/src/api/product/route";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
 export function Category() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: products = [] } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
 
   const updateQuery = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -26,14 +33,15 @@ export function Category() {
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    products.forEach((p) => {
+    products.forEach((p: ShopdataProp) => {
       counts[p.category] = (counts[p.category] || 0) + 1;
     });
-    return ["all", ...Object.keys(counts)]; // Add "all" option
-  }, []);
+    return counts;
+  }, [products]);
+
+  const categories = ["all", ...Object.keys(categoryCounts)];
 
   return (
-    
     <Select
       onValueChange={(value) =>
         updateQuery("cat", value === "all" ? "" : value)
@@ -48,7 +56,7 @@ export function Category() {
           <SelectLabel className="text-gray-500 text-sm font-medium px-2 py-1">
             Category
           </SelectLabel>
-          {categoryCounts.map((cat) => (
+          {categories.map((cat) => (
             <SelectItem key={cat} value={cat}>
               {cat === "all" ? "All" : cat}
             </SelectItem>

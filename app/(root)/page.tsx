@@ -3,10 +3,18 @@ import H2 from "@/components/h2";
 import Hero from "@/components/hero";
 import ProductItem from "@/components/productItem";
 import Promo from "@/components/promo";
-import { products } from "@/constant";
+import axios from "axios";
+
+
 import React from "react";
 
-const Home = () => {
+const Home = async () => {
+  const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}product/all}`
+    );
+  
+    const { products } = data;
+
   return (
     <div>
       <Hero />

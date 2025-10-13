@@ -22,46 +22,6 @@ export default async function Shop({
 }) {
   const params = await searchParams;
   const { cat, color, size, min, max, sort, page = "1" } = params || {};
-  // // --- filter logic ---
-  // let filteredProducts = products.filter((item) => {
-  //   const matchCategory = cat ? item.category === cat : true;
-  //   const matchColor = color ? item.colors?.includes(color as any) : true;
-  //   const matchSize = size ? item.sizes?.includes(size as any) : true;
-  //   const matchMin = min ? item.price >= Number(min) : true;
-  //   const matchMax = max ? item.price <= Number(max) : true;
-
-  //   return matchCategory && matchColor && matchSize && matchMin && matchMax;
-  // });
-
-  // // --- sort logic ---
-  // if (sort) {
-  //   switch (sort) {
-  //     case "a-z":
-  //       filteredProducts = [...filteredProducts].sort((a, b) =>
-  //         a.name.localeCompare(b.name)
-  //       );
-  //       break;
-  //     case "z-a":
-  //       filteredProducts = [...filteredProducts].sort((a, b) =>
-  //         b.name.localeCompare(a.name)
-  //       );
-  //       break;
-  //     case "low-high":
-  //       filteredProducts = [...filteredProducts].sort(
-  //         (a, b) => a.price - b.price
-  //       );
-  //       break;
-  //     case "high-low":
-  //       filteredProducts = [...filteredProducts].sort(
-  //         (a, b) => b.price - a.price
-  //       );
-  //       break;
-  //   }
-  // }
-
-  // // --- header text ---
-  // const activeFilters = [cat, color, size].filter(Boolean).join(" • ");
-  // const priceRange = min || max ? `₦${min || "0"} - ₦${max || "∞"}` : "";
 
   const query = new URLSearchParams({
     ...(cat && { cat }),
@@ -76,8 +36,6 @@ export default async function Shop({
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}product/all?${query.toString()}`
   );
-
-  console.log(data);
 
   const { products, page: currentPage, pages: totalPages } = data;
 
