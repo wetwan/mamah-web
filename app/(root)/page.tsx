@@ -10,7 +10,7 @@ import React from "react";
 
 const Home = async () => {
   const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}product/all}`
+      `${process.env.NEXT_PUBLIC_API_URL}product/all`
     );
   
     const { products } = data;

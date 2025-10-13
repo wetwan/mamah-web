@@ -2,24 +2,39 @@ import H2 from "@/components/h2";
 import ProductDetails from "@/components/productDetails";
 import ProductItem from "@/components/productItem";
 import ProductPageImage from "@/components/productPageImage";
-import { products } from "@/constant";
+import { ShopdataProp } from "@/constant";
 import axios from "axios";
 import Link from "next/link";
 import React from "react";
 
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
+  // getting slug
   const { slug } = params;
+
+  // getting product
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}product/${slug}`
   );
 
+  // gettting products
+  const { data: Datas } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}product/all`
+  );
+
   const { product } = data;
+  const { products } = Datas;
 
   if (!product) {
     return (
       <div className="p-10 text-center text-gray-500">Product not found.</div>
     );
   }
+
+  // getting prodcuts related by categories
+
+  const relatedProduct = products.filter(
+    (d: ShopdataProp) => d.category === product.category
+  );
 
   return (
     <div>
@@ -44,10 +59,10 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
       </div>{" "}
       <div className="my-20 lg:w-full w-full md:px-8 lg:px-16 xl:32 2xl:px-64 px-4 flex flex-col items-center gap-10">
         <H2
-          text="shop popular "
+          text="shop popular"
           className="mx-auto mb-5 flex flex-col items-center "
         />
-        <ProductItem products={products} />
+        <ProductItem products={relatedProduct} />
       </div>
     </div>
   );

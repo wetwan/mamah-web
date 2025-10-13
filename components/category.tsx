@@ -11,7 +11,7 @@ const Category = async () => {
     `${process.env.NEXT_PUBLIC_API_URL}category/`
   );
   const { categories: cat } = data;
-  console.log(cat);
+
   return (
     <div className="flex w-full overflow-scroll  scrollbar-hide  ">
       {cat.map((category: CategoryProp) => (

@@ -1,9 +1,9 @@
 import React, { Suspense } from "react";
 import ProductItem from "@/components/productItem";
 import { Category, SortSelect } from "@/components/filter";
-import ShopSkeleton from "@/components/skeleton";
 import axios from "axios";
 import { PaginationDemo } from "@/components/pagenation";
+import { ShopSkeleton } from "@/components/skeleton";
 
 type SearchParams = {
   cat?: string;

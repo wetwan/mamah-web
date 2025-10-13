@@ -1,14 +1,22 @@
-"use client ";
+"use client";
 
 import React from "react";
 import Logo from "./logo";
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
 import Image from "next/image";
-import { products } from "@/constant";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { getProducts } from "@/src/api/product/route";
+import { useQuery } from "@tanstack/react-query";
 
 const Footer = () => {
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
+
+  if (isLoading) return <div>Loading footer...</div>;
+
   const item = [...products].sort(() => Math.random() - 0.5)[0];
   return (
     <footer className="max-sm:pb-20">

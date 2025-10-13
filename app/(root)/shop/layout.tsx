@@ -1,5 +1,6 @@
 import ShopNav from "@/components/shopNav";
-import ShopSkeleton from "@/components/skeleton";
+import { ShopSkeleton } from "@/components/skeleton";
+
 import { Metadata } from "next";
 import Link from "next/link";
 import React, { Suspense } from "react";

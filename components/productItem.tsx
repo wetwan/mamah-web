@@ -4,8 +4,8 @@ import { ShopdataProp } from "@/constant";
 import Link from "next/link";
 
 const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
+  // checking if prodct is avalible
   if (!products || products.length === 0) {
-    console.log(products.map((i) => i._id));
     return (
       <p className="text-gray-500 mt-10 text-center">No products found.</p>
     );
@@ -39,7 +39,9 @@ const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
             <h3 className="text-[#7971ea] my-3 font-medium capitalize">
               {product.name}
             </h3>
-            <h3 className="text-gray-400 mb-4 ">{product.description}</h3>
+            <h3 className="text-gray-400 mb-4 ">
+              {product.description.slice(0, 20)}
+            </h3>
             <h3 className="text-[#7971ea] font-medium capitalize">
               ₦{product.price}
             </h3>
