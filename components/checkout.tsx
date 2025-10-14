@@ -20,27 +20,12 @@ import { Order } from "@/src/api/product/schema";
 
 
 const Checkout = () => {
-  //   const mockUseForm = () => ({
-  //     register: (name: string) => ({ name }),
-  //     handleSubmit:
-  //       (callback: (arg0: { [k: string]: FormDataEntryValue }) => void) =>
-  //       (event: {
-  //         preventDefault: () => void;
-  //         target: HTMLFormElement | undefined;
-  //       }) => {
-  //         event.preventDefault();
-  //         const formData = new FormData(event.target);
-  //         const data = Object.fromEntries(formData.entries());
-  //         console.log("Form submitted with:", data);
-  //         callback(data);
-  //       },
-  //   });
 
   const form = useForm<shippingData>({
     resolver: zodResolver(shippingSchema),
   });
 
-  //   const form = mockUseForm();
+
   const cartProducts = useCart((state) => state.item);
 
   const [option, setOption] = useState<"cash" | "card" | "">("");

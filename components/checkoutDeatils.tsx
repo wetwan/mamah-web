@@ -7,8 +7,9 @@ import React from "react";
 import { Button } from "./ui/button";
 import { redirect, useRouter } from "next/navigation";
 import { CartItem, useCart } from "@/context/cartStore";
-import { Order } from "./checkout";
 import { UseMutationResult } from "@tanstack/react-query";
+import { Order } from "@/src/api/product/schema";
+
 
 // import { CheckoutForm } from "./stripe"; // must handle stripe.confirmPayment inside
 

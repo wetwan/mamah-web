@@ -1,5 +1,5 @@
 export const ShopSkeleton = () => (
-  <div className="flex flex-col lg:flex-row gap-20 animate-pulse">
+  <div className="flex flex-col lg:flex-row gap-20 animate-pulse ease-in-out">
     <div className="lg:w-[250px] w-full p-4 space-y-10">
       <div className="p-5 border shadow rounded w-full space-y-4">
         <div className="h-6 bg-gray-200 rounded w-1/2"></div>
