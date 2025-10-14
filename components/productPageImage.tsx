@@ -5,11 +5,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 const ProductPageImage = ({ images }: { images: string[] }) => {
-  // const images = [
-  //   "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872767/products/lwedxvsdptgdroroltpz.jpg",
-  //   "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872768/products/igsvdsdkfoniewca8jkc.png",
-  //   "https://res.cloudinary.com/dlu80k3sn/image/upload/v1759872769/products/elljrct6murffzjuquws.jpg",
-  // ];
+
   const [index, setIndex] = useState(0);
 
   if (!images || images.length === 0) {

@@ -13,6 +13,7 @@ type SearchParams = {
   max?: string;
   sort?: string;
   page?: string;
+  search?: string;
 };
 
 export default async function Shop({
@@ -21,7 +22,7 @@ export default async function Shop({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
-  const { cat, color, size, min, max, sort, page = "1" } = params || {};
+  const { cat, color, size, min, max, sort, page = "1", search } = params || {};
 
   const query = new URLSearchParams({
     ...(cat && { cat }),
@@ -30,6 +31,7 @@ export default async function Shop({
     ...(min && { min }),
     ...(max && { max }),
     ...(sort && { sort }),
+    ...(search && { search }),
     page,
   });
 

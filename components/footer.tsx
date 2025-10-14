@@ -6,18 +6,14 @@ import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { getProducts } from "@/src/api/product/route";
-import { useQuery } from "@tanstack/react-query";
+import { useProduct } from "@/context/prodcutStore";
 
 const Footer = () => {
-  const { data: products = [], isLoading } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
-  });
+  const products = useProduct((s) => s.items);
 
-  if (isLoading) return <div>Loading footer...</div>;
+  const item = products.sort(() => Math.random() - 0.5)[0];
 
-  const item = [...products].sort(() => Math.random() - 0.5)[0];
+
   return (
     <footer className="max-sm:pb-20">
       <div className="px-10 md:px-8 lg:px-16 xl:32 2xl:px-64 mt-20 flex justify-between items-start flex-col lg:flex-row gap-10 ">
@@ -72,7 +68,7 @@ const Footer = () => {
         </div>
         <div className="">
           <h4 className="font-bold uppercase text-lg mb-5">shop feacture</h4>
-          <div className="flex lg:flex-col max-sm:items-center  justify-center gap-1.5">
+          <div className="flex lg:flex-col max-sm:items-center  justify-center gap-1.5 max-lg:pr-4">
             <div className="w-[100px] bg-slate-300 p-2 h-[100px]">
               <Image
                 src={item.images[0]}

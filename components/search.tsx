@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -7,9 +7,8 @@ import { useRouter } from "next/navigation";
 
 import React from "react";
 
-type Props = {};
 
-const SearchBox = ({}: Props) => {
+const SearchBox = () => {
   const router = useRouter();
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -17,7 +16,7 @@ const SearchBox = ({}: Props) => {
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name") as string;
     if (name) {
-      router.push(`/shop?name=${name}`);
+      router.push(`/shop?search=${name}`);
     }
   };
   return (

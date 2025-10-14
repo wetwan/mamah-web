@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React from "react";
 // import { Elements } from "@stripe/react-stripe-js";
 // import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "./ui/button";
 import { redirect, useRouter } from "next/navigation";
-import { useCart } from "@/context/cartStore";
+import { CartItem, useCart } from "@/context/cartStore";
+import { Order } from "./checkout";
+import { UseMutationResult } from "@tanstack/react-query";
 
 // import { CheckoutForm } from "./stripe"; // must handle stripe.confirmPayment inside
 
@@ -13,24 +16,27 @@ import { useCart } from "@/context/cartStore";
 //   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 // );
 
-const CheckoutDetails = () => {
-  const router = useRouter();
-  const cartProducts = useCart((state) => state.item);
-  const resetCart = useCart((state) => state.resetCart);
-  const [option, setOption] = useState<"cash" | "card" | "">("");
-  // const [clientSecret, setClientSecret] = useState<string>("");
+type Prop = {
+  option: "" | "cash" | "card";
+  cartProducts: CartItem[];
+  setOption: React.Dispatch<React.SetStateAction<"" | "cash" | "card">>;
+  subtotal: number;
+  delivery?: 10;
+  total: number;
+  mutation: UseMutationResult<any, any, Order, unknown>;
+};
 
-  // 🧮 Calculate totals
-  const subtotal = useMemo(
-    () =>
-      cartProducts.reduce(
-        (acc, item) => acc + item.product.finalPrice * item.quantity,
-        0
-      ),
-    [cartProducts]
-  );
-  const delivery = 10;
-  const total = subtotal + delivery;
+const CheckoutDetails = ({
+  option,
+  cartProducts,
+  setOption,
+  subtotal,
+  mutation,
+  total,
+}: Prop) => {
+  const router = useRouter();
+  const resetCart = useCart((state) => state.resetCart);
+  // const [clientSecret, setClientSecret] = useState<string>("");
 
   if (cartProducts.length === 0) {
     // router.back();
@@ -177,11 +183,12 @@ const CheckoutDetails = () => {
         </div>
 
         <Button
-          disabled={!option}
+          type="submit"
+          disabled={mutation.isPending}
           className="border mb-4 bg-[#7971ea] w-full font-light py-7 text-xl mt-5 text-white uppercase"
           onClick={handlePlaceOrder}
         >
-          {option === "cash" ? "Place Order" : "Pay Now"}
+          {mutation.isPending ? "Processing..." : "Place Order"}
         </Button>
       </div>
     </div>

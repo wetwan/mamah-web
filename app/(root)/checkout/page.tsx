@@ -1,6 +1,6 @@
-import Billing from "@/components/billing";
-import CheckoutDeatils from "@/components/checkoutDeatils";
-import Returing from "@/components/returing";
+
+import Checkout from "@/components/checkout";
+
 
 import Link from "next/link";
 import React from "react";
@@ -19,17 +19,7 @@ const CheckOut = () => {
         <span>/</span>
         <p>Checkout</p>
       </div>
-      <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
-        <Returing />
-        <div className="flex mt-10 flex-col lg:flex-row gap-12 lg:gap-20">
-          <div className="lg:w-1/2 w-full ">
-            <Billing />
-          </div>
-          <div className="lg:w-1/2 w-full ">
-            <CheckoutDeatils />
-          </div>
-        </div>
-      </div>
+      <Checkout />
     </div>
   );
 };

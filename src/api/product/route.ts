@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios";
 import { Order } from "./schema";
 
@@ -48,15 +49,15 @@ export const makePayment = async (id: string) => {
 
 
 
-export const createOrder = async (order: Order, token: string) => {
+export const createOrder = async (order: Order) => {
     const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}order/create`,
         order,
-        {
-            headers: {
-                token,
-            },
-        }
+        // {
+        //     headers: {
+        //         token,
+        //     },
+        // }
     );
     return data;
 };

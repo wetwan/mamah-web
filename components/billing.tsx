@@ -1,23 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
 import { Checkbox } from "./ui/checkbox";
 import { useAuth } from "@/context/userStore";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { shippingData, shippingSchema } from "@/src/api/auth/schema";
+import { shippingData } from "@/src/api/auth/schema";
+import { UseFormReturn } from "react-hook-form";
 
+interface BillingProps {
+  form: UseFormReturn<shippingData>;
+}
 
-const Billing = () => {
+const Billing = ({ form }: BillingProps) => {
   const isLoggedIn = useAuth((s) => !!s.token);
   const [newUser, setNewUser] = useState(false);
-  const form = useForm<shippingData>({
-    resolver: zodResolver(shippingSchema ),
-  });
+
+  const { register } = form;
+
   return (
     <div className="w-full">
       <h2 className="my-3 capitalize font-medium text-2xl"> Billing details</h2>
-      <div className="border px-3 py-5 md:px-6">
+      <div
+
+        className="border px-3 py-5 md:px-6"
+      >
         <div className="capitalize flex flex-col gap-4 font-light text-black">
           <div className="w-full mb-4">
             <label htmlFor="">country</label>
@@ -28,7 +34,7 @@ const Billing = () => {
               required
               aria-label="country"
               placeholder="enter your country"
-              {...form.register("country")}
+              {...register("country")}
             />
           </div>
           <div className="flex flex-col md:flex-row gap-4">
@@ -36,7 +42,7 @@ const Billing = () => {
               <label htmlFor="firstname">first name</label>
               <input
                 type="text"
-                {...form.register("firstName")}
+                {...register("firstName")}
                 id="firstname"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -48,7 +54,7 @@ const Billing = () => {
               <label htmlFor="lastname">last name</label>
               <input
                 type="text"
-                {...form.register("lastName")}
+                {...register("lastName")}
                 id="lastname"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -62,7 +68,7 @@ const Billing = () => {
               <label htmlFor="address">address</label>
               <input
                 type="text"
-                {...form.register("address1")}
+                {...register("address1")}
                 id="address"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -72,7 +78,7 @@ const Billing = () => {
 
               <input
                 type="text"
-                {...form.register("address2")}
+                {...register("address2")}
                 id="address2"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -86,7 +92,7 @@ const Billing = () => {
               <label htmlFor="state">state</label>
               <input
                 type="text"
-                {...form.register("state")}
+                {...register("state")}
                 id="state"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -98,7 +104,7 @@ const Billing = () => {
               <label htmlFor="poster/zip">poster / zip</label>
               <input
                 type="text"
-                {...form.register("poster")}
+                {...register("poster")}
                 id="poster/zip"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -112,7 +118,7 @@ const Billing = () => {
               <label htmlFor="email">email address</label>
               <input
                 type="email"
-                {...form.register("email")}
+                {...register("email")}
                 id="email"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required
@@ -124,7 +130,7 @@ const Billing = () => {
               <label htmlFor="phone">phone</label>
               <input
                 type="text"
-                {...form.register("phone")}
+                {...register("phone")}
                 id="phone"
                 className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
                 required

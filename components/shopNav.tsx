@@ -186,15 +186,23 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/src/api/product/route";
+import { useProduct } from "@/context/prodcutStore";
 
 const ShopNav = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const setProducts = useProduct((s) => s.setProducts);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
   });
+
+  useEffect(() => {
+    if (products.length > 0) {
+      setProducts(products);
+    }
+  }, [products, setProducts]);
 
   const [min, setMin] = useState(searchParams.get("min") || "");
   const [max, setMax] = useState(searchParams.get("max") || "");
