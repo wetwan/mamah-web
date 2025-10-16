@@ -16,35 +16,35 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useAuth } from "@/context/userStore";
 import { Order } from "@/src/api/product/schema";
-
-
+import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
 
 const Checkout = () => {
-
   const form = useForm<shippingData>({
     resolver: zodResolver(shippingSchema),
   });
 
-
   const cartProducts = useCart((state) => state.item);
+  const resetCart = useCart((s) => s.resetCart);
+  const token = useAuth((s) => s.token);
+  const router = useRouter();
 
   const [option, setOption] = useState<"cash" | "card" | "">("");
-
   const [serverError, setServerError] = useState("");
 
   const subtotal = useMemo(
     () =>
-      cartProducts.reduce(
-        (acc, item) => acc + item.product.finalPrice * item.quantity,
-        0
-      ),
+      Array.isArray(cartProducts)
+        ? cartProducts.reduce(
+            (acc, item) => acc + item.product.finalPrice * item.quantity,
+            0
+          )
+        : 0,
     [cartProducts]
   );
+
   const delivery = 10;
   const total = subtotal + delivery;
-  const token = useAuth((s) => !!s.token);
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState(null);
 
   //   const mockUseMutation = ({ mutationFn, onSuccess, onError }) => {
   //     const mutate = async (variables: any) => {
@@ -67,7 +67,11 @@ const Checkout = () => {
   //   };
 
   const mutation = useMutation({
-    mutationFn: createOrder,
+    mutationFn: async ({ order, token }: { order: Order; token: string }) => {
+      console.log("📦 Calling createOrder...");
+      return await createOrder(order, token);
+    },
+
     onError: (error: any) => {
       if (axios.isAxiosError(error)) {
         setServerError(
@@ -79,48 +83,69 @@ const Checkout = () => {
     },
     onSuccess: (data) => {
       console.log("Order success:", data);
-      alert("Order placed successfully!");
+      resetCart();
+      router.push("/success");
     },
   });
 
-  const handleCheckout = form.handleSubmit((values) => {
-    if (!option) {
-      setServerError("Please select a payment method");
-      return;
-    }
+const handleCheckout = form.handleSubmit((values) => {
+  if (!option) {
+    setServerError("Please select a payment method");
+    return;
+  }
 
-    const orderData: Order = {
-      item: cartProducts,
-      shippingAddress: values,
-      paymentmethod: option ,
-      shippingPrice: delivery,
-      taxPrice: 0,
-    };
+  if (!token) {
+    alert("You must be logged in to place an order.");
+    return;
+  }
 
-    mutation.mutate(orderData);
-  });
+const orderData: Order = {
+  items: cartProducts.map((item) => ({
+    product: item.product._id,
+    quantity: item.quantity,
+    color: item.selectedColor || undefined,
+    size: item.selectedSize || undefined,
+  })),
+  shippingAddress: values,
+  paymentMethod: option,
+  shippingPrice: delivery,
+  taxPrice: 0,
+};
+
+
+  mutation.mutate({ order: orderData, token });
+});
+
 
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       <Returing />
-      <form
-        className="flex mt-10 flex-col lg:flex-row gap-12 lg:gap-20"
-        onSubmit={handleCheckout}
-      >
-        <div className="lg:w-1/2 w-full ">
-          <Billing form={form} />
+      {serverError && (
+        <p className="text-red-500 text-center mt-2">{serverError}</p>
+      )}
+      <form onSubmit={handleCheckout}>
+        <div className="flex mt-10 flex-col lg:flex-row gap-12 lg:gap-20">
+          <div className="lg:w-1/2 w-full ">
+            <Billing form={form} />
+          </div>
+          <div className="lg:w-1/2 w-full ">
+            <CheckoutDeatils
+              option={option}
+              cartProducts={cartProducts}
+              setOption={setOption}
+              subtotal={subtotal}
+              delivery={delivery}
+              total={total}
+            />
+          </div>
         </div>
-        <div className="lg:w-1/2 w-full ">
-          <CheckoutDeatils
-            option={option}
-            cartProducts={cartProducts}
-            setOption={setOption}
-            subtotal={subtotal}
-            delivery={delivery}
-            total={total}
-            mutation={mutation}
-          />
-        </div>
+        <Button
+          type="submit"
+          disabled={mutation.isPending}
+          className="border mb-4 bg-[#7971ea] w-full font-light py-7 text-xl mt-5 text-white uppercase"
+        >
+          {mutation.isPending ? "Processing..." : "Place Order"}
+        </Button>
       </form>
     </div>
   );

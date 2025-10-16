@@ -49,15 +49,15 @@ export const makePayment = async (id: string) => {
 
 
 
-export const createOrder = async (order: Order) => {
+export const createOrder = async (order: Order, token: string) => {
     const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}order/create`,
         order,
-        // {
-        //     headers: {
-        //         token,
-        //     },
-        // }
+        {
+            headers: {
+                token,
+            },
+        }
     );
     return data;
 };

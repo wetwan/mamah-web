@@ -5,8 +5,8 @@ import { ShopdataProp } from "@/constant";
 export type CartItem = {
     product: ShopdataProp;
     quantity: number;
-    selectedColor: string;
-    selectedSize: string;
+    selectedColor?: string;
+    selectedSize?: string;
 };
 
 type CartStore = {

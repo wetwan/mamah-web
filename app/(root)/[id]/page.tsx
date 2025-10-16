@@ -7,13 +7,13 @@ import axios from "axios";
 import Link from "next/link";
 import React from "react";
 
-const ProductPage = async ({ params }: { params: { slug: string } }) => {
-  // getting slug
-  const { slug } = params;
+const ProductPage = async ({ params }: { params: { id: string } }) => {
+  // getting id
+  const { id } = await params;
 
   // getting product
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}product/${slug}`
+    `${process.env.NEXT_PUBLIC_API_URL}product/${id}`
   );
 
   // gettting products

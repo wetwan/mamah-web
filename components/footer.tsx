@@ -11,8 +11,10 @@ import { useProduct } from "@/context/prodcutStore";
 const Footer = () => {
   const products = useProduct((s) => s.items);
 
-  const item = products.sort(() => Math.random() - 0.5)[0];
-
+  const randomProduct =
+    products.length > 0
+      ? [...products].sort(() => Math.random() - 0.5)[0]
+      : null;
 
   return (
     <footer className="max-sm:pb-20">
@@ -68,22 +70,27 @@ const Footer = () => {
         </div>
         <div className="">
           <h4 className="font-bold uppercase text-lg mb-5">shop feacture</h4>
-          <div className="flex lg:flex-col max-sm:items-center  justify-center gap-1.5 max-lg:pr-4">
-            <div className="w-[100px] bg-slate-300 p-2 h-[100px]">
-              <Image
-                src={item.images[0]}
-                width={500}
-                height={500}
-                className="w-full h-full"
-                alt={item.name}
-              />
+
+          {randomProduct && (
+            <div className="flex lg:flex-col max-sm:items-center  justify-center gap-1.5 max-lg:pr-4">
+              <div className="w-[100px] bg-slate-300 p-2 h-[100px]">
+                <Image
+                  src={randomProduct?.images[0]}
+                  width={500}
+                  height={500}
+                  className="w-full h-full"
+                  alt={randomProduct?.name}
+                />
+              </div>
+              <p className="font-medium ">{randomProduct?.name}</p>
+              <p className="font-bold text-black">
+                ${randomProduct?.price.toFixed(2)}
+              </p>
+              <Button className="bg-black px-7 py-3 rounded-none shadow-none uppercase">
+                add to cart
+              </Button>
             </div>
-            <p className="font-medium ">{item.name}</p>
-            <p className="font-bold text-black">${item.price.toFixed(2)}</p>
-            <Button className="bg-black px-7 py-3 rounded-none shadow-none uppercase">
-              add to cart
-            </Button>
-          </div>
+          )}
         </div>
       </div>
 

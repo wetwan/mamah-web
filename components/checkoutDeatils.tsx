@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import React from "react";
 // import { Elements } from "@stripe/react-stripe-js";
 // import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "./ui/button";
-import { redirect, useRouter } from "next/navigation";
-import { CartItem, useCart } from "@/context/cartStore";
+import { redirect } from "next/navigation";
+import { CartItem } from "@/context/cartStore";
 import { UseMutationResult } from "@tanstack/react-query";
 import { Order } from "@/src/api/product/schema";
-
 
 // import { CheckoutForm } from "./stripe"; // must handle stripe.confirmPayment inside
 
@@ -24,7 +23,6 @@ type Prop = {
   subtotal: number;
   delivery?: 10;
   total: number;
-  mutation: UseMutationResult<any, any, Order, unknown>;
 };
 
 const CheckoutDetails = ({
@@ -32,11 +30,9 @@ const CheckoutDetails = ({
   cartProducts,
   setOption,
   subtotal,
-  mutation,
+
   total,
 }: Prop) => {
-  const router = useRouter();
-  const resetCart = useCart((state) => state.resetCart);
   // const [clientSecret, setClientSecret] = useState<string>("");
 
   if (cartProducts.length === 0) {
@@ -82,20 +78,20 @@ const CheckoutDetails = ({
 
   // const options = { clientSecret, appearance };
 
-  const handlePlaceOrder = async () => {
-    // if (option === "cash") {
-    //   // ✅ Cash on Delivery flow
-    // } else if (option === "card") {
-    //   // ✅ Card Payment flow handled inside CheckoutForm
-    //   alert("Please complete card payment first.");
-    // }
-    try {
-      resetCart();
-      router.push("/success");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handlePlaceOrder = async () => {
+  //   // if (option === "cash") {
+  //   //   // ✅ Cash on Delivery flow
+  //   // } else if (option === "card") {
+  //   //   // ✅ Card Payment flow handled inside CheckoutForm
+  //   //   alert("Please complete card payment first.");
+  //   // }
+  //   try {
+  //     resetCart();
+  //     router.push("/success");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="w-full">
@@ -182,15 +178,6 @@ const CheckoutDetails = ({
             </div>
           )} */}
         </div>
-
-        <Button
-          type="submit"
-          disabled={mutation.isPending}
-          className="border mb-4 bg-[#7971ea] w-full font-light py-7 text-xl mt-5 text-white uppercase"
-          onClick={handlePlaceOrder}
-        >
-          {mutation.isPending ? "Processing..." : "Place Order"}
-        </Button>
       </div>
     </div>
   );
