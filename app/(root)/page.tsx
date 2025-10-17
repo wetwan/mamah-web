@@ -5,15 +5,14 @@ import ProductItem from "@/components/productItem";
 import Promo from "@/components/promo";
 import axios from "axios";
 
-
 import React from "react";
 
 const Home = async () => {
   const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}product/all`
-    );
-  
-    const { products } = data;
+    `${process.env.NEXT_PUBLIC_API_URL}product/all`
+  );
+
+  const { products } = data;
 
   return (
     <div>
