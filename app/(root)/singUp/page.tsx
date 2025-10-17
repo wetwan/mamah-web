@@ -15,7 +15,7 @@ import { useAuth } from "@/context/userStore";
 import { signUpSchema, singUpData } from "@/src/api/auth/schema";
 import { signUpUser } from "@/src/api/auth/route";
 
-const Login = () => {
+const SignUp = () => {
   const router = useRouter();
   const [serverError, setServerError] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
@@ -50,7 +50,6 @@ const Login = () => {
     if (isLoggedIn) {
       router.push("/");
     }
-    console.log("isLoggedIn");
   }, [isLoggedIn, router]);
 
   const onSubmit = (data: singUpData) => {
@@ -210,4 +209,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

@@ -4,6 +4,8 @@ import { LoginData, singUpData } from "./schema";
 
 
 
+const API_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/";
 
 
 
@@ -17,7 +19,7 @@ export const loginUser = async (info: LoginData) => {
 
 export const signUpUser = async (info: singUpData) => {
     const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}user/register`, // ✅ remove extra /api/
+        `${API_URL}user/register`, // ✅ remove extra /api/
         info
     );
     return data;
