@@ -197,9 +197,9 @@ const SignUp = () => {
             </button>
             <p className=" flex  gap-3  px-3 md:w-[400px] w-[300px] mt-20 py-5 text-center  font-light items-center justify-center  \\">
               already a member{" "}
-              <Link href={"/login"} className="text-[#7971ea]">
+              <Link href={"/login"} className="text-[#7971ea] capitalize">
                 {" "}
-                Sign up!
+                sign in!
               </Link>
             </p>
           </form>
