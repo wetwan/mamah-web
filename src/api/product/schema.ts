@@ -1,5 +1,5 @@
 
-import { shippingData } from "../auth/schema";
+import { PaymentMethodType, shippingData } from "../auth/schema";
 
 export interface OrderItem {
   product: string; // only the product ID
@@ -11,7 +11,7 @@ export interface OrderItem {
 export interface Order {
   items: OrderItem[];
   shippingAddress: shippingData;
-  paymentMethod: "card" | "cash";
+  paymentMethod: PaymentMethodType;
   shippingPrice: number;
   taxPrice: number;
 }

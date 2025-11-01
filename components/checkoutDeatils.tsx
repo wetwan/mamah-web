@@ -17,9 +17,9 @@ import { Order } from "@/src/api/product/schema";
 // );
 
 type Prop = {
-  option: "" | "cash" | "card";
+  option: "cash_on_delivery" | "card";
   cartProducts: CartItem[];
-  setOption: React.Dispatch<React.SetStateAction<"" | "cash" | "card">>;
+  setOption: React.Dispatch<React.SetStateAction<"cash_on_delivery" | "card">>;
   subtotal: number;
   delivery?: 10;
   total: number;
@@ -36,7 +36,6 @@ const CheckoutDetails = ({
   // const [clientSecret, setClientSecret] = useState<string>("");
 
   if (cartProducts.length === 0) {
-    // router.back();
     redirect("/shop");
   }
 
@@ -149,9 +148,9 @@ const CheckoutDetails = ({
         <div className="mt-7">
           <div
             className={`border mb-4 text-[#7971ea] w-full capitalize py-3 px-2 cursor-pointer ${
-              option === "cash" ? "bg-[#7971ea] text-white" : ""
+              option === "cash_on_delivery" ? "bg-[#7971ea] text-white" : ""
             }`}
-            onClick={() => setOption("cash")}
+            onClick={() => setOption("cash_on_delivery")}
           >
             Payment on Delivery
           </div>

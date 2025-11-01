@@ -8,7 +8,14 @@ import Billing from "./billing";
 import { Checkbox } from "./ui/checkbox";
 import CheckoutDeatils from "@/components/checkoutDeatils";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { shippingData, shippingSchema } from "@/src/api/auth/schema";
+import {
+  OrderShippingData,
+  PaymentMethodSchema,
+  PaymentMethodType,
+  shippingData,
+  ShippingInputData,
+  shippingSchema,
+} from "@/src/api/auth/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CartItem, useCart } from "@/context/cartStore";
 import { createOrder } from "@/src/api/product/route";
@@ -20,16 +27,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 
 const Checkout = () => {
-  // const form = useForm<shippingData>({
-  //   resolver: zodResolver(shippingSchema),
-  // });
-
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<shippingData>();
+  } = useForm<OrderShippingData>();
+
   const isLoggedIn = useAuth((s) => !!s.token);
   const [newUser, setNewUser] = useState(false);
 
@@ -38,7 +42,7 @@ const Checkout = () => {
   const token = useAuth((s) => s.token);
   const router = useRouter();
 
-  const [option, setOption] = useState<"cash" | "card" | "">("");
+  const [option, setOption] = useState<PaymentMethodType>("cash_on_delivery");
   const [serverError, setServerError] = useState("");
 
   const subtotal = useMemo(
@@ -54,26 +58,6 @@ const Checkout = () => {
 
   const delivery = 10;
   const total = subtotal + delivery;
-
-  //   const mockUseMutation = ({ mutationFn, onSuccess, onError }) => {
-  //     const mutate = async (variables: any) => {
-  //       setIsPending(true);
-  //       setError(null);
-  //       try {
-  //         // Simulate network delay
-  //         await new Promise((resolve) => setTimeout(resolve, 1000));
-  //         const result = await mutationFn(variables);
-  //         onSuccess(result);
-  //       } catch (err) {
-  //         setError(err);
-  //         onError(err);
-  //       } finally {
-  //         setIsPending(false);
-  //       }
-  //     };
-
-  //     return { mutate, isPending, error };
-  //   };
 
   const { mutate: handleCheckoutOrder, isPending } = useMutation({
     mutationFn: async ({ order, token }: { order: Order; token: string }) => {
@@ -98,11 +82,19 @@ const Checkout = () => {
   });
 
   const onSubmit: SubmitHandler<shippingData> = (data) => {
-    console.log("adsdcdcs");
-    console.log(data);
+    const fullName = `${data.firstName} ${data.lastName}`;
 
     if (!option) {
-      setServerError("Please select a payment method");
+      setServerError("Please select a payment method.");
+      return;
+    }
+
+    try {
+      PaymentMethodSchema.parse(option);
+    } catch (e) {
+      setServerError(
+        `'${option}' is not a valid payment option. Please choose an available method.`
+      );
       return;
     }
 
@@ -118,8 +110,8 @@ const Checkout = () => {
         color: item.selectedColor || undefined,
         size: item.selectedSize || undefined,
       })),
-      shippingAddress: data,
-      paymentMethod: option,
+      shippingAddress: { ...data, fullName },
+      paymentMethod: option as PaymentMethodType,
       shippingPrice: delivery,
       taxPrice: 0,
     };
@@ -200,7 +192,6 @@ const Checkout = () => {
                         {...register("address2")}
                         id="address2"
                         className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
-                        required
                         aria-label="address2"
                         placeholder="enter your apartment, suite, unit etc. (optional)"
                       />
@@ -226,7 +217,6 @@ const Checkout = () => {
                         {...register("poster")}
                         id="poster/zip"
                         className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
-                        required
                         aria-label="poster/zip"
                         placeholder="enter your poster / zip"
                       />
@@ -272,14 +262,17 @@ const Checkout = () => {
                           If you are a returning customer please login at the
                           top of the page.
                         </p>
-                        <div className="w-full mb-4 capitalize">
+                        <div
+                          className={`${
+                            newUser ? "block" : "hidden"
+                          } w-full mb-4 capitalize`}
+                        >
                           <label htmlFor="password">password</label>
                           <input
                             type="password"
                             name="password"
                             id="password"
                             className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded  transition-all duration-300 ease-in rounded"
-                            required
                             aria-label="password"
                             placeholder="enter your password"
                           />
@@ -300,43 +293,18 @@ const Checkout = () => {
               delivery={delivery}
               total={total}
             />
-          </div>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="border mb-4 bg-[#7971ea] w-full font-light py-7 text-xl mt-5 text-white uppercase"
+            >
+              {isPending ? "Processing..." : "Place Order"}
+            </Button>
+          </div>{" "}
         </div>
-        <Button
-          type="submit"
-          disabled={isPending}
-          className="border mb-4 bg-[#7971ea] w-full font-light py-7 text-xl mt-5 text-white uppercase"
-        >
-          {isPending ? "Processing..." : "Place Order"}
-        </Button>
       </form>
     </div>
   );
 };
 
 export default Checkout;
-
-// if (!option) {
-//   setServerError("Please select a payment method");
-//   return;
-// }
-
-// if (!token) {
-//   alert("You must be logged in to place an order.");
-//   return;
-// }
-
-// const orderData: Order = {
-//   items: cartProducts.map((item) => ({
-//     product: item.product._id,
-//     quantity: item.quantity,
-//     color: item.selectedColor || undefined,
-//     size: item.selectedSize || undefined,
-//   })),
-//   shippingAddress: values,
-//   paymentMethod: option,
-//   shippingPrice: delivery,
-//   taxPrice: 0,
-// };
-
-// mutation.mutate({ order: orderData, token });
