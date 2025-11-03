@@ -21,7 +21,10 @@ const Cart = ({
   const router = useRouter();
   return (
     <div className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 ">
-      <h2 className="text-lg font-semibold mb-2">Shopping Cart</h2>
+      <div className="flex items-center mb-2  justify-between">
+        <h2 className="text-lg font-semibold">Shopping Cart</h2>
+        <X onClick={() => setOpenCart(false)} />
+      </div>
 
       {cartProducts.length === 0 && (
         <div className="py-20 flex flex-col items-center justify-center gap-4">
@@ -46,7 +49,7 @@ const Cart = ({
           </h3>
           <div className="">
             {cartProducts.map((item) => (
-              <div key={item.product._id} className="">
+              <div key={item.id} className="">
                 <div className="flex items-start gap-4 my-4 relative">
                   <div className="h-[60px] w-[60px] bg-amber-200 p-2 rounded">
                     <img
@@ -58,8 +61,9 @@ const Cart = ({
                     />
                   </div>
                   <div className="">
-                    <p className="capitalize font-medium text-lg tracking-wide">
-                      {item.product.name}
+                    <p className="capitalize font-medium text-[15px] tracking-wide">
+                      {item.product.name} {item.selectedSize}{" "}
+                      {item.selectedColor}
                     </p>
                     <p className="text-gray-600 font-medium">
                       {item.quantity} × ₦{item.product.finalPrice.toFixed(2)}
@@ -67,7 +71,7 @@ const Cart = ({
                   </div>
                   <div
                     className="justify-end mr-auto absolute top-0 right-3"
-                    onClick={() => removeItem(item.product._id)}
+                    onClick={() => removeItem(item.id)}
                   >
                     <X size={16} />
                   </div>

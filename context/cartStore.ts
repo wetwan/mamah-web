@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { ShopdataProp } from "@/constant";
 
 export type CartItem = {
+    id: string;
     product: ShopdataProp;
     quantity: number;
     selectedColor?: string;
@@ -13,11 +14,12 @@ type CartStore = {
     item: CartItem[];
     addProduct: (
         product: ShopdataProp,
-        selectedColor: string,
-        selectedSize: string,
-        quantity: number
+        quantity: number,
+        selectedColor?: string,
+        selectedSize?: string,
+
     ) => void;
-    removeProduct: (productId: string) => void;
+    removeProduct: (cartItemId: string) => void;
     resetCart: () => void;
 };
 
@@ -27,13 +29,15 @@ export const useCart = create<CartStore>()(
         (set) => ({
             item: [],
 
-            addProduct: (product, selectedColor, selectedSize, quantity) =>
+            addProduct: (product, quantity, selectedColor, selectedSize) =>
                 set((state) => {
                     const existingIndex = state.item.findIndex(
-                        (i) =>
-                            i.product.id === product.id &&
-                            i.selectedColor === selectedColor &&
-                            i.selectedSize === selectedSize
+                        (i) => {
+                            const sameProduct = i.product.id === product.id;
+                            const sameColor = i.selectedColor === selectedColor;
+                            const sameSize = i.selectedSize === selectedSize;
+                            return sameProduct && sameColor && sameSize;
+                        }
                     );
 
                     if (existingIndex !== -1) {
@@ -45,14 +49,14 @@ export const useCart = create<CartStore>()(
                     return {
                         item: [
                             ...state.item,
-                            { product, quantity, selectedColor, selectedSize },
+                            { id: crypto.randomUUID(), product, quantity, selectedColor, selectedSize },
                         ],
                     };
                 }),
 
             removeProduct: (productId) =>
                 set((state) => ({
-                    item: state.item.filter((i) => i.product.id !== productId),
+                    item: state.item.filter((i) => i.id !== productId),
                 })),
 
             resetCart: () => set({ item: [] }),

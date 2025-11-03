@@ -75,9 +75,13 @@ const Checkout = () => {
       }
     },
     onSuccess: (data) => {
-      console.log("Order success:", data);
-      resetCart();
-      router.push("/success");
+      if (option === "cash_on_delivery") {
+        console.log("Order success:", data);
+        resetCart();
+        router.push("/success");
+      }
+      if (option === "card") {
+      }
     },
   });
 

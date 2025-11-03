@@ -124,7 +124,7 @@ const CheckoutDetails = ({
           {cartProducts.map((item) => (
             <div
               className="border-b mb-3 pb-2 flex justify-between"
-              key={item.product._id}
+              key={item.id}
             >
               <p>
                 {item.product.name} * {item.quantity}

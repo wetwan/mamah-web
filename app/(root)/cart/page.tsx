@@ -10,11 +10,12 @@ import { X } from "lucide-react";
 const CartPage = () => {
   const cartProducts = useCart((state) => state.item);
   const removeItem = useCart((state) => state.removeProduct);
+  console.log(cartProducts);
 
   const subtotal = useMemo(() => {
-  if (cartProducts.length === 0) {
-    redirect('/shop')
-  }
+    if (cartProducts.length === 0) {
+      redirect("/shop");
+    }
 
     return cartProducts.reduce(
       (acc, item) => acc + item.product.finalPrice * item.quantity,
@@ -39,19 +40,21 @@ const CartPage = () => {
 
       <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
         <section className="mt-20">
-          <div className="grid max-sm:grid-cols-5 [grid-template-columns:100px_2fr_1fr_1fr_1fr_100px]  font-semibold capitalize text-gray-700 border-b pb-2 items-center">
+          <div className="grid max-sm:grid-cols-5 [grid-template-columns:100px_2fr_1fr_1fr_1fr_1fr_1fr_100px]  font-semibold capitalize text-gray-700 border-b pb-2 items-center">
             <p>Item</p>
             <p className="max-sm:hidden"> Title</p>
             <p>Price</p>
             <p>Quantity</p>
+            <p>color</p>
+            <p>size</p>
             <p>Total</p>
             <p>Remove</p>
           </div>
 
           {cartProducts.map((item) => (
             <div
-              key={item.product._id}
-              className="grid max-sm:grid-cols-5 [grid-template-columns:100px_2fr_1fr_1fr_1fr_100px] md:gap-0 gap-4 items-center border-b py-4 text-gray-700 relative"
+              key={item.id}
+              className="grid max-sm:grid-cols-5 [grid-template-columns:100px_2fr_1fr_1fr_1fr_1fr_1fr_100px] md:gap-0 gap-4 items-center border-b py-4 text-gray-700 relative"
             >
               <Image
                 src={item.product.images[0]}
@@ -63,9 +66,11 @@ const CartPage = () => {
               <p className="capitalize max-sm:hidden">{item.product.name}</p>
               <p>₦{item.product.finalPrice.toFixed(2)}</p>
               <p>{item.quantity}</p>
+              <p>{item.selectedColor}</p>
+              <p>{item.selectedSize}</p>
               <p>₦{(item.product.finalPrice * item.quantity).toFixed(2)}</p>
               <button
-                onClick={() => removeItem(item.product._id)}
+                onClick={() => removeItem(item.id)}
                 className="text-red-500 hover:text-red-700 text-lg font-semibold"
               >
                 <X />

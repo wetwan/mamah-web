@@ -220,7 +220,7 @@ import { useRouter } from "next/navigation";
 
 const ProductDetails = ({ item }: { item: ShopdataProp }) => {
   const [selectedcolor, setSelectedcolor] = useState<any>(null);
-  const [selectedSize, setSelectedSize] = useState<number>(0);
+  const [selectedSize, setSelectedSize] = useState<any>(null);
   const [addQuanitity, setAddQuanitity] = useState<number>(1);
 
   const addProduct = useCart((state) => state.addProduct);
@@ -243,12 +243,8 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
   const add = () => {
     if (addQuanitity === 0 || !selectedcolor) return;
 
-    addProduct(
-      item,
-      selectedcolor?.name || "",
-      item.sizes?.[selectedSize] || "",
-      addQuanitity
-    );
+    addProduct(item, addQuanitity, selectedcolor, selectedSize);
+
     router.push("/cart");
     setSelectedSize(0);
     setAddQuanitity(1);
