@@ -1,6 +1,6 @@
 export const ShopSkeleton = () => (
   <div className="flex flex-col lg:flex-row gap-20 animate-pulse ease-in-out">
-    <div className="lg:w-[250px] w-full p-4 space-y-10">
+    <div className="w-full p-4 space-y-10">
       <div className="p-5 border shadow rounded w-full space-y-4">
         <div className="h-6 bg-gray-200 rounded w-1/2"></div>
         <div className="h-4 bg-gray-200 rounded w-full"></div>
@@ -21,12 +21,16 @@ export const ShopSkeleton = () => (
           <div className="h-10 bg-gray-200 rounded w-48"></div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="border rounded-lg p-4 space-y-3">
-            <div className="h-48 bg-gray-200 rounded"></div>
-            <div className="h-5 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-5 bg-gray-200 rounded w-1/2"></div>
+      <div className="grid w-full
+       grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8">
+        {Array.from({ length: 20 }).map((_, index) => (
+          <div key={index} className="animate-pulse shadow-2xl pb-10">
+            <div className="w-full h-[350px] bg-gray-200"></div>
+            <div className="p-4 text-center">
+              <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto my-3"></div>
+              <div className="h-3 bg-gray-200 rounded w-1/2 mx-auto my-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto my-4"></div>
+            </div>
           </div>
         ))}
       </div>

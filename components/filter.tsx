@@ -19,6 +19,7 @@ import { useMemo } from "react";
 export function Category() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  
   const { data: products = [] } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,

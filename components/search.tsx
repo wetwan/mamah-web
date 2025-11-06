@@ -1,23 +1,32 @@
-
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Search, X } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import React from "react";
-
+import React, { useState } from "react";
 
 const SearchBox = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialValue = searchParams.get("search") || "";
+
+  const [value, setValue] = useState(initialValue);
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get("name") as string;
-    if (name) {
-      router.push(`/shop?search=${name}`);
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (value.trim()) {
+      params.set("search", value.trim());
+      params.set("page", "1"); // ✅ reset to first page
+    } else {
+      params.delete("search");
+      params.set("page", "1"); // reset here too
     }
+
+    router.push(`/shop?${params.toString()}`);
   };
   return (
     <form
@@ -26,10 +35,12 @@ const SearchBox = () => {
     >
       <Search color="gray" className="md:text-lg lg:text-5xl " />
       <Input
-        name="name"
-        className="ring-0 hover:ring-0 focus-visible:ring-0 focus-visible::ring-0 border-0 focus:-translate-x-1 focus-visible:border-0 placeholder:text-lg  pl-2 md:text-lg shadow-none"
-        placeholder="Search"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        name="search"
+        placeholder="Search products..."
       />
+      {value && <X onClick={() => setValue("")} />}
     </form>
   );
 };

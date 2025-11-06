@@ -21,19 +21,42 @@ export default async function Shop({
 }: {
   searchParams: SearchParams;
 }) {
-  const params = await searchParams;
-  const { cat, color, size, min, max, sort, page = "1", search } = params || {};
+  //   const params = await searchParams;
+  //   const { cat, color, size, min, max, sort, page = "1", search } = params || {};
 
-  const query = new URLSearchParams({
-    ...(cat && { cat }),
-    ...(color && { color }),
-    ...(size && { size }),
-    ...(min && { min }),
-    ...(max && { max }),
-    ...(sort && { sort }),
-    ...(search && { search }),
-    page,
-  });
+  //   const query = new URLSearchParams({
+  //     ...(cat && { cat }),
+  //     ...(color && { color }),
+  //     ...(size && { size }),
+  //     ...(min && { min }),
+  //     ...(max && { max }),
+  //     ...(sort && { sort }),
+  //     ...(search && { search }),
+  //     page,
+  //   });
+
+  //   const { data } = await axios.get(
+  //     `${process.env.NEXT_PUBLIC_API_URL}product/all?${query.toString()}`
+  //   );
+
+  //   const { products, page: currentPage, pages: totalPages } = data;
+
+  //   //
+
+  const { cat, color, size, min, max, sort, page = "1", search } = searchParams;
+
+  const query = new URLSearchParams();
+
+  if (cat) query.set("cat", cat);
+  if (color) query.set("color", color);
+  if (size) query.set("size", size);
+  if (min) query.set("min", min);
+  if (max) query.set("max", max);
+  if (sort) query.set("sort", sort);
+  if (search) query.set("search", search);
+
+  // Always include page
+  query.set("page", page);
 
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}product/all?${query.toString()}`
@@ -41,12 +64,25 @@ export default async function Shop({
 
   const { products, page: currentPage, pages: totalPages } = data;
 
-  //
-
   return (
     <section className="w-full p-4">
       <div className="flex justify-between lg:items-center lg:flex-row flex-col gap-4">
-        <h3 className="font-bold capitalize text-xl">Shop</h3>
+        <div className="">
+          <h3 className="font-bold text-xl capitalize">
+            {search || cat ? search || cat : "Shop"}
+          </h3>
+
+          {(search || cat || min || max) && (
+            <p className="text-sm text-gray-500 mb-4">
+              Showing results for{" "}
+              <span className="font-medium">
+                {search || cat || "all products"}
+              </span>
+              {(min || max) &&
+                ` (Price range: ₦${min || "0"} - ₦${max || "∞"})`}
+            </p>
+          )}
+        </div>
 
         <div className="flex p-4 gap-4">
           <Suspense fallback={<ShopSkeleton />}>
@@ -64,7 +100,9 @@ export default async function Shop({
         )}
       </div>
 
-      <PaginationDemo currentPage={currentPage} totalPages={totalPages} />
+      {products.length >= 20 && totalPages > 1 && (
+        <PaginationDemo currentPage={currentPage} totalPages={totalPages} />
+      )}
     </section>
   );
 }

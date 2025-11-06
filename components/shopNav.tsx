@@ -185,24 +185,30 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/src/api/product/route";
-import { useProduct } from "@/context/prodcutStore";
+import axios from "axios";
+import { X } from "lucide-react";
 
 const ShopNav = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const setProducts = useProduct((s) => s.setProducts);
+  // const setProducts = useProduct((s) => s.setProducts);
+  const searchActive = Boolean(searchParams.get("search"));
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
-    queryFn: getProducts,
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}product?limit=0`
+      );
+      return res.data.products; // Make sure this matches your API response key
+    },
   });
 
-  useEffect(() => {
-    if (products.length > 0) {
-      setProducts(products);
-    }
-  }, [products, setProducts]);
+  // useEffect(() => {
+  //   if (products.length > 0) {
+  //     setProducts(products);
+  //   }
+  // }, [products, setProducts]);
 
   const [min, setMin] = useState(searchParams.get("min") || "");
   const [max, setMax] = useState(searchParams.get("max") || "");
@@ -211,8 +217,15 @@ const ShopNav = () => {
 
   const updateQuery = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
+
+    // ✅ If user is searching and selects category → clear search first
+    if (searchActive && key === "cat") {
+      params.delete("search");
+    }
+
     if (value) params.set(key, value);
     else params.delete(key);
+
     router.push(`/shop?${params.toString()}`);
   };
 
@@ -228,20 +241,40 @@ const ShopNav = () => {
     return () => clearTimeout(timeout);
   }, [min, max, router, searchParams]);
 
-  // ✅ Extract category counts from backend products
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    if (Array.isArray(products)) {
-      products.forEach((p: any) => {
-        counts[p.category] = (counts[p.category] || 0) + 1;
-      });
-    }
+    products.forEach((p: any) => {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
     return counts;
   }, [products]);
 
   const categories = Object.keys(categoryCounts);
 
-  if (isLoading) return <div>Loading filters...</div>;
+  if (isLoading)
+    return (
+      <div className="lg:w-[250px] w-full p-4 animate-pulse space-y-8">
+        {/* Category skeleton */}
+        <div className="p-5 border shadow rounded w-full space-y-4">
+          <div className="h-4 w-32 bg-gray-200 rounded" />
+          <div className="space-y-3">
+            <div className="h-3 w-full bg-gray-200 rounded" />
+            <div className="h-3 w-full bg-gray-200 rounded" />
+            <div className="h-3 w-full bg-gray-200 rounded" />
+            <div className="h-3 w-full bg-gray-200 rounded" />
+          </div>
+        </div>
+
+        {/* Price skeleton */}
+        <div className="p-5 border shadow rounded w-full space-y-4">
+          <div className="h-4 w-20 bg-gray-200 rounded" />
+          <div className="space-y-3">
+            <div className="h-10 w-32 bg-gray-200 rounded-full" />
+            <div className="h-10 w-32 bg-gray-200 rounded-full" />
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="lg:w-[250px] w-full p-4">
@@ -259,7 +292,7 @@ const ShopNav = () => {
             <p>({products.length})</p>
           </div>
 
-          {categories.map((cat) => (
+          {categories.map((cat: string) => (
             <div
               key={cat}
               onClick={() =>
@@ -287,20 +320,34 @@ const ShopNav = () => {
         <h4 className="uppercase font-bold mt-4">Price</h4>
         <div className="mt-6">
           <div className="flex flex-row md:flex-col gap-4">
-            <input
-              type="text"
-              placeholder="min price"
-              value={min}
-              onChange={(e) => setMin(e.target.value)}
-              className="border w-32 py-2 px-3 rounded-full placeholder:capitalize"
-            />
-            <input
-              type="text"
-              placeholder="max price"
-              value={max}
-              onChange={(e) => setMax(e.target.value)}
-              className="border w-32 py-2 px-3 rounded-full placeholder:capitalize"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="min price"
+                value={min}
+                onChange={(e) => setMin(e.target.value)}
+                className="border w-32 py-2 px-3 rounded-full placeholder:capitalize"
+              />
+              <X
+                className=" absolute right-3 top-4 hover:text-red-600 cursor-pointer z-40"
+                onClick={() => setMin("")}
+                size={15}
+              />
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="max price"
+                value={max}
+                onChange={(e) => setMax(e.target.value)}
+                className="border w-32 py-2 px-3 rounded-full placeholder:capitalize"
+              />
+              <X
+                className=" absolute right-3 top-4 hover:text-red-600 cursor-pointer z-40"
+                onClick={() => setMax("")}
+                size={15}
+              />
+            </div>
           </div>
         </div>
       </div>
