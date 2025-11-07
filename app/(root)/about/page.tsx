@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { Suspense } from "react";
+import React from "react";
 import image from "@/public/mamah.png";
 import Image from "next/image";
 import H2 from "@/components/h2";
@@ -33,7 +33,7 @@ const About = () => {
   ];
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <>
       <div>
         <div className="w-full  py-6 bg-[#f8f9fa] md:px-8 lg:px-16 xl:32 2xl:px-64   capitalize flex items-center gap-2 px-4 font-medium">
           <Link href={"/"} className="text-[#7971ea]">
@@ -84,7 +84,7 @@ const About = () => {
           ))}
         </div>
       </div>
-    </Suspense>
+    </>
   );
 };
 
