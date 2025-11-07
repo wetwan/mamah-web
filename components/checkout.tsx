@@ -82,7 +82,7 @@ const Checkout = () => {
       }
     },
   });
-
+ 
 
 const onSubmit: SubmitHandler<shippingData> = useCallback(
   (data) => {
