@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Returing from "./returing";
 import Billing from "./billing";
 import { Checkbox } from "./ui/checkbox";
@@ -36,9 +36,7 @@ const Checkout = () => {
 
   const isLoggedIn = useAuth((s) => !!s.token);
   const [newUser, setNewUser] = useState(false);
-
-  const cartProducts = useCart((state) => state.item);
-  const resetCart = useCart((s) => s.resetCart);
+  const { resetCart, item: cartProducts } = useCart();
   const token = useAuth((s) => s.token);
   const router = useRouter();
 
@@ -85,42 +83,52 @@ const Checkout = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<shippingData> = (data) => {
-    const fullName = `${data.firstName} ${data.lastName}`;
 
+const onSubmit: SubmitHandler<shippingData> = useCallback(
+  (data) => {
+    setServerError("");
+    // Clear previous errors
+    if (cartProducts.length === 0) {
+      setServerError("Your cart is empty. Please add items before placing an order.");
+      return;
+    }
+    const fullName = `${data.firstName} ${data.lastName}`;
     if (!option) {
       setServerError("Please select a payment method.");
       return;
     }
-
     try {
       PaymentMethodSchema.parse(option);
     } catch (e) {
-      setServerError(
-        `'${option}' is not a valid payment option. Please choose an available method.`
-      );
+      setServerError(`'${option}' is not a valid payment option. Please choose an available method.`);
       return;
     }
-
     if (!token) {
       alert("You must be logged in to place an order.");
       return;
     }
-
     const orderData: Order = {
       items: cartProducts.map((item) => ({
         product: item.product._id,
         quantity: item.quantity,
-        color: item.selectedColor || undefined,
+        color: item.selectedColor?.name || undefined,
         size: item.selectedSize || undefined,
       })),
-      shippingAddress: { ...data, fullName },
+      shippingAddress: {
+        ...data,
+        fullName,
+      },
       paymentMethod: option as PaymentMethodType,
       shippingPrice: delivery,
       taxPrice: 0,
     };
     handleCheckoutOrder({ order: orderData, token: token });
-  };
+  },
+  [cartProducts, option, token, delivery, handleCheckoutOrder] // Add dependencies here
+);
+
+
+
 
   // const isPending = false;
   return (
@@ -299,7 +307,7 @@ const Checkout = () => {
             />
             <Button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || cartProducts.length === 0}
               className="border mb-4 bg-[#7971ea] w-full font-light py-7 text-xl mt-5 text-white uppercase"
             >
               {isPending ? "Processing..." : "Place Order"}

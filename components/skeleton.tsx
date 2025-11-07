@@ -27,7 +27,7 @@ export const ShopSkeleton = () => (
           <div key={index} className="animate-pulse shadow-2xl pb-10">
             <div className="w-full h-[350px] bg-gray-200"></div>
             <div className="p-4 text-center">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto my-3"></div>
+              <div className="h-4 bg-gray-200 rounded w-[300px] mx-auto my-3"></div>
               <div className="h-3 bg-gray-200 rounded w-1/2 mx-auto my-2"></div>
               <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto my-4"></div>
             </div>

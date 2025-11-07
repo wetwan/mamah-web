@@ -2,11 +2,18 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ShopdataProp } from "@/constant";
 
+export type ProductColor = {
+    name: string;
+    hex?: string;
+    available: boolean;
+    _id: string; // Assuming this is the unique ID for the color
+};
+
 export type CartItem = {
     id: string;
     product: ShopdataProp;
     quantity: number;
-    selectedColor?: string;
+    selectedColor?: ProductColor;
     selectedSize?: string;
 };
 
@@ -15,7 +22,7 @@ type CartStore = {
     addProduct: (
         product: ShopdataProp,
         quantity: number,
-        selectedColor?: string,
+        selectedColor?: ProductColor,
         selectedSize?: string,
 
     ) => void;

@@ -63,7 +63,7 @@ const Cart = ({
                   <div className="">
                     <p className="capitalize font-medium text-[15px] tracking-wide">
                       {item.product.name} {item.selectedSize}{" "}
-                      {item.selectedColor}
+                      {item?.selectedColor?.name}
                     </p>
                     <p className="text-gray-600 font-medium">
                       {item.quantity} × ₦{item.product.finalPrice.toFixed(2)}

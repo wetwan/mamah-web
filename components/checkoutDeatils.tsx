@@ -35,9 +35,6 @@ const CheckoutDetails = ({
 }: Prop) => {
   // const [clientSecret, setClientSecret] = useState<string>("");
 
-  if (cartProducts.length === 0) {
-    redirect("/shop");
-  }
 
   // ⚙️ Create Stripe payment intent when user selects "card"
   // useEffect(() => {
