@@ -26,7 +26,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface orderProps {
+export interface orderProps {
   _id: string;
   items: Array<{
     name: string;
@@ -430,8 +430,23 @@ export const columns: ColumnDef<orderProps>[] = [
   },
 ];
 
+const fetchOrders = async (): Promise<orderProps[]> => {
+  // Simulate network delay (optional)
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  return orders; // Return your static data
+};
+
 const Orders = () => {
   const limit = 50;
+
+  const {
+    data: orders,
+    isLoading,
+    isError,
+  } = useQuery<orderProps[]>({
+    queryKey: ["orders"],
+    queryFn: () => fetchOrders(),
+  });
 
   // Since you're not using TanStack Query for data fetching,
   // the 'page' state is not controlling server-side pagination.
@@ -481,64 +496,75 @@ const Orders = () => {
         <h2 className="text-2xl font-bold mb-6">Order History</h2>
 
         <div className="rounded-md border overflow-x-auto">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((hg) => (
-                <TableRow key={hg.id} className="bg-gray-50 hover:bg-gray-50">
-                  {hg.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      className="py-4 px-3 whitespace-nowrap text-xs font-semibold uppercase text-gray-700"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : typeof header.column.columnDef.header === "function"
-                        ? header.column.columnDef.header({
-                            table,
-                            column: header.column,
-                            header,
-                          })
-                        : header.column.columnDef.header}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
+          {isLoading && (
+            <div className="p-6 text-center flex-1">Loading...</div>
+          )}
+          {isError && (
+            <div className="p-6 text-center text-red-500">
+              Error loading orders.
+            </div>
+          )}
 
-            <TableBody>
-              {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    className="cursor-pointer hover:bg-gray-50 transition-colors"
-                    onClick={() => {
-                      // Navigate to the details page on row click
-                      // router.push(`/order/${row.original._id}`);
-                      // If router is not available, use Link or window.location
-                      window.location.href = `/order/${row.original._id}`;
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-4 px-3 text-sm">
-                        {typeof cell.column.columnDef.cell === "function"
-                          ? cell.column.columnDef.cell(cell.getContext())
-                          : cell.getValue()}
-                      </TableCell>
+          {!isLoading && !isError && orders && (
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((hg) => (
+                  <TableRow key={hg.id} className="bg-gray-50 hover:bg-gray-50">
+                    {hg.headers.map((header) => (
+                      <TableHead
+                        key={header.id}
+                        className="py-4 px-3 whitespace-nowrap text-xs font-semibold uppercase text-gray-700"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : typeof header.column.columnDef.header === "function"
+                          ? header.column.columnDef.header({
+                              table,
+                              column: header.column,
+                              header,
+                            })
+                          : header.column.columnDef.header}
+                      </TableHead>
                     ))}
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="text-center py-10 text-lg text-gray-500"
-                  >
-                    No orders found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                ))}
+              </TableHeader>
+
+              <TableBody>
+                {table.getRowModel().rows.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      className="cursor-pointer hover:bg-gray-50 transition-colors"
+                      onClick={() => {
+                        // Navigate to the details page on row click
+                        // router.push(`/order/${row.original._id}`);
+                        // If router is not available, use Link or window.location
+                        window.location.href = `/order/${row.original._id}`;
+                      }}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="py-4 px-3 text-sm">
+                          {typeof cell.column.columnDef.cell === "function"
+                            ? cell.column.columnDef.cell(cell.getContext())
+                            : cell.getValue()}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="text-center py-10 text-lg text-gray-500"
+                    >
+                      No orders found.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </div>
 
         {/* --- Pagination --- */}
