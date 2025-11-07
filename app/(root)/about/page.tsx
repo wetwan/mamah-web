@@ -28,7 +28,8 @@ const About = () => {
         "Free Shipping Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.",
       icon: <CircleQuestionMark size={40} />,
     },
-  ];
+  ]; 
+  
   return (
     <div>
       <div className="w-full  py-6 bg-[#f8f9fa] md:px-8 lg:px-16 xl:32 2xl:px-64   capitalize flex items-center gap-2 px-4 font-medium">
