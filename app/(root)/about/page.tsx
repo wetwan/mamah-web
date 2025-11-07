@@ -46,10 +46,10 @@ const About = () => {
             <Image
               src={image}
               alt="about"
-              sizes=""
               fill
               className=""
               loading="lazy"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
           <div className="w-full lg:w-1/2 ">

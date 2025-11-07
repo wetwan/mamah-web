@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 import React from "react";
 
-const H2 = ({ text, className }: { text: string; className: any }) => {
+const H2 = ({ text, className }: { text: string; className: string }) => {
   return (
     <div
       className={`${className} flex flex-col justify-center w-fit px-3 py-2
