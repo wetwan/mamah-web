@@ -1,3 +1,4 @@
+"use client";
 
 import { CheckCircle2Icon } from "lucide-react";
 import Link from "next/link";
