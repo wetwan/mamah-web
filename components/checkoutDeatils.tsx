@@ -1,18 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { Button } from "./ui/button";
-import { redirect } from "next/navigation";
-import { CartItem, useCart } from "@/context/cartStore";
-import { UseMutationResult } from "@tanstack/react-query";
-import { Order } from "@/src/api/product/schema";
 
-import { CheckoutForm } from "./stripe"; // must handle stripe.confirmPayment inside
-import { useRouter } from "next/router";
-import axios from "axios";
+import { useRouter } from "next/navigation";
+import { CartItem, useCart } from "@/context/cartStore";
+
+import { CheckoutForm } from "./stripe";
+// import { useAuth } from "@/context/userStore";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -25,6 +21,10 @@ type Prop = {
   subtotal: number;
   delivery?: 10;
   total: number;
+  showCardPayment: boolean;
+  orderId: null;
+  clientSecret: string;
+  setClientSecret: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const CheckoutDetails = ({
@@ -32,40 +32,17 @@ const CheckoutDetails = ({
   cartProducts,
   setOption,
   subtotal,
-
+  showCardPayment,
   total,
+  clientSecret,
+  orderId,
 }: Prop) => {
-  const [clientSecret, setClientSecret] = useState<string>("");
-
   const { resetCart } = useCart();
+  // const { token } = useAuth();
 
   const router = useRouter();
 
   // ⚙️ Create Stripe payment intent when user selects "card"
-  useEffect(() => {
-    const createPaymentIntent = async () => {
-      if (option === "card") {
-        try {
-          const token = localStorage.getItem("token");
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}stripe/create-payment`,
-            { amount: total * 100 }, // in kobo (cents)
-            {
-              headers: {
-                "Content-Type": "application/json",
-                token,
-              },
-            }
-          );
-          if (res.data.clientSecret) setClientSecret(res.data.clientSecret);
-        } catch (err) {
-          console.error("❌ Error creating payment intent:", err);
-        }
-      }
-    };
-
-    createPaymentIntent();
-  }, [option, total]);
 
   // Stripe UI styles
   const appearance = {
@@ -77,7 +54,7 @@ const CheckoutDetails = ({
     },
   };
 
-  const options = { clientSecret, appearance };
+  const options = { clientSecret: clientSecret, appearance };
 
   return (
     <div className="w-full">
@@ -151,7 +128,7 @@ const CheckoutDetails = ({
             Pay with Card
           </div>
 
-          {option === "card" && clientSecret && (
+          {option === "card" && showCardPayment && clientSecret && (
             <div className="border p-3 rounded">
               <Elements options={options} stripe={stripePromise}>
                 <CheckoutForm
@@ -159,6 +136,7 @@ const CheckoutDetails = ({
                     resetCart();
                     router.push("/success");
                   }}
+                  orderId={orderId} // ✅ Pass orderId to CheckoutForm
                 />
               </Elements>
             </div>

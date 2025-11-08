@@ -217,6 +217,7 @@ import { Button } from "./ui/button";
 import { ShopdataProp } from "@/constant";
 import { useCart } from "@/context/cartStore";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const ProductDetails = ({ item }: { item: ShopdataProp }) => {
   const [selectedcolor, setSelectedcolor] = useState<any>(null);
@@ -246,6 +247,7 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
     addProduct(item, addQuanitity, selectedcolor, selectedSize);
 
     router.push("/cart");
+    toast.success("Product added to cart!");
     setSelectedSize(0);
     setAddQuanitity(1);
     if (item.colors?.length > 0) setSelectedcolor(item.colors[0]);

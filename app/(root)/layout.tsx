@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
 import { Providers } from "@/components/providers";
+import ToastProvider from "@/components/ToastProvider";
 
 const geistSans = Poppins({
   subsets: ["latin"],
@@ -30,11 +31,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.className} ${geistMono.className} antialiased`}
       >
-        <Providers>
-          <Nav />
-          {children}
-          <Footer />
-        </Providers>
+        <ToastProvider>
+          <Providers>
+            <Nav />
+            {children}
+            <Footer />
+          </Providers>
+        </ToastProvider>
       </body>
     </html>
   );

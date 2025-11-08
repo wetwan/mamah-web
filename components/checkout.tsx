@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Returing from "./returing";
 import Billing from "./billing";
 import { Checkbox } from "./ui/checkbox";
@@ -25,6 +25,7 @@ import { useAuth } from "@/context/userStore";
 import { Order } from "@/src/api/product/schema";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
+import { toast } from "react-toastify";
 
 const Checkout = () => {
   const {
@@ -39,9 +40,11 @@ const Checkout = () => {
   const { resetCart, item: cartProducts } = useCart();
   const token = useAuth((s) => s.token);
   const router = useRouter();
-
+  const [showCardPayment, setShowCardPayment] = useState(false);
+  const [orderId, setOrderId] = useState(null);
   const [option, setOption] = useState<PaymentMethodType>("cash_on_delivery");
   const [serverError, setServerError] = useState("");
+  const [clientSecret, setClientSecret] = useState<string>("");
 
   const subtotal = useMemo(
     () =>
@@ -73,62 +76,95 @@ const Checkout = () => {
       }
     },
     onSuccess: (data) => {
+      const newOrderId = data?.order?._id;
+      setOrderId(newOrderId);
       if (option === "cash_on_delivery") {
         console.log("Order success:", data);
         resetCart();
+        toast.success("Order placed successfully!");
         router.push("/success");
+        return;
       }
       if (option === "card") {
+        setShowCardPayment(true);
       }
     },
   });
- 
 
-const onSubmit: SubmitHandler<shippingData> = useCallback(
-  (data) => {
-    setServerError("");
-    // Clear previous errors
-    if (cartProducts.length === 0) {
-      setServerError("Your cart is empty. Please add items before placing an order.");
-      return;
-    }
-    const fullName = `${data.firstName} ${data.lastName}`;
-    if (!option) {
-      setServerError("Please select a payment method.");
-      return;
-    }
-    try {
-      PaymentMethodSchema.parse(option);
-    } catch (e) {
-      setServerError(`'${option}' is not a valid payment option. Please choose an available method.`);
-      return;
-    }
-    if (!token) {
-      alert("You must be logged in to place an order.");
-      return;
-    }
-    const orderData: Order = {
-      items: cartProducts.map((item) => ({
-        product: item.product._id,
-        quantity: item.quantity,
-        color: item.selectedColor?.name || undefined,
-        size: item.selectedSize || undefined,
-      })),
-      shippingAddress: {
-        ...data,
-        fullName,
-      },
-      paymentMethod: option as PaymentMethodType,
-      shippingPrice: delivery,
-      taxPrice: 0,
+  useEffect(() => {
+    const createPaymentIntent = async () => {
+      if (option !== "card" || !orderId) return;
+      try {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}stripe/create-payment`,
+          { orderId },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (res.data.clientSecret) {
+          setClientSecret(res.data.clientSecret); // ✅ This must be running!
+
+          // Add a log here to confirm the value is received
+          console.log("Stripe Client Secret received:", res.data.clientSecret);
+        }
+      } catch (err) {
+        console.error("❌ Error creating payment intent:", err);
+        toast.error(
+          "There was an error initializing the payment. Please try again."
+        );
+      }
     };
-    handleCheckoutOrder({ order: orderData, token: token });
-  },
-  [cartProducts, option, token, delivery, handleCheckoutOrder] // Add dependencies here
-);
 
+    createPaymentIntent();
+  }, [option, orderId, token]);
 
+  const onSubmit: SubmitHandler<shippingData> = useCallback(
+    (data) => {
+      console.log("✅ 1. onSubmit started.");
+      setServerError("");
+      // Clear previous errors
+      if (cartProducts.length === 0) {
+        setServerError(
+          "Your cart is empty. Please add items before placing an order."
+        );
+        return;
+      }
+      const fullName = `${data.firstName} ${data.lastName}`;
 
+      const orderData: Order = {
+        items: cartProducts.map((item) => ({
+          product: item.product._id,
+          quantity: item.quantity,
+          color: item.selectedColor?.name || undefined,
+          size: item.selectedSize || undefined,
+        })),
+        shippingAddress: {
+          ...data,
+          fullName,
+        },
+        paymentMethod: option as PaymentMethodType,
+        shippingPrice: delivery,
+        taxPrice: 0,
+      };
+      if (!token) {
+        alert("You must be logged in.");
+        return;
+      }
+      console.log("⏳ 2. Calling handleCheckoutOrder...");
+
+      handleCheckoutOrder({ order: orderData, token });
+      if (!token) {
+        alert("You must be logged in.");
+        return;
+      }
+    },
+    [cartProducts, option, token, delivery, handleCheckoutOrder] // Add dependencies here
+  );
 
   // const isPending = false;
   return (
@@ -304,6 +340,10 @@ const onSubmit: SubmitHandler<shippingData> = useCallback(
               subtotal={subtotal}
               delivery={delivery}
               total={total}
+              showCardPayment={showCardPayment}
+              orderId={orderId}
+              clientSecret={clientSecret}
+              setClientSecret={setClientSecret}
             />
             <Button
               type="submit"

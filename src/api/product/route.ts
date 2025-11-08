@@ -1,6 +1,7 @@
 
 import axios from "axios";
 import { Order } from "./schema";
+import { useMutation } from "@tanstack/react-query";
 
 
 
@@ -61,3 +62,21 @@ export const createOrder = async (order: Order, token: string) => {
     );
     return data;
 };
+
+
+export const useCreateOrder = () =>
+    useMutation({
+        mutationFn: async (cartData) => {
+            const token = localStorage.getItem("token");
+
+            const { data } = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}orders/create`,
+                cartData,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            return data;
+        },
+    });
