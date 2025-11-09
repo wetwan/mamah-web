@@ -1,14 +1,13 @@
 // app/(root)/shop/layout.tsx
 import Link from "next/link";
 import React from "react";
-import dynamic from "next/dynamic";
 
+import ShopNavWrapper from "@/components/ShopNavWrapper";
 export const metadata = {
   title: "UAM SHOP",
   description: "YOUR ONE STOP YOUR HEART",
 };
 
-const ShopNav = dynamic(() => import("@/components/shopNav"), { ssr: false });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Link href="/" className="text-[#7971ea]">home</Link> / <p>Shop</p>
       </div>
       <div className="flex">
-        <ShopNav />
+        <ShopNavWrapper />
         <div className="flex-1">{children}</div>
       </div>
     </div>
