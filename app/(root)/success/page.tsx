@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic"; 
 
 import { CheckCircle2Icon } from "lucide-react";
 import Link from "next/link";

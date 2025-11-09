@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+export const dynamic = "force-dynamic"; 
 
 import Link from "next/link";
 import React, { useMemo, useEffect } from "react";

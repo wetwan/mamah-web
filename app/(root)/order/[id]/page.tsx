@@ -2,6 +2,8 @@
 /* eslint-disable @next/next/no-img-element */
 
 "use client";
+
+export const dynamic = "force-dynamic";
 import React from "react";
 
 import {
@@ -15,7 +17,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-
 
 interface OrderProps {
   _id: string;
