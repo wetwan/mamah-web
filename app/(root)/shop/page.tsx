@@ -63,10 +63,8 @@ export default async function Shop({
         </div>
 
         <div className="flex p-4 gap-4">
-          <Suspense fallback={<ShopSkeleton />}>
-            <Category />
-            <SortSelect />
-          </Suspense>
+          <Category />
+          <SortSelect />
         </div>
       </div>
 
