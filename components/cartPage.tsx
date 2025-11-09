@@ -52,6 +52,7 @@ const columns: ColumnDef<CartItem>[] = [
         alt={row.original.product.name}
         width={50}
         height={50}
+          sizes="(max-width: 768px) 50px, 70px" 
         className="w-14 h-14 object-cover rounded-md"
       />
     ),
@@ -178,10 +179,6 @@ const CartPage = () => {
     },
   });
 
-  // Since we redirect for an empty cart, no need to render the rest of the page if cartProducts is empty.
-  if (cartProducts.length === 0) {
-    return null; // Or a loading spinner while redirecting
-  }
 
   return (
     <div className="min-h-screen">
