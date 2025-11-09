@@ -1,5 +1,5 @@
 "use client";
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
 import { CheckCircle2Icon } from "lucide-react";
 import Link from "next/link";
@@ -27,7 +27,7 @@ const Sucess = () => {
         </p>
 
         <Link
-          href={"/"}
+          href={"/Shop"}
           className="w-fit px-7 py-4 uppercase border  bg-[#7971ea]"
         >
           back to shop

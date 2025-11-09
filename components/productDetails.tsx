@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
@@ -10,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const ProductDetails = ({ item }: { item: ShopdataProp }) => {
-
   const [selectedcolor, setSelectedcolor] = useState<any>(null);
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [addQuanitity, setAddQuanitity] = useState<number>(1);
@@ -37,7 +35,7 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
 
     addProduct(item, addQuanitity, selectedcolor, selectedSize);
 
-    router.push("/cart");
+    router.push("/shop");
     toast.success("Product added to cart!");
     setSelectedSize(0);
     setAddQuanitity(1);

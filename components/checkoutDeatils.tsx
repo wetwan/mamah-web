@@ -6,12 +6,18 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import { useRouter } from "next/navigation";
 import { CartItem, useCart } from "@/context/cartStore";
-
 import { CheckoutForm } from "./stripe";
+
 // import { useAuth } from "@/context/userStore";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+);
+
+// Add this log outside the component function (or inside, if preferred)
+console.log(
+  "Stripe Public Key loaded:",
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
 type Prop = {
@@ -23,8 +29,8 @@ type Prop = {
   total: number;
   showCardPayment: boolean;
   orderId: string | null;
-  clientSecret: string;
-  setClientSecret: React.Dispatch<React.SetStateAction<string>>;
+  clientSecret: string | null;
+  setClientSecret: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 const CheckoutDetails = ({
@@ -54,7 +60,7 @@ const CheckoutDetails = ({
     },
   };
 
-  const options = { clientSecret: clientSecret, appearance };
+  const options = { clientSecret: clientSecret as string, appearance };
 
   return (
     <div className="w-full">
@@ -130,13 +136,14 @@ const CheckoutDetails = ({
 
           {option === "card" && showCardPayment && clientSecret && (
             <div className="border p-3 rounded">
-              <Elements options={options} stripe={stripePromise}>
+              <Elements stripe={stripePromise}>
                 <CheckoutForm
                   onPaymentSuccess={() => {
                     resetCart();
                     router.push("/success");
                   }}
-                  orderId={orderId} // ✅ Pass orderId to CheckoutForm
+                  orderId={orderId}
+                  clientSecret={clientSecret}
                 />
               </Elements>
             </div>

@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -9,13 +8,11 @@ import CheckoutDeatils from "@/components/checkoutDeatils";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   OrderShippingData,
-
   PaymentMethodType,
   shippingData,
-
 } from "@/src/api/auth/schema";
 
-import {  useCart } from "@/context/cartStore";
+import { useCart } from "@/context/cartStore";
 import { createOrder } from "@/src/api/product/route";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -29,8 +26,8 @@ const Checkout = () => {
   const {
     register,
     handleSubmit,
-  
-    formState: {  },
+
+    formState: {},
   } = useForm<OrderShippingData>();
 
   const isLoggedIn = useAuth((s) => !!s.token);
@@ -42,8 +39,7 @@ const Checkout = () => {
   const [orderId, setOrderId] = useState(null);
   const [option, setOption] = useState<PaymentMethodType>("cash_on_delivery");
   const [serverError, setServerError] = useState("");
-  const [clientSecret, setClientSecret] = useState<string>("");
-
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const subtotal = useMemo(
     () =>
       Array.isArray(cartProducts)
@@ -83,21 +79,69 @@ const Checkout = () => {
         router.push("/success");
         return;
       }
-      if (option === "card") {
-        setShowCardPayment(true);
+      if (option === "card" && newOrderId) {
+        // 🚩 CRITICAL FIX: Trigger secret fetching immediately after order is created
+        console.log(
+          "⏳ 4. Attempting to create Payment Intent with Order ID:",
+          newOrderId
+        );
+        createPaymentIntent(newOrderId);
+        // NOTE: You must remove the line setShowCardPayment(true); from here
       }
     },
   });
 
-  useEffect(() => {
-    const createPaymentIntent = async () => {
-      if (option !== "card" || !orderId) return;
+  // useEffect(() => {
+  //   const createPaymentIntent = async () => {
+  //     if (option !== "card" || !orderId) return;
+  //     try {
+  //       const res = await axios.post(
+  //         `${process.env.NEXT_PUBLIC_API_URL}stripe/create-payment`,
+  //         { orderId },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //             "Content-Type": "application/json",
+  //           },
+  //         }
+  //       );
+
+  //       if (res.data.clientSecret) {
+  //         setClientSecret(res.data.clientSecret); // ✅ This must be running!
+
+  //         // Add a log here to confirm the value is received
+  //         console.log("Stripe Client Secret received:", res.data.clientSecret);
+  //       }
+  //     } catch (err) {
+  //       console.error("❌ Error creating payment intent:", err);
+  //       toast.error(
+  //         "There was an error initializing the payment. Please try again."
+  //       );
+  //     }
+  //   };
+
+  //   createPaymentIntent();
+  // }, [option, orderId, token]);
+
+  // In checkout.tsx
+
+  const createPaymentIntent = useCallback(
+    async (newOrderId: string) => {
+      if (!newOrderId) return;
+
+      // 💡 FIX 1: Check for the token from the useAuth hook
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        return;
+      }
+
       try {
         const res = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}stripe/create-payment`,
-          { orderId },
+          { orderId: newOrderId },
           {
             headers: {
+              // 💡 FIX 2: Use the token from the useAuth hook
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
@@ -105,21 +149,48 @@ const Checkout = () => {
         );
 
         if (res.data.clientSecret) {
-          setClientSecret(res.data.clientSecret); // ✅ This must be running!
-
-          // Add a log here to confirm the value is received
-          console.log("Stripe Client Secret received:", res.data.clientSecret);
+          setClientSecret(res.data.clientSecret);
+          setShowCardPayment(true);
+          console.log(
+            "✅ 5. Stripe Client Secret received:",
+            res.data.clientSecret
+          );
+        } else {
+          console.error(
+            "❌ 5. Stripe API response did not contain clientSecret. Full response data:",
+            res.data
+          );
+          toast.error(
+            "Invalid response from payment server. Please try again."
+          );
+          setShowCardPayment(false);
         }
-      } catch (err) {
+      } catch (err: any) {
+        // Added 'any' type to access err.response
         console.error("❌ Error creating payment intent:", err);
-        toast.error(
-          "There was an error initializing the payment. Please try again."
-        );
-      }
-    };
 
-    createPaymentIntent();
-  }, [option, orderId, token]);
+        // Log the specific 401 error message from the backend
+        if (err.response?.status === 401) {
+          toast.error("Authorization failed. Please log in again.");
+        } else {
+          toast.error(
+            "There was an error initializing the payment. Please check your card option."
+          );
+        }
+        setShowCardPayment(false);
+      }
+    },
+    [token] // 💡 FIX 3: Add token to the dependency array
+  );
+
+  useEffect(() => {
+    // If the user switches away from 'card', reset the secret and hide the form
+    if (option !== "card") {
+      setClientSecret(null);
+      setShowCardPayment(false);
+      setOrderId(null); // Also clear the temporary orderId
+    }
+  }, [option]);
 
   const onSubmit: SubmitHandler<shippingData> = useCallback(
     (data) => {
