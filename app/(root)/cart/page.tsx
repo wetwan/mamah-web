@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
-export const dynamic = "force-dynamic"; 
+
 
 import Link from "next/link";
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
-// Assuming CartItem, useCart, and the full path are correct
-// import { CartItem, useCart } from "@/context/cartStore";
+import {  useRouter } from "next/navigation";
+
 import { X } from "lucide-react";
 
 import {
@@ -32,7 +31,7 @@ import { CartItem, useCart } from "@/context/cartStore";
 // --- START: COLUMNS DEFINITION ---
 
 // Define the columns array, incorporating the product image and a remove button
-export const columns: ColumnDef<CartItem>[] = [
+const columns: ColumnDef<CartItem>[] = [
   {
     id: "sn",
     header: "S/N",
@@ -156,13 +155,6 @@ export const columns: ColumnDef<CartItem>[] = [
 const CartPage = () => {
   const { removeProduct: removeItem, item: cartProducts } = useCart();
   const router = useRouter();
-
-  // Redirect if cart is empty. Using useEffect for client-side redirection.
-  // useEffect(() => {
-  //   if (cartProducts.length === 0) {
-  //     router.replace("/shop");
-  //   }
-  // }, [cartProducts, router]);
 
   const subtotal = useMemo(() => {
     return cartProducts.reduce(
