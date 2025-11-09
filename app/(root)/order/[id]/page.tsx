@@ -16,46 +16,6 @@ import {
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 
-// const order = {
-//   createdAt: "2025-06-29T08:36:26.693Z",
-//   deliveredAt: "2025-11-06T06:36:05.456Z",
-//   isDelivered: true, // Example 1: Delivered
-//   isPaid: true,
-//   items: [
-//     {
-//       image: "https://placehold.co/100x100/A0BFFF/white?text=Towels",
-//       name: "Fresh Bamboo Towels (Set of 3)",
-//       price: 98,
-//       cat: "bath",
-//       qty: 3,
-//     },
-//     {
-//       image: "https://placehold.co/100x100/FFB3C6/white?text=Soap",
-//       name: "Luxury Hand Soap",
-//       price: 12,
-//       cat: "personal care",
-//       qty: 2,
-//     },
-//   ],
-//   itemsPrice: 318, // (98*3 + 12*2) = 318
-//   paidAt: "2025-06-29T09:15:00.000Z", // Corrected for chronological flow
-//   paymentMethod: "card",
-//   shippingAddress: {
-//     address1: "2427 Mraz Center",
-//     country: "Benin",
-//     email: "janie.b@example.com",
-//     fullName: "Janie Beer-Schneider",
-//     phone: "(477) 892-5364 x87398",
-//     state: "Montana",
-//   },
-//   shippingPrice: 6,
-//   status: "delivered",
-//   taxPrice: 16, // Calculated based on actual item price for better consistency
-//   totalPrice: 340, // 318 + 6 + 16 = 340
-//   updatedAt: "2025-11-06T11:23:48.033Z",
-//   user: "b5a2aa65-3daf-43eb-88d8-b048451f04a5",
-//   _id: "2ae9d3dd-b45a-4af6-842e-db624c4f687f",
-// };
 
 interface OrderProps {
   _id: string;

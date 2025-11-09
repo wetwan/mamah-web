@@ -21,28 +21,6 @@ export default async function Shop({
 }: {
   searchParams: SearchParams;
 }) {
-  //   const params = await searchParams;
-  //   const { cat, color, size, min, max, sort, page = "1", search } = params || {};
-
-  //   const query = new URLSearchParams({
-  //     ...(cat && { cat }),
-  //     ...(color && { color }),
-  //     ...(size && { size }),
-  //     ...(min && { min }),
-  //     ...(max && { max }),
-  //     ...(sort && { sort }),
-  //     ...(search && { search }),
-  //     page,
-  //   });
-
-  //   const { data } = await axios.get(
-  //     `${process.env.NEXT_PUBLIC_API_URL}product/all?${query.toString()}`
-  //   );
-
-  //   const { products, page: currentPage, pages: totalPages } = data;
-
-  //   //
-
   const { cat, color, size, min, max, sort, page = "1", search } = searchParams;
 
   const query = new URLSearchParams();
@@ -93,14 +71,14 @@ export default async function Shop({
       </div>
 
       <div>
-        {products ? (
+        {products?.length > 0 ? (
           <ProductItem products={products} />
         ) : (
           <p className="text-gray-500 mt-10 text-center">No products found.</p>
         )}
       </div>
 
-      {products.length >= 20 && totalPages > 1 && (
+      {products?.length >= 20 && totalPages > 1 && (
         <PaginationDemo currentPage={currentPage} totalPages={totalPages} />
       )}
     </section>

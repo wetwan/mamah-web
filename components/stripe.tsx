@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // stripe.tsx
+"use client";
+
 
 import { useCart } from "@/context/cartStore";
 import { useAuth } from "@/context/userStore";

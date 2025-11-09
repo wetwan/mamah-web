@@ -1,4 +1,7 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
+
+
 import React from "react";
 import { ShopdataProp } from "@/constant";
 import Link from "next/link";

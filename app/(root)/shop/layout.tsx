@@ -25,8 +25,10 @@ export default function RootLayout({
       </div>
       <div className="md:px-8 lg:px-16 xl:32 2xl:px-64 px-4 flex items-start flex-col lg:flex-row gap-20 mt-20">
         <Suspense fallback={<ShopSkeleton />}>
-          <ShopNav />
-          {children}
+          <div className="">
+            <ShopNav />
+            {children}
+          </div>
         </Suspense>
       </div>
     </div>

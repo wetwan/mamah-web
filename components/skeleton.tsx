@@ -1,3 +1,6 @@
+"use client";
+
+
 export const ShopSkeleton = () => (
   <div className="flex flex-col lg:flex-row gap-20 animate-pulse ease-in-out">
     <div className="w-full p-4 space-y-10">
