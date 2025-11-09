@@ -10,29 +10,21 @@ import { X } from "lucide-react";
 const ShopNav = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // const setProducts = useProduct((s) => s.setProducts);
   const searchActive = Boolean(searchParams.get("search"));
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
+      // ✅ Use limit=0 to get ALL products from backend
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}product?limit=0`
+        `${process.env.NEXT_PUBLIC_API_URL}product/all?limit=0`
       );
-      return res.data.products; // Make sure this matches your API response key
+      return res.data.products || [];
     },
   });
 
-  // useEffect(() => {
-  //   if (products.length > 0) {
-  //     setProducts(products);
-  //   }
-  // }, [products, setProducts]);
-
   const [min, setMin] = useState(searchParams.get("min") || "");
   const [max, setMax] = useState(searchParams.get("max") || "");
-
-  // ✅ Fetch products from backend
 
   const updateQuery = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -44,6 +36,9 @@ const ShopNav = () => {
 
     if (value) params.set(key, value);
     else params.delete(key);
+    
+    // ✅ Reset to page 1 when filtering
+    params.set("page", "1");
 
     router.push(`/shop?${params.toString()}`);
   };
@@ -55,6 +50,10 @@ const ShopNav = () => {
       else params.delete("min");
       if (max) params.set("max", max);
       else params.delete("max");
+      
+      // ✅ Reset to page 1 when price filtering
+      params.set("page", "1");
+      
       router.push(`/shop?${params.toString()}`);
     }, 500);
     return () => clearTimeout(timeout);

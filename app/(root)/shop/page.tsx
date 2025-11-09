@@ -76,7 +76,7 @@ export default async function Shop({
         )}
       </div>
 
-      {products?.length >= 20 && totalPages > 1 && (
+      {totalPages > 1 && (
         <PaginationDemo currentPage={currentPage} totalPages={totalPages} />
       )}
     </section>

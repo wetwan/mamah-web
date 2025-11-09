@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 
 export const getProducts = async () => {
     const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}product/all`,
+        `${process.env.NEXT_PUBLIC_API_URL}product/all?limit=0`
     );
 
     return data.products || data.prodcuts || [];

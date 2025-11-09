@@ -29,7 +29,7 @@ const SearchBox = () => {
     router.push(`/shop?${params.toString()}`);
   };
   return (
-    <form
+    <form 
       className=" max-sm:flex-1 flex gap-2 py-4 p-2 items-center md:w-1/3 "
       onSubmit={handleSearch}
     >

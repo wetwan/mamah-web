@@ -19,7 +19,7 @@ import { useMemo } from "react";
 function CategorySelect() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const { data: products = [] } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
@@ -29,6 +29,10 @@ function CategorySelect() {
     const params = new URLSearchParams(searchParams.toString());
     if (value) params.set(key, value);
     else params.delete(key);
+
+    // ✅ Reset to page 1 when filtering
+    params.set("page", "1");
+
     router.push(`/shop?${params.toString()}`);
   };
 
@@ -76,6 +80,10 @@ function SortSelectInner() {
     const params = new URLSearchParams(searchParams.toString());
     if (value) params.set(key, value);
     else params.delete(key);
+
+    // ✅ Reset to page 1 when sorting
+    params.set("page", "1");
+
     router.push(`/shop?${params.toString()}`);
   };
 
@@ -104,7 +112,14 @@ function SortSelectInner() {
 
 export function Category() {
   return (
-    <Suspense fallback={<div className="w-[200px] h-9 bg-gray-200 animate-pulse rounded" />}>
+    <Suspense
+      fallback={
+        <div>
+          <div className="h-6 w-32 bg-gray-200 rounded animate-pulse" />
+          <div className="h-4 w-48 mt-2 bg-gray-200 rounded animate-pulse" />
+        </div>
+      }
+    >
       <CategorySelect />
     </Suspense>
   );
@@ -112,7 +127,14 @@ export function Category() {
 
 export function SortSelect() {
   return (
-    <Suspense fallback={<div className="w-[200px] h-9 bg-gray-200 animate-pulse rounded" />}>
+    <Suspense
+      fallback={
+        <div className="flex gap-4">
+          <div className="h-9 w-[200px] bg-gray-200 rounded animate-pulse" />
+          <div className="h-9 w-[200px] bg-gray-200 rounded animate-pulse" />
+        </div>
+      }
+    >
       <SortSelectInner />
     </Suspense>
   );

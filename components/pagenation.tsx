@@ -9,25 +9,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
+import { useSearchParams } from "next/navigation";
 
 export function PaginationDemo({
   currentPage,
   totalPages,
-  queryParams = {},
 }: {
   currentPage: number;
   totalPages: number;
-  queryParams?: Record<string, string | number>;
 }) {
-  // Keep existing filters in URL
+  const searchParams = useSearchParams();
+
+  // ✅ Preserve all current query parameters
   const makeUrl = (page: number) => {
-    const params = new URLSearchParams({
-      ...Object.fromEntries(
-        Object.entries(queryParams).filter(([key]) => key !== "page")
-      ),
-      page: page.toString(),
-    });
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
     return `/shop?${params.toString()}`;
   };
 
