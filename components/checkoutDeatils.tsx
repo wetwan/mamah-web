@@ -22,7 +22,7 @@ type Prop = {
   delivery?: 10;
   total: number;
   showCardPayment: boolean;
-  orderId: null;
+  orderId: string | null;
   clientSecret: string;
   setClientSecret: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -53,7 +53,6 @@ const CheckoutDetails = ({
       colorText: "#30313d",
     },
   };
-  
 
   const options = { clientSecret: clientSecret, appearance };
 
