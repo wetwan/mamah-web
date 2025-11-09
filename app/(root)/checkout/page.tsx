@@ -4,6 +4,13 @@
 import React, { Suspense } from "react";
 import Checkout from "@/components/checkout";
 
+const ClientCheckoutWrapper = () => {
+  // This wrapper ensures that the client component (Checkout) is fully contained
+  // and doesn't cause hydration errors on the server, especially if Checkout
+  // implicitly or explicitly uses client hooks like useSearchParams.
+  return <Checkout />;
+};
+
 export default function CheckOutPage() {
   return (
     <div>
@@ -26,8 +33,7 @@ export default function CheckOutPage() {
           </div>
         }
       >
-        {/* Note: Assuming Checkout component is in the same directory structure */}
-        <Checkout />
+        <ClientCheckoutWrapper />
       </Suspense>
     </div>
   );
