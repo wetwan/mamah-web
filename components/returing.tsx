@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import React from "react";
 
 const Returing = () => {
@@ -9,9 +8,9 @@ const Returing = () => {
       <div className="mt-10 border py-7 px-3">
         <p className="font-light">
           Returning customer?{" "}
-          <Link className="text-[#7971ea]" href={"/login"}>
+          <a className="text-[#7971ea]" href={"/login"}>
             Click here{" "}
-          </Link>{" "}
+          </a>{" "}
           to login
         </p>
       </div>

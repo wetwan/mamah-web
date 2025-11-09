@@ -1,23 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Returing from "./returing";
-import Billing from "./billing";
 import { Checkbox } from "./ui/checkbox";
 import CheckoutDeatils from "@/components/checkoutDeatils";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   OrderShippingData,
-  PaymentMethodSchema,
+
   PaymentMethodType,
   shippingData,
-  ShippingInputData,
-  shippingSchema,
+
 } from "@/src/api/auth/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CartItem, useCart } from "@/context/cartStore";
+
+import {  useCart } from "@/context/cartStore";
 import { createOrder } from "@/src/api/product/route";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -31,8 +29,8 @@ const Checkout = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
+  
+    formState: {  },
   } = useForm<OrderShippingData>();
 
   const isLoggedIn = useAuth((s) => !!s.token);
@@ -166,7 +164,8 @@ const Checkout = () => {
     [cartProducts, option, token, delivery, handleCheckoutOrder] // Add dependencies here
   );
 
-  // const isPending = false;
+  if (!isPending) return null;
+
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       <Returing />

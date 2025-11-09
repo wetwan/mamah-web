@@ -53,6 +53,7 @@ const CheckoutDetails = ({
       colorText: "#30313d",
     },
   };
+  
 
   const options = { clientSecret: clientSecret, appearance };
 
