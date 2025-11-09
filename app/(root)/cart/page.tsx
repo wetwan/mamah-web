@@ -1,5 +1,6 @@
-import CartPage from "@/components/cartPage";
+"use client"
 
+import CartPage from "@/components/cartPage";
 
 import React from "react";
 
