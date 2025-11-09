@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { Metadata } from "next";
 import { Poppins, Roboto } from "next/font/google";
+// @ts-ignore: CSS import types are not declared in this project
 import "./globals.css";
-import Nav from "@/components/nav";
-import Footer from "@/components/footer";
-import { Providers } from "@/components/providers";
-import ToastProvider from "@/components/ToastProvider";
+
+import AppLayOut from "@/components/appLayOut";
 
 const geistSans = Poppins({
   subsets: ["latin"],
@@ -31,13 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.className} ${geistMono.className} antialiased`}
       >
-        <ToastProvider>
-          <Providers>
-            <Nav />
-            {children}
-            <Footer />
-          </Providers>
-        </ToastProvider>
+        <AppLayOut>{children}</AppLayOut>
       </body>
     </html>
   );

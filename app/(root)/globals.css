@@ -3,7 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
 /* Hide scrollbar for all browsers */
 body {
   scroll-behavior: smooth;
