@@ -1,6 +1,6 @@
-
 "use client";
 
+import { Suspense } from "react";
 import {
   Select,
   SelectContent,
@@ -16,7 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
-export function Category() {
+function CategorySelect() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -68,7 +68,7 @@ export function Category() {
   );
 }
 
-export function SortSelect() {
+function SortSelectInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -99,5 +99,21 @@ export function SortSelect() {
         </SelectGroup>
       </SelectContent>
     </Select>
+  );
+}
+
+export function Category() {
+  return (
+    <Suspense fallback={<div className="w-[200px] h-9 bg-gray-200 animate-pulse rounded" />}>
+      <CategorySelect />
+    </Suspense>
+  );
+}
+
+export function SortSelect() {
+  return (
+    <Suspense fallback={<div className="w-[200px] h-9 bg-gray-200 animate-pulse rounded" />}>
+      <SortSelectInner />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Logo from "./logo";
 import SearchBox from "./search";
 import MenuIcons from "./menuIcons";
@@ -18,7 +18,9 @@ const Nav = () => {
           <Logo />
         </div>
         <div className="flex items-center justify-center gap-2 ">
-          <SearchBox />
+          <Suspense fallback={<div className="w-full h-10" />}>
+            <SearchBox />
+          </Suspense>
           <MenuIcons />
           <div
             className="text-gray-500 hover:text-neutral-600 cursor-pointer transition-all duration-300 ml-5"
@@ -31,7 +33,9 @@ const Nav = () => {
 
       <div className="md:flex hidden flex-col justify-center items-center  mt-6 py-2 ">
         <div className="flex items-center justify-between  w-full">
-          <SearchBox />
+          <Suspense fallback={<div className="w-1/3 h-10" />}>
+            <SearchBox />
+          </Suspense>
           <div className="md:w-1/3 flex items-center justify-center">
             <Logo />
           </div>
