@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
-"use client";
 
 import React, { Suspense } from "react";
 import Checkout from "@/components/checkout";
