@@ -148,8 +148,18 @@ const Checkout = () => {
           }
         );
 
-        if (res.data.clientSecret) {
-          setClientSecret(res.data.clientSecret);
+        console.log("✅ Payment intent response:", res.data);
+
+        if (res.data.success && res.data.clientSecret) {
+          const secret = res.data.clientSecret;
+
+          if (!secret.startsWith("pi_") && !secret.startsWith("seti_")) {
+            console.error("❌ Invalid client secret format:", secret);
+            toast.error("Invalid payment configuration. Please try again.");
+            return;
+          }
+
+          setClientSecret(secret);
           setShowCardPayment(true);
           console.log(
             "✅ 5. Stripe Client Secret received:",
@@ -172,6 +182,8 @@ const Checkout = () => {
         // Log the specific 401 error message from the backend
         if (err.response?.status === 401) {
           toast.error("Authorization failed. Please log in again.");
+        } else if (err.response?.status === 404) {
+          toast.error("Order not found. Please try again.");
         } else {
           toast.error(
             "There was an error initializing the payment. Please check your card option."

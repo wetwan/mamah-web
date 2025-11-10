@@ -1,6 +1,6 @@
 // app/(root)/shop/layout.tsx
 import Link from "next/link";
-import React, { Suspense } from "react";
+import React from "react";
 
 import ShopNavWrapper from "@/components/ShopNavWrapper";
 export const metadata = {

@@ -8,12 +8,10 @@ import { useRouter } from "next/navigation";
 import { CartItem, useCart } from "@/context/cartStore";
 import { CheckoutForm } from "./stripe";
 
-
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 );
 
-// Add this log outside the component function (or inside, if preferred)
 console.log(
   "Stripe Public Key loaded:",
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -48,7 +46,7 @@ const CheckoutDetails = ({
 
   const router = useRouter();
 
-    const appearance = {
+  const appearance = {
     theme: "stripe" as const,
     variables: {
       colorPrimary: "#7971ea",
@@ -56,8 +54,6 @@ const CheckoutDetails = ({
       colorText: "#30313d",
     },
   };
-
-  
 
   return (
     <div className="w-full">
@@ -137,20 +133,26 @@ const CheckoutDetails = ({
 
           {option === "card" && showCardPayment && clientSecret && (
             <div className="border p-3 rounded">
-              {/* ✅ Pass options with clientSecret and appearance */}
-              <Elements 
-                stripe={stripePromise} 
-                options={{ clientSecret, appearance }}
-              >
-                <CheckoutForm
-                  onPaymentSuccess={() => {
-                    resetCart();
-                    router.push("/success");
-                  }}
-                  orderId={orderId}
-                  clientSecret={clientSecret}
-                />
-              </Elements>
+              {!clientSecret.startsWith("pi_") &&
+              !clientSecret.startsWith("seti_") ? (
+                <div className="text-center py-4 text-red-500">
+                  Invalid payment configuration. Please refresh and try again.
+                </div>
+              ) : (
+                <Elements
+                  stripe={stripePromise}
+                  options={{ clientSecret, appearance, loader: "auto" }}
+                >
+                  <CheckoutForm
+                    onPaymentSuccess={() => {
+                      resetCart();
+                      router.push("/success");
+                    }}
+                    orderId={orderId}
+                    clientSecret={clientSecret}
+                  />
+                </Elements>
+              )}
             </div>
           )}
         </div>
