@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -57,7 +58,7 @@ const ShopNav = () => {
       router.push(`/shop?${params.toString()}`);
     }, 500);
     return () => clearTimeout(timeout);
-  }, [min, max, router, searchParams]);
+  }, [min, max, router]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};

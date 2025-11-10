@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { CartItem, useCart } from "@/context/cartStore";
 import { CheckoutForm } from "./stripe";
 
-// import { useAuth } from "@/context/userStore";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -42,16 +41,14 @@ const CheckoutDetails = ({
   total,
   clientSecret,
   orderId,
+  delivery = 10,
 }: Prop) => {
   const { resetCart } = useCart();
   // const { token } = useAuth();
 
   const router = useRouter();
 
-  // ⚙️ Create Stripe payment intent when user selects "card"
-
-  // Stripe UI styles
-  const appearance = {
+    const appearance = {
     theme: "stripe" as const,
     variables: {
       colorPrimary: "#7971ea",
@@ -60,7 +57,7 @@ const CheckoutDetails = ({
     },
   };
 
-  const options = { clientSecret: clientSecret as string, appearance };
+  
 
   return (
     <div className="w-full">
@@ -107,6 +104,10 @@ const CheckoutDetails = ({
             <p className="font-semibold">Cart Subtotal</p>
             <p>₦{subtotal.toFixed(2)}</p>
           </div>
+          <div className="flex justify-between border-b mb-3 pb-2">
+            <p className="font-semibold">Cart Subtotal</p>
+            <p>₦{delivery.toFixed(2)}</p>
+          </div>
 
           <div className="flex justify-between mt-3 pb-3">
             <p className="font-semibold">Order Total</p>
@@ -136,7 +137,11 @@ const CheckoutDetails = ({
 
           {option === "card" && showCardPayment && clientSecret && (
             <div className="border p-3 rounded">
-              <Elements stripe={stripePromise}>
+              {/* ✅ Pass options with clientSecret and appearance */}
+              <Elements 
+                stripe={stripePromise} 
+                options={{ clientSecret, appearance }}
+              >
                 <CheckoutForm
                   onPaymentSuccess={() => {
                     resetCart();
