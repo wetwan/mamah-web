@@ -433,9 +433,6 @@ const Orders = () => {
 
   const router = useRouter(); // Assuming you have imported useRouter
 
-  useEffect(() => {
-    if (!token) redirect("/login");
-  }, [token]);
 
   // State is no longer needed since filtering is not implemented client-side
   // const [globalFilter, setGlobalFilter] = useState("");
@@ -465,8 +462,7 @@ const Orders = () => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  if (!token)
-    return toast.error("You must be logged in to view order details.");
+  if (!token) return null;
 
   return (
     <div>
@@ -520,7 +516,7 @@ const Orders = () => {
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
-                      className="cursor-pointer hover:bg-gray-50 transition-colors"
+                      className="cursor-pointer hover:bg-gray-50 transition-colors capitalize"
                       onClick={() => {
                         // Navigate to the details page on row click
                         // router.push(`/order/${row.original._id}`);
@@ -529,7 +525,7 @@ const Orders = () => {
                       }}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="py-4 px-3 text-sm">
+                        <TableCell key={cell.id} className="py-4 px-3 text-sm capitalize">
                           {typeof cell.column.columnDef.cell === "function"
                             ? cell.column.columnDef.cell(cell.getContext())
                             : cell.getValue()}
@@ -541,7 +537,7 @@ const Orders = () => {
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
-                      className="text-center py-10 text-lg text-gray-500"
+                      className="text-center py-10 text-lg text-gray-500 capitalize"
                     >
                       No orders found.
                     </TableCell>

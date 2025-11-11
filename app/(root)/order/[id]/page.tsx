@@ -104,13 +104,6 @@ const OrderDetails = () => {
     enabled: !!id,
   });
 
-  console.log(order);
-
-
-  if (!token) redirect("/login");
-
-  if (!token)
-    return toast.error("You must be logged in to view order details.");
 
   const {
     icon: StatusIcon,
@@ -390,7 +383,7 @@ const OrderDetails = () => {
                     </div>
                     <div className="text-right flex-shrink-0">
                       <p className="font-bold text-gray-800">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ₦ {(item.price * item.quantity).toFixed(2)}
                       </p>
                       <p className="text-sm text-gray-500">
                         {item.quantity} Qty @ ${item.price.toFixed(2)}

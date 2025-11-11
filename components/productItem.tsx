@@ -48,7 +48,7 @@ const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
               {product.description.slice(0, 20)}
             </h3>
             <h3 className="text-[#7971ea] font-medium capitalize">
-              ₦{product.price}
+              ₦{product.finalPrice.toFixed(2)}
             </h3>
           </div>
         </div>

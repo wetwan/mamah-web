@@ -169,7 +169,7 @@ const Checkout: React.FC = () => {
                     <input
                       type="text"
                       id="country"
-                      className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                      className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                       required
                       placeholder="enter your country"
                       {...register("country")}
@@ -183,7 +183,7 @@ const Checkout: React.FC = () => {
                         type="text"
                         {...register("firstName")}
                         id="firstname"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                         required
                         placeholder="enter your firstname"
                       />
@@ -194,7 +194,7 @@ const Checkout: React.FC = () => {
                         type="text"
                         {...register("lastName")}
                         id="lastname"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                         required
                         placeholder="enter your lastname"
                       />
@@ -208,7 +208,7 @@ const Checkout: React.FC = () => {
                         type="text"
                         {...register("address1")}
                         id="address"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                         required
                         placeholder="street address"
                       />
@@ -216,7 +216,7 @@ const Checkout: React.FC = () => {
                         type="text"
                         {...register("address2")}
                         id="address2"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                         placeholder="apartment, suite, unit etc. (optional)"
                       />
                     </div>
@@ -229,7 +229,7 @@ const Checkout: React.FC = () => {
                         type="text"
                         {...register("state")}
                         id="state"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                         required
                         placeholder="enter your state"
                       />
@@ -240,7 +240,7 @@ const Checkout: React.FC = () => {
                         type="text"
                         {...register("poster")}
                         id="poster"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                         placeholder="enter your postal / zip"
                       />
                     </div>
@@ -253,7 +253,7 @@ const Checkout: React.FC = () => {
                         type="email"
                         {...register("email")}
                         id="email"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                         required
                         placeholder="enter your email"
                       />
@@ -264,7 +264,7 @@ const Checkout: React.FC = () => {
                         type="text"
                         {...register("phone")}
                         id="phone"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded"
+                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
                         required
                         placeholder="enter your phone"
                       />
