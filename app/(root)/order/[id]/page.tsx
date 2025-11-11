@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 
 "use client";
 
 export const dynamic = "force-dynamic";
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Truck,
@@ -17,91 +18,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/context/userStore";
+import { redirect, useParams, useRouter } from "next/navigation";
+import { getOrder, getProducts } from "@/src/api/product/route";
+import { orderProps } from "@/src/types/tpes";
+import { toast } from "react-toastify";
 
-interface OrderProps {
-  _id: string;
-  createdAt: string;
-  deliveredAt: string | null;
-  isDelivered: boolean;
-  isPaid: boolean;
-  items: {
-    image: string;
-    name: string;
-    price: number;
-    cat: string;
-    qty: number;
-  }[];
-  itemsPrice: number;
-  paidAt: string | null;
-  paymentMethod: "card" | "cash_on_delivery";
-  shippingAddress: {
-    address1: string;
-    country: string;
-    email: string;
-    fullName: string;
-    phone: string;
-    state: string;
-  };
-  shippingPrice: number;
-  status: "pending" | "processing" | "delivered" | "cancelled"; // Adjust status type if needed
-  taxPrice: number;
-  totalPrice: number;
-  updatedAt: string;
-  user: string;
-}
-
-// Fixed order object (matching types)
-const order: OrderProps = {
-  createdAt: "2025-06-29T08:36:26.693Z",
-  deliveredAt: "2025-11-06T06:36:05.456Z",
-  isDelivered: true,
-  isPaid: true,
-  items: [
-    {
-      image: "https://placehold.co/100x100/A0BFFF/white?text=Towels",
-      name: "Fresh Bamboo Towels (Set of 3)",
-      price: 98,
-      cat: "bath",
-      qty: 3,
-    },
-    {
-      image: "https://placehold.co/100x100/FFB3C6/white?text=Soap",
-      name: "Luxury Hand Soap",
-      price: 12,
-      cat: "personal care",
-      qty: 2,
-    },
-  ],
-  itemsPrice: 318, // (98*3 + 12*2) = 318
-  paidAt: "2025-06-29T09:15:00.000Z",
-  paymentMethod: "card", // Fixed: lowercase "card"
-  shippingAddress: {
-    address1: "2427 Mraz Center",
-    country: "Benin",
-    email: "janie.b@example.com",
-    fullName: "Janie Beer-Schneider",
-    phone: "(477) 892-5364 x87398",
-    state: "Montana",
-  },
-  shippingPrice: 6,
-  status: "delivered", // Fixed: lowercase "delivered" (if status is typed as a string literal)
-  taxPrice: 16,
-  totalPrice: 340, // 318 + 6 + 16 = 340
-  updatedAt: "2025-11-06T11:23:48.033Z",
-  user: "b5a2aa65-3daf-43eb-88d8-b048451f04a5",
-  _id: "2ae9d3dd-b45a-4af6-842e-db624c4f687f",
-};
-
-// Fixed fetchOrder function
-const fetchOrder = async (): Promise<OrderProps> => {
-  // Simulate network delay (optional)
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return order; // Return your static data
-};
-
-// --- HELPER FUNCTIONS ---
-
-// Function to format dates into a readable string
 const formatDate = (dateString: string | null) => {
   if (!dateString) return "N/A";
   try {
@@ -119,7 +41,6 @@ const formatDate = (dateString: string | null) => {
   }
 };
 
-// Function to get the status icon and style
 const getStatusInfo = (status: any, isDelivered: any) => {
   const lowerStatus = status?.toLowerCase();
 
@@ -161,14 +82,36 @@ const getStatusInfo = (status: any, isDelivered: any) => {
 
 // --- MAIN COMPONENT ---
 const OrderDetails = () => {
+  const params = useParams();
+  const id = params?.id;
+  const { token } = useAuth();
+
+  console.log(id);
+  console.log(token);
+
   const {
     data: order,
     isLoading,
     isError,
-  } = useQuery<OrderProps>({
-    queryKey: ["orders"],
-    queryFn: () => fetchOrder(),
+  } = useQuery<orderProps>({
+    queryKey: ["order", id],
+    queryFn: () => getOrder(id as string),
+    enabled: !!id,
   });
+  const { data: product } = useQuery<orderProps>({
+    queryKey: ["prodcut"],
+    queryFn: () => getProducts(),
+    enabled: !!id,
+  });
+
+  console.log(order);
+
+
+  if (!token) redirect("/login");
+
+  if (!token)
+    return toast.error("You must be logged in to view order details.");
+
   const {
     icon: StatusIcon,
     text: statusText,
@@ -185,7 +128,7 @@ const OrderDetails = () => {
       description: "Order has been successfully placed.",
       date: order?.createdAt,
       isCompleted: true, // Always completed if the order exists
-      isCurrent: !order?.isPaid && order?.status.toLowerCase() !== "cancelled",
+      isCurrent: !order?.isPaid && order?.status?.toLowerCase() !== "cancelled",
     },
     {
       key: "paid",
@@ -193,19 +136,19 @@ const OrderDetails = () => {
       description: "Payment has been successfully processed and verified.",
       date: order?.paidAt,
       isCompleted: order?.isPaid,
-      isCurrent: order?.isPaid && order?.status.toLowerCase() === "processing",
+      isCurrent: order?.isPaid && order?.status?.toLowerCase() === "processing",
     },
     {
       key: "shipped",
       label: "Order Shipped",
       description: "Products are packed and on the way.",
       date:
-        order?.status.toLowerCase() === "shipped" || order?.isDelivered
+        order?.status?.toLowerCase() === "shipped" || order?.isDelivered
           ? order?.deliveredAt
           : null, // Use deliveredAt as a placeholder for ship date if not explicitly tracked
       isCompleted:
-        order?.status.toLowerCase() === "shipped" || order?.isDelivered,
-      isCurrent: order?.status.toLowerCase() === "shipped",
+        order?.status?.toLowerCase() === "shipped" || order?.isDelivered,
+      isCurrent: order?.status?.toLowerCase() === "shipped",
     },
     {
       key: "delivered",
@@ -348,19 +291,19 @@ const OrderDetails = () => {
                     <div className="flex justify-between border-b border-gray-100 pb-2">
                       <span className="text-gray-600">Items Subtotal:</span>
                       <span className="font-medium">
-                        ${order?.itemsPrice.toFixed(2)}
+                        ${order?.itemsPrice?.toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between border-b border-gray-100 pb-2">
                       <span className="text-gray-600">Shipping:</span>
                       <span className="font-medium">
-                        ${order?.shippingPrice.toFixed(2)}
+                        ${order?.shippingPrice?.toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between border-b border-gray-100 pb-2">
                       <span className="text-gray-600">Tax:</span>
                       <span className="font-medium">
-                        ${order?.taxPrice.toFixed(2)}
+                        ${order?.taxPrice?.toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between pt-2">
@@ -368,7 +311,7 @@ const OrderDetails = () => {
                         Order Total:
                       </span>
                       <span className="text-2xl font-extrabold text-blue-600">
-                        ${order?.totalPrice.toFixed(2)}
+                        ${order?.totalPrice?.toFixed(2)}
                       </span>
                     </div>
                     <p className="text-sm text-gray-500 pt-2 border-t border-gray-100">
@@ -399,20 +342,20 @@ const OrderDetails = () => {
                   </h3>
                   <address className="not-italic text-gray-700 space-y-1.5">
                     <p className="font-semibold text-sm text-gray-900">
-                      {order?.shippingAddress.fullName}
+                      {order?.shippingAddress?.fullName}
                     </p>
-                    <p>{order?.shippingAddress.address1}</p>
+                    <p>{order?.shippingAddress?.address1}</p>
                     <p>
-                      {order?.shippingAddress.state},{" "}
-                      {order?.shippingAddress.country}
+                      {order?.shippingAddress?.state},{" "}
+                      {order?.shippingAddress?.country}
                     </p>
                     <p>
                       Email:{" "}
                       <span className="text-blue-600">
-                        {order?.shippingAddress.email}
+                        {order?.shippingAddress?.email}
                       </span>
                     </p>
-                    <p>Phone: {order?.shippingAddress.phone}</p>
+                    <p>Phone: {order?.shippingAddress?.phone}</p>
                   </address>
                 </div>
               </div>
@@ -425,32 +368,32 @@ const OrderDetails = () => {
                 Order Items
               </h3>
               <div className="space-y-4">
-                {order?.items.map((item, index) => (
+                {order?.items?.map((item, index) => (
                   <div
                     key={index}
                     className="flex items-start md:items-center border-b pb-4 last:border-b-0 last:pb-0"
                   >
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.images[0]}
+                      alt={item.product.name}
                       className="w-20 h-20 rounded-lg object-cover mr-4 flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0 pr-4">
                       <p className="font-semibold text-gray-900 truncate">
-                        {item.name}
+                        {item.product.name}
                       </p>
-                      {item.cat && (
+                      {/* {item.cat && (
                         <p className="text-sm text-gray-500 capitalize">
                           Category: {item.cat}
                         </p>
-                      )}
+                      )} */}
                     </div>
                     <div className="text-right flex-shrink-0">
                       <p className="font-bold text-gray-800">
-                        ${(item.price * item.qty).toFixed(2)}
+                        ${(item.price * item.quantity).toFixed(2)}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {item.qty} Qty @ ${item.price.toFixed(2)}
+                        {item.quantity} Qty @ ${item.price.toFixed(2)}
                       </p>
                     </div>
                   </div>

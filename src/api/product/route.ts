@@ -25,27 +25,33 @@ export const getProduct = async (id: string) => {
     return data
 }
 
-export const getorder = async () => {
+export const getOrders = async (token: string) => {
+
     const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}order/my-orders`,
         {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-
+            headers: { token, }
         }
     );
-    return data;
+
+    return data.orders;
 };
 
-export const makePayment = async (orderId: string) => {
-    const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}order/my-orders`,
-        { orderId }, {
 
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+export const getOrder = async (orderId: string, ) => {
+// export const getOrder = async (orderId: string, token: string) => {
 
-    }
+
+    const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}order/${orderId}`,
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`,
+        //     },
+        //     withCredentials: true
+        // }
     );
-    return data;
+    return data.order;
 };
 
 
@@ -58,6 +64,7 @@ export const createOrder = async (order: Order, token: string) => {
             headers: {
                 token,
             },
+
         }
     );
     return data;
