@@ -52,3 +52,51 @@ export interface orderProps {
     updatedAt: string;
     deliveredAt: string;
 }
+
+interface ColorAvailability {
+  name: string;
+  available: boolean;
+  _id?: string; // Added _id based on the 'item' structure
+}
+
+interface Review {
+  user: string;
+  rating: number;
+  comment: string;
+  createdAt: string; // Changed to ISO string
+  updatedAt: string; // Changed to ISO string
+}
+
+export interface CategoryProp {
+  _id: string;
+  name: string;
+  slug: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+
+export interface ShopdataProp {
+  _id: string;
+  name: string;
+  images: string[];
+  colors: ColorAvailability[];
+  sizes: string[];
+  price: number;
+  discount: number;
+  category: string;
+  stock: number;
+  description: string;
+  postedby: string;
+  averageRating: number;
+  numOfReviews: number;
+  reviews: Review[];
+  createdAt: string; // Changed from number to ISO string
+  updatedAt: string; // Changed from number to ISO string
+  __v: number;      // New metadata field
+  finalPrice: number; // New calculated field
+  inStock: boolean; // New status field
+  id: string;       // New field (often redundant with _id)
+}

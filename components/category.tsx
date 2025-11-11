@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-
-import { CategoryProp } from "@/constant";
+import { CategoryProp } from "@/src/types/tpes";
 import axios from "axios";
 
 import Link from "next/link";

@@ -3,10 +3,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
-import { ShopdataProp } from "@/constant";
+
 import { useCart } from "@/context/cartStore";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { ShopdataProp } from "@/src/types/tpes";
 
 const ProductDetails = ({ item }: { item: ShopdataProp }) => {
   const [selectedcolor, setSelectedcolor] = useState<any>(null);

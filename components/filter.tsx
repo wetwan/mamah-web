@@ -10,11 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ShopdataProp } from "@/constant";
+
 import { getProducts } from "@/src/api/product/route";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
+import { ShopdataProp } from "@/src/types/tpes";
 
 function CategorySelect() {
   const router = useRouter();

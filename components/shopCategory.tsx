@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getProducts } from "@/src/api/product/route";
-import { ShopdataProp } from "@/constant";
+import { ShopdataProp } from "@/src/types/tpes";
 
 export default function Category() {
   const router = useRouter();

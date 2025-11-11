@@ -2,7 +2,8 @@ import H2 from "@/components/h2";
 import ProductDetails from "@/components/productDetails";
 import ProductItem from "@/components/productItem";
 import ProductPageImage from "@/components/productPageImage";
-import { ShopdataProp } from "@/constant";
+import { ShopdataProp } from "@/src/types/tpes";
+
 import axios from "axios";
 import Link from "next/link";
 import React from "react";
