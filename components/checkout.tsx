@@ -16,14 +16,21 @@ import { useAuth } from "@/context/userStore";
 import { createOrder } from "@/src/api/product/route";
 import { Order } from "@/src/api/product/schema";
 import {
-  OrderShippingData,
   shippingData,
   PaymentMethodType,
+  shippingSchema,
 } from "@/src/api/auth/schema";
 import { Button } from "./ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Checkout: React.FC = () => {
-  const { register, handleSubmit } = useForm<OrderShippingData>();
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm<shippingData>({
+  resolver: zodResolver(shippingSchema),
+});
   const token = useAuth((s) => s.token);
   const router = useRouter();
   const { resetCart, item: cartProducts } = useCart();
@@ -135,7 +142,7 @@ const Checkout: React.FC = () => {
           color: item.selectedColor?.name,
           size: item.selectedSize,
         })),
-        shippingAddress: { ...data, fullName },
+        shippingAddress: { ...data, fullName } as unknown as shippingData,
         paymentMethod: option,
         shippingPrice: delivery,
         taxPrice: 0,
@@ -170,10 +177,15 @@ const Checkout: React.FC = () => {
                       type="text"
                       id="country"
                       className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
-                      required
+                      // required
                       placeholder="enter your country"
                       {...register("country")}
                     />
+                    {errors.country && (
+                      <p className="text-red-500 mt-1">
+                        {errors.country.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col md:flex-row gap-4">
@@ -184,9 +196,14 @@ const Checkout: React.FC = () => {
                         {...register("firstName")}
                         id="firstname"
                         className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
-                        required
+                        // required
                         placeholder="enter your firstname"
                       />
+                      {errors.firstName && (
+                        <p className="text-red-500 mt-1">
+                          {errors.firstName.message}
+                        </p>
+                      )}
                     </div>
                     <div className="w-full mb-4">
                       <label htmlFor="lastname">last name</label>
@@ -195,23 +212,37 @@ const Checkout: React.FC = () => {
                         {...register("lastName")}
                         id="lastname"
                         className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
-                        required
+                        // required
                         placeholder="enter your lastname"
                       />
+                      {errors.lastName && (
+                        <p className="text-red-500 mt-1">
+                          {errors.lastName.message}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-4">
                     <div className="w-full mb-4">
-                      <label htmlFor="address">address</label>
-                      <input
-                        type="text"
-                        {...register("address1")}
-                        id="address"
-                        className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
-                        required
-                        placeholder="street address"
-                      />
+                      <div className="">
+                        <label htmlFor="address">address</label>
+
+                        <input
+                          type="text"
+                          {...register("address1")}
+                          id="address"
+                          className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
+                          // required
+                          placeholder="street address"
+                        />
+                        {errors.address1 && (
+                          <p className="text-red-500 mt-1">
+                            {errors.address1.message}
+                          </p>
+                        )}
+                      </div>
+
                       <input
                         type="text"
                         {...register("address2")}
@@ -230,9 +261,14 @@ const Checkout: React.FC = () => {
                         {...register("state")}
                         id="state"
                         className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
-                        required
+                        // required
                         placeholder="enter your state"
                       />
+                      {errors.state && (
+                        <p className="text-red-500 mt-1">
+                          {errors.state.message}
+                        </p>
+                      )}
                     </div>
                     <div className="w-full mb-4">
                       <label htmlFor="poster">postal / zip</label>
@@ -254,9 +290,14 @@ const Checkout: React.FC = () => {
                         {...register("email")}
                         id="email"
                         className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
-                        required
+                        // required
                         placeholder="enter your email"
                       />
+                      {errors.email && (
+                        <p className="text-red-500 mt-1">
+                          {errors.email.message}
+                        </p>
+                      )}
                     </div>
                     <div className="w-full mb-4">
                       <label htmlFor="phone">phone</label>
@@ -265,9 +306,14 @@ const Checkout: React.FC = () => {
                         {...register("phone")}
                         id="phone"
                         className="placeholder:capitalize border w-full px-3 py-4 mt-3 outline-none focus-within:border-[#7971ea] focus-within:rounded transition-all duration-300 ease-in rounded capitalize"
-                        required
+                        // required
                         placeholder="enter your phone"
                       />
+                      {errors.phone && (
+                        <p className="text-red-500 mt-1">
+                          {errors.phone.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

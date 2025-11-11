@@ -25,21 +25,18 @@ export const getProduct = async (id: string) => {
     return data
 }
 
-export const getOrders = async (token: string) => {
-
+export const getOrders = async (token: string, page = 1, limit = 50) => {
     const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}order/my-orders`,
-        {
-            headers: { token, }
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}order/my-orders?page=${page}&limit=${limit}`,
+        { headers: { token } }
     );
 
-    return data.orders;
+    return data;
 };
 
 
-export const getOrder = async (orderId: string, ) => {
-// export const getOrder = async (orderId: string, token: string) => {
+export const getOrder = async (orderId: string,) => {
+    // export const getOrder = async (orderId: string, token: string) => {
 
 
     const { data } = await axios.get(

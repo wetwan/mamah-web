@@ -86,9 +86,6 @@ const OrderDetails = () => {
   const id = params?.id;
   const { token } = useAuth();
 
-  console.log(id);
-  console.log(token);
-
   const {
     data: order,
     isLoading,
@@ -98,12 +95,6 @@ const OrderDetails = () => {
     queryFn: () => getOrder(id as string),
     enabled: !!id,
   });
-  const { data: product } = useQuery<orderProps>({
-    queryKey: ["prodcut"],
-    queryFn: () => getProducts(),
-    enabled: !!id,
-  });
-
 
   const {
     icon: StatusIcon,
