@@ -36,10 +36,10 @@ export const getorder = async () => {
     return data;
 };
 
-export const makePayment = async (id: string) => {
+export const makePayment = async (orderId: string) => {
     const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}order/my-orders`,
-        id, {
+        { orderId }, {
 
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 

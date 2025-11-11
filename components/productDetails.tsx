@@ -13,6 +13,7 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [addQuanitity, setAddQuanitity] = useState<number>(1);
 
+
   const addProduct = useCart((state) => state.addProduct);
   const router = useRouter();
 
@@ -22,6 +23,8 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
     }
   }, [item]);
 
+
+  
   if (!item) {
     return (
       <div className="h-[500px] w-full flex items-center justify-center">

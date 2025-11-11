@@ -3,57 +3,39 @@
 import React from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-
 import { useRouter } from "next/navigation";
-import { CartItem, useCart } from "@/context/cartStore";
+import { useCart, CartItem } from "@/context/cartStore";
 import { CheckoutForm } from "./stripe";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-console.log(
-  "Stripe Public Key loaded:",
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
-
-type Prop = {
+type Props = {
   option: "cash_on_delivery" | "card";
-  cartProducts: CartItem[];
   setOption: React.Dispatch<React.SetStateAction<"cash_on_delivery" | "card">>;
+  cartProducts: CartItem[];
   subtotal: number;
-  delivery?: 10;
+  delivery: number;
   total: number;
   showCardPayment: boolean;
-  orderId: string | null;
   clientSecret: string | null;
-  setClientSecret: React.Dispatch<React.SetStateAction<string | null>>;
+  orderId: string | null;
 };
 
 const CheckoutDetails = ({
   option,
-  cartProducts,
   setOption,
+  cartProducts,
   subtotal,
-  showCardPayment,
+  delivery,
   total,
+  showCardPayment,
   clientSecret,
   orderId,
-  delivery = 10,
-}: Prop) => {
+}: Props) => {
   const { resetCart } = useCart();
-  // const { token } = useAuth();
-
   const router = useRouter();
-
-  const appearance = {
-    theme: "stripe" as const,
-    variables: {
-      colorPrimary: "#7971ea",
-      colorBackground: "#ffffff",
-      colorText: "#30313d",
-    },
-  };
 
   return (
     <div className="w-full">
@@ -76,12 +58,12 @@ const CheckoutDetails = ({
       </div>
 
       {/* Order Summary */}
-      <h2 className="my-3 mt-7 capitalize font-medium text-2xl">Your Order</h2>
+      <h2 className="my-3 mt-7 font-medium text-2xl">Your Order</h2>
       <div className="border px-3 py-5 md:px-12">
-        <div className="capitalize">
-          <div className="flex items-start justify-between mb-4">
-            <p className="font-bold">Products</p>
-            <p className="font-bold">Total</p>
+        <div>
+          <div className="flex justify-between mb-3 font-bold">
+            <p>Products</p>
+            <p>Total</p>
           </div>
 
           {cartProducts.map((item) => (
@@ -90,71 +72,69 @@ const CheckoutDetails = ({
               key={item.id}
             >
               <p>
-                {item.product.name} * {item.quantity}
+                {item.product.name} × {item.quantity}
               </p>
               <p>₦{(item.product.finalPrice * item.quantity).toFixed(2)}</p>
             </div>
           ))}
 
           <div className="flex justify-between border-b mb-3 pb-2">
-            <p className="font-semibold">Cart Subtotal</p>
+            <p className="font-semibold">Subtotal</p>
             <p>₦{subtotal.toFixed(2)}</p>
           </div>
+
           <div className="flex justify-between border-b mb-3 pb-2">
-            <p className="font-semibold">Cart Subtotal</p>
+            <p className="font-semibold">Delivery</p>
             <p>₦{delivery.toFixed(2)}</p>
           </div>
 
-          <div className="flex justify-between mt-3 pb-3">
-            <p className="font-semibold">Order Total</p>
-            <p className="font-semibold">₦{total.toFixed(2)}</p>
+          <div className="flex justify-between mt-3 pb-3 font-semibold">
+            <p>Total</p>
+            <p>₦{total.toFixed(2)}</p>
           </div>
         </div>
 
         {/* Payment Options */}
         <div className="mt-7">
-          <div
-            className={`border mb-4 text-[#7971ea] w-full capitalize py-3 px-2 cursor-pointer ${
-              option === "cash_on_delivery" ? "bg-[#7971ea] text-white" : ""
+          <button
+            type="button"
+            className={`border mb-4 w-full py-3 px-2 capitalize transition ${
+              option === "cash_on_delivery"
+                ? "bg-[#7971ea] text-white"
+                : "text-[#7971ea]"
             }`}
             onClick={() => setOption("cash_on_delivery")}
+            disabled={showCardPayment}
           >
-            Payment on Delivery
-          </div>
+            Pay on Delivery
+          </button>
 
-          <div
-            className={`border mb-4 text-[#7971ea] w-full capitalize py-3 px-2 cursor-pointer ${
-              option === "card" ? "bg-[#7971ea] text-white" : ""
+          <button
+            type="button"
+            className={`border mb-4 w-full py-3 px-2 capitalize transition ${
+              option === "card" ? "bg-[#7971ea] text-white" : "text-[#7971ea]"
             }`}
             onClick={() => setOption("card")}
+            disabled={showCardPayment}
           >
             Pay with Card
-          </div>
+          </button>
 
-          {option === "card" && showCardPayment && clientSecret && (
-            <div className="border p-3 rounded">
-              {!clientSecret.startsWith("pi_") &&
-              !clientSecret.startsWith("seti_") ? (
-                <div className="text-center py-4 text-red-500">
-                  Invalid payment configuration. Please refresh and try again.
-                </div>
-              ) : (
-                <Elements
-                  stripe={stripePromise}
-                  options={{ clientSecret, appearance, loader: "auto" }}
-                >
-                  <CheckoutForm
-                    onPaymentSuccess={() => {
-                      resetCart();
-                      router.push("/success");
-                    }}
-                    orderId={orderId}
-                    clientSecret={clientSecret}
-                  />
-                </Elements>
-              )}
+          {/* Only show Stripe form when card is selected, payment initialized, and we have clientSecret */}
+          {option === "card" && clientSecret && (
+            <div className="border p-4 rounded   bg-gray-50">
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm
+                  orderId={orderId}
+                  onPaymentSuccess={() => {
+                    resetCart();
+                    router.push("/success");
+                  }}
+                />
+              </Elements>
             </div>
           )}
+          <div />
         </div>
       </div>
     </div>

@@ -1,126 +1,102 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
-import { useCart } from "@/context/cartStore";
-import { useAuth } from "@/context/userStore";
+import { useState } from "react";
 import {
+  PaymentElement,
   useStripe,
   useElements,
-  PaymentElement,
 } from "@stripe/react-stripe-js";
-import axios from "axios";
-import { useState } from "react";
+import { Button } from "./ui/button";
 import { toast } from "react-toastify";
+import { useAuth } from "@/context/userStore";
+import axios from "axios";
 
-interface CheckoutFormProps {
+type Props = {
   onPaymentSuccess: () => void;
   orderId: string | null;
-  clientSecret: string | null;
-}
+};
 
-export const CheckoutForm: React.FC<CheckoutFormProps> = ({
-  onPaymentSuccess,
-  orderId,
-  clientSecret,
-}) => {
+export const CheckoutForm = ({ onPaymentSuccess, orderId }: Props) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [loading, setLoading] = useState(false);
-  const { resetCart } = useCart();
   const token = useAuth((s) => s.token);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    if (!stripe || !elements || !orderId || !clientSecret) {
-      console.error(
-        "Stripe.js, elements, orderId, or clientSecret is missing."
-      );
-      toast.error("Payment details not initialized. Please try again.");
+    if (!stripe || !elements || !orderId) {
+      toast.error("Payment system not ready. Please try again.");
       return;
     }
 
-    setLoading(true);
+    setIsProcessing(true);
 
     try {
-      console.log("🔄 Confirming payment...");
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        toast.error(submitError.message || "Could not submit payment details.");
+        setIsProcessing(false);
+        return;
+      }
 
-      // ✅ Confirm the payment
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         redirect: "if_required",
         confirmParams: {
-          return_url: `${window.location.origin}/success`,
+          return_url: window.location.origin + "/success",
         },
       });
 
       if (error) {
-        console.error("❌ Payment error:", error);
         toast.error(error.message || "Payment failed");
-        setLoading(false);
+        setIsProcessing(false);
         return;
       }
 
-      if (paymentIntent && paymentIntent.status === "succeeded") {
-        console.log("✅ Payment succeeded, updating order...");
-
-        // ✅ Inform backend to update order status
-        try {
-          const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}order/${orderId}/pay`,
-            { paymentIntentId: paymentIntent.id },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          console.log("✅ Order updated successfully:", response.data);
-
-          resetCart();
-          toast.success("Payment successful! Redirecting...");
-
-          // Small delay before redirect for better UX
-          setTimeout(() => {
-            onPaymentSuccess();
-          }, 1000);
-        } catch (backendError: any) {
-          console.error("❌ Error updating order status:", backendError);
-
-          if (backendError.response?.status === 401) {
-            toast.error("Session expired. Please log in again.");
-          } else {
-            const errorMessage =
-              backendError.response?.data?.message ||
-              "Payment succeeded, but there was an error updating your order. Please contact support.";
-            toast.error(errorMessage);
-          }
+      if (paymentIntent?.status === "succeeded") {
+        if (!token) {
+          toast.error("Authentication session expired. Please log in again.");
+          setIsProcessing(false);
+          return;
         }
+
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}order/${orderId}/pay`,
+          { paymentIntentId: paymentIntent.id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        toast.success("Payment successful! Order processed.");
+        onPaymentSuccess();
       }
-    } catch (err) {
-      console.error("❌ Unexpected error:", err);
-      toast.error("An unexpected error occurred. Please try again.");
+    } catch (err: any) {
+      console.error("Payment error:", err);
+
+      const errorMessage =
+        err.response?.data?.message ||
+        "An unexpected error occurred. Please try again.";
+      toast.error(errorMessage);
     } finally {
-      setLoading(false);
+      setIsProcessing(false);
     }
   };
-
   return (
-    <div>
-      <PaymentElement
-        options={{
-          layout: "tabs",
-        }}
-      />
-      <button
-        onSubmit={handleSubmit}
-        type="submit"
-        disabled={!stripe || loading || !orderId || !clientSecret}
-        className="bg-[#7971ea] text-white w-full py-3 mt-4 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#6961d9] transition-colors"
+    <div className="space-y-4">
+      <PaymentElement />
+      <Button
+        type="button"
+        onClick={handleSubmit}
+        disabled={!stripe || isProcessing}
+        className="w-full bg-[#7971ea] hover:bg-[#6961d9] py-6 text-white uppercase font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? (
+        {isProcessing ? (
           <span className="flex items-center justify-center">
             <svg
               className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -142,12 +118,12 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            Processing...
+            Processing Payment...
           </span>
         ) : (
           "Confirm Payment"
         )}
-      </button>
+      </Button>
     </div>
   );
 };

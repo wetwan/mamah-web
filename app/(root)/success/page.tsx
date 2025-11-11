@@ -27,7 +27,7 @@ const Sucess = () => {
         </p>
 
         <Link
-          href={"/Shop"}
+          href={"/shop"}
           className="w-fit px-7 py-4 uppercase border  bg-[#7971ea]"
         >
           back to shop

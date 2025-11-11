@@ -56,7 +56,9 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
         <div className="lg:w-1/2 w-fit max-sm:mt-10">
           <ProductDetails item={product} />
         </div>
-      </div>{" "}
+      </div>
+
+      
       <div className="my-20 lg:w-full w-full md:px-8 lg:px-16 xl:32 2xl:px-64 px-4 flex flex-col items-center gap-10">
         <H2
           text="shop popular"
