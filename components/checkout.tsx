@@ -24,13 +24,13 @@ import { Button } from "./ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const Checkout: React.FC = () => {
-const {
-  register,
-  handleSubmit,
-  formState: { errors },
-} = useForm<shippingData>({
-  resolver: zodResolver(shippingSchema),
-});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<shippingData>({
+    resolver: zodResolver(shippingSchema),
+  });
   const token = useAuth((s) => s.token);
   const router = useRouter();
   const { resetCart, item: cartProducts } = useCart();
@@ -105,10 +105,6 @@ const {
             toast.error("Failed to initialize payment. Please try again.");
             return;
           }
-
-          console.log(res.data.clientSecret);
-          console.log(res.data);
-
           setClientSecret(res.data.clientSecret);
           setShowCardPayment(true);
         } catch (err) {

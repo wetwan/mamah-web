@@ -10,12 +10,13 @@ type AuthStore = {
 };
 
 interface User {
-    id: string;
+    _id: string;
     email: string;
-    firstName?: string;
-    lastName?: string;
-    address?: string;
-    phone?: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    phone: string;
+    role: string
 }
 
 export const useAuth = create<AuthStore>()(

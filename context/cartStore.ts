@@ -1,6 +1,7 @@
+import { ShopdataProp } from "@/src/types/tpes";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ShopdataProp } from "@/constant";
+
 
 export type ProductColor = {
     name: string;

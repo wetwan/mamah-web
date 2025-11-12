@@ -62,7 +62,14 @@ export function ProfileDropdown() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onClick={isLoggedOut}>Log out</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                isLoggedOut();
+                router.push("/");
+              }}
+            >
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (

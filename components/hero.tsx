@@ -7,8 +7,15 @@ import image3 from "@/public/image3.png";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { redirect } from "next/navigation";
+import { useAuth } from "@/context/userStore";
+import { useNotificationStore } from "@/context/notificationStore";
 
 const Hero = () => {
+  const { user } = useAuth();
+  const { notifications } = useNotificationStore();
+  console.log("notifications" , notifications);
+  console.log("user" , user);
+
   const banner = [
     {
       image: image1,

@@ -29,6 +29,7 @@ import { getOrders } from "@/src/api/product/route";
 import { useAuth } from "@/context/userStore";
 
 import { orderProps } from "@/src/types/tpes";
+import { redirect, useRouter } from "next/navigation";
 
 // 💡 Utility function to format date
 const formatDate = (dateString: string) => {
@@ -180,11 +181,10 @@ const Orders = () => {
 
   const [page, setPage] = useState(1);
 
-
   const table = useReactTable({
     data: orders,
     columns,
-    manualPagination: true, 
+    manualPagination: true,
     pageCount: totalPages,
     state: {
       pagination: {
@@ -204,7 +204,12 @@ const Orders = () => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  if (!token) return null;
+  const isLoggedIn = useAuth((s) => !!s.token);
+  useEffect(() => {
+    if (isLoggedIn) {
+      redirect("/");
+    }
+  }, [isLoggedIn]);
 
   return (
     <div>

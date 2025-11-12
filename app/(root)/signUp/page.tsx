@@ -195,13 +195,13 @@ const SignUp = () => {
               type="submit"
               disabled={mutation.isPending}
             >
-              {mutation.isPending ? "signing uo..." : "sign up"}
+              {mutation.isPending ? "signing up..." : "sign up"}
             </button>
             <p className=" flex  gap-3  px-3 md:w-[400px] w-[300px] mt-20 py-5 text-center  font-light items-center justify-center  \\">
-              already a member{" "}
+              Already a member{" "}
               <Link href={"/login"} className="text-[#7971ea] capitalize">
                 {" "}
-                sign in!
+                Sign in!
               </Link>
             </p>
           </form>

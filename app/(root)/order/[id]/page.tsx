@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 
@@ -19,10 +18,10 @@ import {
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/userStore";
-import { redirect, useParams, useRouter } from "next/navigation";
-import { getOrder, getProducts } from "@/src/api/product/route";
+import { redirect, useParams, } from "next/navigation";
+import { getOrder } from "@/src/api/product/route";
 import { orderProps } from "@/src/types/tpes";
-import { toast } from "react-toastify";
+
 
 const formatDate = (dateString: string | null) => {
   if (!dateString) return "N/A";
@@ -84,7 +83,6 @@ const getStatusInfo = (status: any, isDelivered: any) => {
 const OrderDetails = () => {
   const params = useParams();
   const id = params?.id;
-  const { token } = useAuth();
 
   const {
     data: order,
@@ -101,6 +99,14 @@ const OrderDetails = () => {
     text: statusText,
     color: statusColor,
   } = getStatusInfo(order?.status, order?.isDelivered);
+
+  const isLoggedIn = useAuth((s) => !!s.token);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      redirect("/");
+    }
+  }, [isLoggedIn]);
 
   if (isLoading) {
     return null;
