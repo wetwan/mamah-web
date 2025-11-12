@@ -44,26 +44,10 @@ const Notifications = ({
   console.log(data);
   console.log(product?.[0]);
 
-  if (isLoading) {
-    return (
-      <div className="p-4 text-center text-gray-500">
-        <div className="flex justify-center gap-2 items-center">
-          <div className="w-4 h-4 border-2 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
-          <span>Loading notifications...</span>
-        </div>
-      </div>
-    );
-  }
-
   if (isError) {
     return <p className="text-center text-red-500">{isError}</p>;
   }
 
-  if (data?.length === 0) {
-    return (
-      <div className="p-4 text-center text-gray-500">No new notifications</div>
-    );
-  }
 
   return (
     <div className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 ">
@@ -71,6 +55,21 @@ const Notifications = ({
         <h2 className="text-lg font-semibold">Your notifications </h2>
         <X onClick={() => setOpenCart(false)} />
       </div>
+
+      {data?.length === 0 && (
+        <div className="p-4 text-center text-gray-500">
+          No new notifications
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="p-4 text-center text-gray-500">
+          <div className="flex justify-center gap-2 items-center">
+            <div className="w-4 h-4 border-2 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+            <span>Loading notifications...</span>
+          </div>
+        </div>
+      )}
 
       {!isLoading && !isError && data && (
         <div className="notification-dropdown">
