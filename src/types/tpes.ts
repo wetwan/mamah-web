@@ -58,6 +58,11 @@ interface ColorAvailability {
   available: boolean;
   _id?: string; // Added _id based on the 'item' structure
 }
+interface SizeAvailability {
+  name: string;
+  available: boolean;
+  _id?: string; // Added _id based on the 'item' structure
+}
 
 interface Review {
   user: string;
@@ -83,7 +88,7 @@ export interface ShopdataProp {
   name: string;
   images: string[];
   colors: ColorAvailability[];
-  sizes: string[];
+  sizes: SizeAvailability[];
   price: number;
   discount: number;
   category: string;

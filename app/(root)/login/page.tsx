@@ -52,7 +52,6 @@ const Login = () => {
     if (isLoggedIn) {
       router.push("/");
     }
-    console.log("isLoggedIn");
   }, [isLoggedIn, router]);
 
   const onSubmit = (data: LoginData) => {

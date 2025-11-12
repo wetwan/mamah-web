@@ -4,7 +4,7 @@
 "use client";
 
 export const dynamic = "force-dynamic";
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
   Truck,
@@ -17,11 +17,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/context/userStore";
-import { redirect, useParams, } from "next/navigation";
+
 import { getOrder } from "@/src/api/product/route";
 import { orderProps } from "@/src/types/tpes";
-
+import Loading from "./loading";
+import { useParams } from "next/navigation";
 
 const formatDate = (dateString: string | null) => {
   if (!dateString) return "N/A";
@@ -100,16 +100,16 @@ const OrderDetails = () => {
     color: statusColor,
   } = getStatusInfo(order?.status, order?.isDelivered);
 
-  const isLoggedIn = useAuth((s) => !!s.token);
+  // const isLoggedIn = useAuth((s) => !!s.token);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      redirect("/");
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     redirect("/");
+  //   }
+  // }, [isLoggedIn]);
 
   if (isLoading) {
-    return null;
+    return <Loading />;
   }
   const steps = [
     {

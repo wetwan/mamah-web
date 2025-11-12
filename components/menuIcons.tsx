@@ -1,18 +1,20 @@
 "use client";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Bell, ShoppingCart } from "lucide-react";
 import React, { useState } from "react";
 import Cart from "./cart";
 import ProfileDropdown from "./profiledropdown";
 import { Button } from "./ui/button";
 import { useCart } from "@/context/cartStore";
+import Notifications from "./notification";
 
 const MenuIcons = () => {
   const [openCart, setOpenCart] = useState(false);
+  const [notifyPanel, setNotifyPanel] = useState(false);
   const cartItems = useCart((state) => state.item);
 
   const cartnumber = cartItems.length;
   // const [openProfile, setOpenProfile] = useState(false);
-  
+
   return (
     <>
       <ul className="flex items-center gap-3 md:w-1/3 justify-end">
@@ -22,9 +24,10 @@ const MenuIcons = () => {
         <li className="text-gray-500 hover:text-neutral-600 cursor-pointer transition-all duration-300 hover:-translate-y-1 ">
           <Button
             variant="ghost"
+            onClick={() => setNotifyPanel(!notifyPanel)}
             className="relative flex items-center  justify-center hover:bg-transparent "
           >
-            <Heart
+            <Bell
               size={54}
               strokeWidth={2.4}
               className="text-3xl scale-[1.6]"
@@ -56,6 +59,7 @@ const MenuIcons = () => {
       </ul>
 
       {openCart && <Cart setOpenCart={setOpenCart} />}
+      {notifyPanel && <Notifications setOpenCart={setNotifyPanel} />}
       {/* {openProfile && <ProfileDropdown />} */}
     </>
   );

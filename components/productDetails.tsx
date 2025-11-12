@@ -14,7 +14,6 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [addQuanitity, setAddQuanitity] = useState<number>(1);
 
-
   const addProduct = useCart((state) => state.addProduct);
   const router = useRouter();
 
@@ -23,9 +22,12 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
       setSelectedcolor(item.colors[0]);
     }
   }, [item]);
+  useEffect(() => {
+    if (item?.sizes?.length > 0) {
+      setSelectedSize(item.sizes[0]);
+    }
+  }, [item]);
 
-
-  
   if (!item) {
     return (
       <div className="h-[500px] w-full flex items-center justify-center">
@@ -108,7 +110,7 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
       )}
 
       {/* SIZES */}
-      {item.sizes?.length > 0 ? (
+      {item.sizes?.length > 0 && item.sizes ? (
         <div className="mt-4 w-full">
           <h5 className="font-semibold uppercase text-gray-500">
             Choose a size
@@ -124,7 +126,7 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
                 key={i}
                 onClick={() => setSelectedSize(i)}
               >
-                {size}
+                {size.name}
               </Button>
             ))}
           </div>

@@ -33,6 +33,14 @@ export const getOrders = async (token: string, page = 1, limit = 50) => {
 
     return data;
 };
+export const getNotify = async (token: string) => {
+    const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}notify`,
+        { headers: { token } }
+    );
+
+    return data.notifications;
+};
 
 
 export const getOrder = async (orderId: string,) => {

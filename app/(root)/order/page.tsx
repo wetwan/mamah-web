@@ -206,7 +206,7 @@ const Orders = () => {
 
   const isLoggedIn = useAuth((s) => !!s.token);
   useEffect(() => {
-    if (isLoggedIn) {
+    if (!isLoggedIn) {
       redirect("/");
     }
   }, [isLoggedIn]);

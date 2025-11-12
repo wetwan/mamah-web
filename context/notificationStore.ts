@@ -52,6 +52,16 @@ export const useNotificationStore = create<NotificationStore>((set,) => ({
                 title = `Urgent Inventory Alert!`;
                 message = `🚨 ${data.alertCount} product(s) are running critically low on stock. Check the admin panel immediately.`;
                 break;
+
+            // --- ADD THIS NEW CASE ---
+            case 'NEW_PRODUCT_CREATED':
+                type = 'INFO'; // You can keep this as 'INFO' or add 'NEW_PRODUCT' to your types
+                title = data.title;    // Use the title from the payload
+                message = data.message; // Use the message from the payload
+                relatedId = data.relatedId;
+                break;
+            // -------------------------
+
             default:
                 type = 'INFO';
                 title = 'New System Message';
