@@ -15,7 +15,7 @@ const useAckNotification = (token: string) => {
   return useMutation({
     mutationFn: (id: string) => acknowledgeNotification(token, id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notify"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (error) => {
       console.error("Failed to acknowledge notification:", error);
@@ -37,7 +37,7 @@ const Notifications = ({
     queryKey: ["notify"],
     queryFn: () => getNotify(token as string),
     enabled: !!token,
-    refetchInterval: 20000,
+    refetchInterval: 2000,
     refetchOnWindowFocus: true,
   });
 
@@ -52,6 +52,8 @@ const Notifications = ({
       onSettled: () => setActiveId(null),
     });
   };
+
+  console.log(data);
 
   // const { data: product } = useQuery<ShopdataProp[]>({
   //   queryKey: ["notify"],

@@ -124,7 +124,7 @@ const MenuIcons = () => {
           <Button
             variant="ghost"
           className={`relative flex items-center  justify-center hover:bg-transparent ${
-                cartnumber && "bg-green-20 hover:bg-green-200"
+                cartnumber && "bg-green-200 hover:bg-green-200"
               }`}>
             {/* Bigger icon */}
             <ShoppingCart

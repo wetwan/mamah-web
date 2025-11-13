@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Returing from "./returing";
 import CheckoutDetails from "./checkoutDeatils";
@@ -27,12 +27,15 @@ const Checkout: React.FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
+
     formState: { errors },
   } = useForm<shippingData>({
     resolver: zodResolver(shippingSchema),
   });
-  const token = useAuth((s) => s.token);
+  const { token, user } = useAuth();
   const router = useRouter();
+
   const { resetCart, item: cartProducts } = useCart();
 
   const [option, setOption] = useState<PaymentMethodType>("cash_on_delivery");
@@ -148,6 +151,22 @@ const Checkout: React.FC = () => {
     },
     [cartProducts, option, token, delivery, handleCheckoutOrder]
   );
+
+  useEffect(() => {
+    if (user) {
+      reset({
+        country: "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        address1: user.address || "",
+        address2: "",
+        state: "",
+        poster: "",
+        email: user.email || "",
+        phone: user.phone || "",
+      });
+    }
+  }, [user, reset]);
 
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative">

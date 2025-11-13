@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeClosed, Lock, Mail, User } from "lucide-react";
+import { Eye, EyeClosed, Lock, Mail, MapIcon, Phone, User } from "lucide-react";
 import { useAuth } from "@/context/userStore";
 
 import { signUpSchema, singUpData } from "@/src/api/auth/schema";
@@ -85,7 +85,7 @@ const SignUp = () => {
                 <User size={20} color="gray" />
                 <input
                   placeholder="first name"
-                  className="placeholder:capitalize outline-none py-3 w-full"
+                  className="placeholder:capitalize outline-none py-3 w-full px-2"
                   type="text"
                   {...form.register("firstName")}
                 />
@@ -101,7 +101,7 @@ const SignUp = () => {
                 <User size={20} color="gray" />
                 <input
                   placeholder="last name"
-                  className="placeholder:capitalize outline-none py-3 w-full"
+                  className="placeholder:capitalize outline-none py-3 w-full px-2"
                   type="text"
                   {...form.register("lastName")}
                 />
@@ -117,7 +117,7 @@ const SignUp = () => {
                 <Mail size={20} color="gray" />
                 <input
                   placeholder="email"
-                  className="placeholder:capitalize outline-none py-3 w-full"
+                  className="placeholder:capitalize outline-none py-3 w-full px-2"
                   type="email"
                   {...form.register("email")}
                 />
@@ -133,7 +133,7 @@ const SignUp = () => {
                 <Lock size={20} color="gray" />
                 <input
                   placeholder="password"
-                  className="placeholder:capitalize outline-none py-3 w-full"
+                  className="placeholder:capitalize outline-none py-3 w-full px-2"
                   {...form.register("password")}
                   type={passwordShow ? "text" : "password"}
                 />
@@ -153,10 +153,10 @@ const SignUp = () => {
             </div>
             <div className="mb-5">
               <div className="bg-gray-300 flex  gap-3 items-center px-3 md:w-[400px] w-[300px] mb-2 focus-within:bg-white border  focus-within:text-[#7971ea] focus-within:border-[#7971ea]">
-                <Lock size={20} color="gray" />
+                <Phone size={20} color="gray" />
                 <input
                   placeholder="phone"
-                  className="placeholder:capitalize outline-none py-3 w-full"
+                  className="placeholder:capitalize outline-none py-3 w-full px-2"
                   {...form.register("phone")}
                   type="text"
                 />
@@ -169,10 +169,10 @@ const SignUp = () => {
             </div>
             <div className="mb-5">
               <div className="bg-gray-300 flex  gap-3 items-center px-3 md:w-[400px] w-[300px] mb-2 focus-within:bg-white border  focus-within:text-[#7971ea] focus-within:border-[#7971ea]">
-                <Lock size={20} color="gray" />
+                <MapIcon size={20} color="gray" />
                 <input
                   placeholder="address"
-                  className="placeholder:capitalize outline-none py-3 w-full"
+                  className="placeholder:capitalize outline-none py-3 w-full px-2"
                   {...form.register("address")}
                   type="text"
                 />
