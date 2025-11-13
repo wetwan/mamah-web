@@ -45,13 +45,13 @@ const CheckoutDetails = ({
         <p className="font-light text-black">
           Enter your coupon code if you have one
         </p>
-        <div className="flex justify-center items-center w-[80%] border mt-6 h-[55px] rounded">
+        <div className="flex justify-center items-center sm:w-[80%]  border mt-6 h-[55px] rounded">
           <input
             type="text"
             placeholder="coupon code"
             className="placeholder:capitalize border w-[70%] h-full px-3 py-4 outline-none"
           />
-          <button className="capitalize border w-[35%] h-full border-[#7971ea] bg-[#7971ea] text-white">
+          <button className="capitalize border sm:w-[35%] w-[45%] h-full border-[#7971ea] bg-[#7971ea] text-white">
             check coupon
           </button>
         </div>
