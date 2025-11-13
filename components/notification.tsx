@@ -6,6 +6,8 @@ import { getNotify, getProducts } from "@/src/api/product/route";
 import { useAuth } from "@/context/userStore";
 import { useQuery } from "@tanstack/react-query";
 import { ShopdataProp } from "@/src/types/tpes";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 export interface Notification {
   _id: string;
@@ -17,13 +19,14 @@ export interface Notification {
     | "NEW_ORDER";
   title: string;
   message: string;
-  relatedId?: string; // optional: orderId, productId, etc.
-  userIds?: string[]; // optional: target users
-  isGlobal?: boolean; // optional: broadcast notification
-  createdAt: string; // ISO timestamp
+  relatedId?: string;
+  userIds?: string[];
+  isGlobal?: boolean;
+  createdAt: string;
+  timestamp: string;
 
   isRead: boolean;
-  updatedAt: string; // ISO timestamp
+  updatedAt: string;
 }
 
 const Notifications = ({
@@ -31,6 +34,7 @@ const Notifications = ({
 }: {
   setOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  dayjs.extend(relativeTime);
   const { token } = useAuth();
 
   const { data, isLoading, isError } = useQuery<Notification[]>({
@@ -47,7 +51,6 @@ const Notifications = ({
   if (isError) {
     return <p className="text-center text-red-500">{isError}</p>;
   }
-
 
   return (
     <div className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 ">
@@ -92,18 +95,17 @@ const Notifications = ({
                   )}
                 </div>
               </div>
-
               {n.type !== "NEW_PRODUCT_CREATED" && (
                 <p className=" uppercase  text-gray-500 font-bold">
                   {n.title.toLowerCase()}{" "}
                 </p>
               )}
-              <p className=" uppercase  text-gray-500">
+              <p className=" uppercase text-gray-500">
                 {n.message.toLowerCase()}{" "}
-                <small className="mr-auto mx-5 text-pink-600">
-                  {new Date(n.createdAt).toLocaleTimeString()}
-                </small>
-              </p>
+              </p>{" "}
+              <small className="text-pink-600 place-items-end w-full flex justify-end">
+                {dayjs(n.createdAt || n.timestamp).fromNow()}
+              </small>
             </div>
           ))}
         </div>

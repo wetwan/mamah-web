@@ -139,8 +139,6 @@ const useWebSocketNotifications = (
               break;
 
             case "NEW_ORDER":
-              // Only show to admins and sales staff
-
               toast.success(
                 `🎉 New Order Received! Order #${data.orderId?.slice(-4)} - $${
                   data.totalPrice
@@ -154,13 +152,12 @@ const useWebSocketNotifications = (
               break;
 
             case "INVENTORY_ALERT":
-              // Inventory alerts are typically only for Admins and Sales
               if (userRole === "admin" || userRole === "sales") {
                 toast.warn(
                   `⚠️ INVENTORY ALERT: ${data.alertCount} product(s) are low in stock!`,
                   {
                     position: "top-right",
-                    autoClose: false, // Keep alert visible until dismissed
+                    autoClose: false,
                   }
                 );
                 addNotification(data);
