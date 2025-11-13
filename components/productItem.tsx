@@ -5,14 +5,16 @@ import React from "react";
 
 import Link from "next/link";
 import { ShopdataProp } from "@/src/types/tpes";
+import { useRouter } from "next/navigation";
 
 const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
-  // checking if prodct is avalible
+  const router = useRouter();
   if (!products || products.length === 0) {
     return (
       <p className="text-gray-500 mt-10 text-center">No products found.</p>
     );
   }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8">
       {products.map((product) => (
@@ -37,7 +39,10 @@ const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
             </div>
           </div>
 
-          <div className="flex-1 p-4 flex flex-col justify-between items-center text-center">
+          <div
+            className="flex-1 p-4 flex flex-col justify-between items-center text-center cursor-pointer"
+            onClick={() => router.push(`/${product._id}`)}
+          >
             <Link
               className="text-[#7971ea] my-3 font-medium capitalize"
               href={`/${product._id}`}

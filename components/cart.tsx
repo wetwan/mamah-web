@@ -9,8 +9,10 @@ import { useCart } from "@/context/cartStore";
 
 const Cart = ({
   setOpenCart,
+  cartRef,
 }: {
   setOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
+  cartRef: React.RefObject<null>;
 }) => {
   const cartProducts = useCart((state) => state.item);
   const removeItem = useCart((state) => state.removeProduct);
@@ -20,7 +22,10 @@ const Cart = ({
   }, 0);
   const router = useRouter();
   return (
-    <div className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 ">
+    <div
+      className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 "
+      ref={cartRef}
+    >
       <div className="flex items-center mb-2  justify-between">
         <h2 className="text-lg font-semibold">Shopping Cart</h2>
         <X onClick={() => setOpenCart(false)} />

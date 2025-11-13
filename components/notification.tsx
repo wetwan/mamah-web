@@ -25,8 +25,10 @@ const useAckNotification = (token: string) => {
 
 const Notifications = ({
   setOpenCart,
+  notifyRef,
 }: {
   setOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
+  notifyRef: React.RefObject<null>;
 }) => {
   dayjs.extend(relativeTime);
   const { token } = useAuth();
@@ -34,10 +36,10 @@ const Notifications = ({
   const { data, isLoading, isError } = useQuery<NotificationData>({
     queryKey: ["notify"],
     queryFn: () => getNotify(token as string),
+    enabled: !!token,
+    refetchInterval: 20000,
+    refetchOnWindowFocus: true,
   });
-  console.log(data);
-
-  const notification = data?.notifications;
 
   const { mutate: acknowledge, isPending } = useAckNotification(
     token as string
@@ -60,8 +62,13 @@ const Notifications = ({
     return <p className="text-center text-red-500">{isError}</p>;
   }
 
+  const notification = data?.notifications;
+
   return (
-    <div className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 max-h-screen">
+    <div
+      className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 max-h-screen"
+      ref={notifyRef}
+    >
       <div className="flex items-center mb-2  justify-between">
         <h2 className="text-lg font-semibold">Your notifications </h2>
         <X onClick={() => setOpenCart(false)} />
@@ -82,9 +89,9 @@ const Notifications = ({
         </div>
       )}
 
-      {!isLoading && !isError && data?.notifications && (
+      {!isLoading && !isError && notification && (
         <div className="notification-dropdown">
-          {data.notifications.map((n: Notification) => (
+          {notification.map((n: Notification) => (
             <div
               key={n._id}
               className="mt-2 rounded-2xl bg-white border px-3 py-2 shadow-md hover:shadow-lg cursor-pointer"
