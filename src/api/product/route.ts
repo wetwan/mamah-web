@@ -39,7 +39,6 @@ export const getNotify = async (token: string) => {
         { headers: { token } }
     );
 
-    console.log(data);
     return data;
 };
 export const acknowledgeNotification = async (token: string, id: string) => {
@@ -50,22 +49,14 @@ export const acknowledgeNotification = async (token: string, id: string) => {
     );
     return data;
 };
+
 export const getOrder = async (orderId: string,) => {
-    // export const getOrder = async (orderId: string, token: string) => {
-
-
     const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}order/${orderId}`,
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`,
-        //     },
-        //     withCredentials: true
-        // }
+
     );
     return data.order;
 };
-
 
 
 export const createOrder = async (order: Order, token: string) => {
