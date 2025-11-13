@@ -1,4 +1,5 @@
-import { ShopdataProp } from "@/constant";
+
+import { ShopdataProp } from "@/src/types/tpes";
 import { create } from "zustand";
 
 import { persist } from "zustand/middleware";
