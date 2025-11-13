@@ -1,33 +1,27 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
-import { BellElectric, Check, CheckCircle, X } from "lucide-react";
-import { getNotify, getProducts } from "@/src/api/product/route";
+import { BellElectric, Check, CheckCircle, Loader, X } from "lucide-react";
+import { getNotify, acknowledgeNotification } from "@/src/api/product/route";
 import { useAuth } from "@/context/userStore";
-import { useQuery } from "@tanstack/react-query";
-import { ShopdataProp } from "@/src/types/tpes";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Notification, NotificationData } from "@/src/types/tpes";
 
-export interface Notification {
-  _id: string;
-  type:
-    | "ORDER_STATUS_UPDATE"
-    | "ORDER_CANCELLED"
-    | "INVENTORY_ALERT"
-    | "NEW_PRODUCT_CREATED"
-    | "NEW_ORDER";
-  title: string;
-  message: string;
-  relatedId?: string;
-  userIds?: string[];
-  isGlobal?: boolean;
-  createdAt: string;
-  timestamp: string;
+const useAckNotification = (token: string) => {
+  const queryClient = useQueryClient();
 
-  isRead: boolean;
-  updatedAt: string;
-}
+  return useMutation({
+    mutationFn: (id: string) => acknowledgeNotification(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notify"] });
+    },
+    onError: (error) => {
+      console.error("Failed to acknowledge notification:", error);
+    },
+  });
+};
 
 const Notifications = ({
   setOpenCart,
@@ -37,29 +31,43 @@ const Notifications = ({
   dayjs.extend(relativeTime);
   const { token } = useAuth();
 
-  const { data, isLoading, isError } = useQuery<Notification[]>({
+  const { data, isLoading, isError } = useQuery<NotificationData>({
     queryKey: ["notify"],
     queryFn: () => getNotify(token as string),
   });
-  const { data: product } = useQuery<ShopdataProp[]>({
-    queryKey: ["notify"],
-    queryFn: () => getProducts(),
-  });
   console.log(data);
-  console.log(product?.[0]);
+
+  const notification = data?.notifications;
+
+  const { mutate: acknowledge, isPending } = useAckNotification(
+    token as string
+  );
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const handleAck = (id: string) => {
+    setActiveId(id);
+    acknowledge(id, {
+      onSettled: () => setActiveId(null),
+    });
+  };
+
+  // const { data: product } = useQuery<ShopdataProp[]>({
+  //   queryKey: ["notify"],
+  //   queryFn: () => getProducts(),
+  // });
 
   if (isError) {
     return <p className="text-center text-red-500">{isError}</p>;
   }
 
   return (
-    <div className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 ">
+    <div className="z-50 absolute md:right-6 md:top-28 shadow-2xl shadow-black/40  w-[350px] h-auto p-4 bg-gray-100 top-52 right-0 max-h-screen">
       <div className="flex items-center mb-2  justify-between">
         <h2 className="text-lg font-semibold">Your notifications </h2>
         <X onClick={() => setOpenCart(false)} />
       </div>
 
-      {data?.length === 0 && (
+      {notification?.length === 0 && (
         <div className="p-4 text-center text-gray-500">
           No new notifications
         </div>
@@ -68,43 +76,50 @@ const Notifications = ({
       {isLoading && (
         <div className="p-4 text-center text-gray-500">
           <div className="flex justify-center gap-2 items-center">
-            <div className="w-4 h-4 border-2 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-4 h-4 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" />
             <span>Loading notifications...</span>
           </div>
         </div>
       )}
 
-      {!isLoading && !isError && data && (
+      {!isLoading && !isError && data?.notifications && (
         <div className="notification-dropdown">
-          {data.map((n) => (
+          {data.notifications.map((n: Notification) => (
             <div
               key={n._id}
-              className="mt-5 border px-3 py-4"
-              // onClick={() => markAsRead(n.id)}
+              className="mt-2 rounded-2xl bg-white border px-3 py-2 shadow-md hover:shadow-lg cursor-pointer"
+              onClick={() => handleAck(n._id)}
             >
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-1">
                 <div className="flex gap-3 items-center ">
                   <BellElectric size={20} />
-                  <strong>{n.type}</strong>
+                  <strong className="text-sm">{n.type}</strong>
                 </div>
-                <div className="">
+                <div onClick={() => handleAck(n._id)}>
                   {!n.isRead ? (
                     <Check size={20} className="text-pink-600" />
+                  ) : activeId === n._id && isPending ? (
+                    <Loader className="animate-spin text-pink-600" />
                   ) : (
                     <CheckCircle className="text-pink-600" />
                   )}
                 </div>
               </div>
               {n.type !== "NEW_PRODUCT_CREATED" && (
-                <p className=" uppercase  text-gray-500 font-bold">
-                  {n.title.toLowerCase()}{" "}
+                <p className=" uppercase text-xs text-gray-500 font-semibold">
+                  {n.title.toLowerCase()}
                 </p>
               )}
-              <p className=" uppercase text-gray-500">
-                {n.message.toLowerCase()}{" "}
-              </p>{" "}
-              <small className="text-pink-600 place-items-end w-full flex justify-end">
-                {dayjs(n.createdAt || n.timestamp).fromNow()}
+              <p className=" uppercase text-gray-500 text-xs">
+                {n.message.toLowerCase()}
+              </p>
+              <small className="text-pink-600 place-items-end w-full flex justify-end text-xs">
+                {(() => {
+                  const txt = dayjs(n.createdAt || n.timestamp).fromNow();
+                  return txt
+                    ? txt.charAt(0).toUpperCase() + txt.slice(1)
+                    : "N/A";
+                })()}
               </small>
             </div>
           ))}

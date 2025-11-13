@@ -8,13 +8,8 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { redirect } from "next/navigation";
 
-import { useNotificationStore } from "@/context/notificationStore";
 
 const Hero = () => {
-
-  const { notifications } = useNotificationStore();
-  console.log("notifications" , notifications);
-
 
   const banner = [
     {

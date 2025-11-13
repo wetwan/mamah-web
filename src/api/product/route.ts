@@ -39,10 +39,17 @@ export const getNotify = async (token: string) => {
         { headers: { token } }
     );
 
-    return data.notifications;
+    console.log(data);
+    return data;
 };
-
-
+export const acknowledgeNotification = async (token: string, id: string) => {
+    const { data } = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}notify/${id}/read`,
+        {},
+        { headers: { token } }
+    );
+    return data;
+};
 export const getOrder = async (orderId: string,) => {
     // export const getOrder = async (orderId: string, token: string) => {
 

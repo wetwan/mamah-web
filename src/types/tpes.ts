@@ -82,6 +82,31 @@ export interface CategoryProp {
   __v: number;
 }
 
+export interface Notification {
+  _id: string;
+  type:
+    | "ORDER_STATUS_UPDATE"
+    | "ORDER_CANCELLED"
+    | "INVENTORY_ALERT"
+    | "NEW_PRODUCT_CREATED"
+    | "NEW_ORDER";
+  title: string;
+  message: string;
+  relatedId?: string;
+  userIds?: string[];
+  isGlobal?: boolean;
+  createdAt: string;
+  timestamp: string;
+
+  isRead: boolean;
+  updatedAt: string;
+}
+export interface NotificationData {
+  success: boolean;
+  notifications: Notification[];
+  unreadCount: number;
+}
+
 
 export interface ShopdataProp {
   _id: string;

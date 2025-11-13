@@ -5,6 +5,8 @@
 
 export const dynamic = "force-dynamic";
 import React from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import {
   Truck,
@@ -35,8 +37,7 @@ const formatDate = (dateString: string | null) => {
       minute: "2-digit",
     }).format(date);
   } catch (err) {
-    console.log(err);
-    return "Invalid Date";
+    return "Invalid Date" + err;
   }
 };
 
@@ -83,7 +84,7 @@ const getStatusInfo = (status: any, isDelivered: any) => {
 const OrderDetails = () => {
   const params = useParams();
   const id = params?.id;
-
+  dayjs.extend(relativeTime);
   const {
     data: order,
     isLoading,
@@ -188,7 +189,12 @@ const OrderDetails = () => {
                 <p className="text-sm font-medium text-gray-600">
                   Placed on:{" "}
                   <span className="font-semibold text-gray-800">
-                    {formatDate(order?.createdAt)}
+                    {(() => {
+                      const txt = dayjs(order?.createdAt).fromNow();
+                      return txt
+                        ? txt.charAt(0).toUpperCase() + txt.slice(1)
+                        : "N/A";
+                    })()}
                   </span>
                 </p>
                 <div
@@ -258,7 +264,13 @@ const OrderDetails = () => {
                             </p>
                             {step.date && isCompleted && (
                               <p className="text-xs font-medium text-gray-400 mt-1">
-                                {formatDate(step.date)}
+                                {formatDate(step.date)} {"  "}
+                                {(() => {
+                                  const txt = dayjs(order?.createdAt).fromNow();
+                                  return txt
+                                    ? txt.charAt(0).toUpperCase() + txt.slice(1)
+                                    : "N/A";
+                                })()}
                               </p>
                             )}
                           </div>

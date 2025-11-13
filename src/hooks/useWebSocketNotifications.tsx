@@ -49,7 +49,6 @@ const useWebSocketNotifications = (
 
   useEffect(() => {
     if (!token) {
-      console.log("WebSocket: User not authenticated, skipping connection.");
       return;
     }
 
@@ -91,22 +90,18 @@ const useWebSocketNotifications = (
           // Handle different notification types
           switch (data.type) {
             case "CONNECTION_SUCCESS":
-              console.log("🔗 Connection established:", data.message);
               if (!data.isAuthenticated) {
                 toast.warning("Connected as guest. Please login.");
               }
               break;
 
             case "NOTIFICATION_HISTORY":
-              console.log(`📨 Received ${data.count} historical notifications`);
-              // Optionally populate store with history
               if (data.notifications && data.notifications.length > 0) {
                 data.notifications.forEach((notif) => addNotification(notif));
               }
               break;
 
             case "ORDER_STATUS_UPDATE":
-              // Show notification only to admins or the order owner
               if (userRole === "admin" || data.userId === userId) {
                 toast.info(
                   `Order #${data.orderId?.slice(
@@ -175,14 +170,13 @@ const useWebSocketNotifications = (
               break;
 
             default:
-              console.log("WS Message:", data);
               // Add to notification store even if type is unknown
               addNotification(data);
           }
         } catch (error) {
           const errMsg = error instanceof Error ? error.message : String(error);
           console.error("Error parsing WebSocket message:", errMsg);
-          console.log("Raw message:", event.data.toString());
+    
         }
       };
 
@@ -232,7 +226,6 @@ const useWebSocketNotifications = (
     return () => {
       if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.close(1000, "Component Unmounted");
-        console.log("WebSocket connection cleaned up.");
       }
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
