@@ -10,7 +10,6 @@ import { redirect } from "next/navigation";
 
 
 const Hero = () => {
-
   const banner = [
     {
       image: image1,

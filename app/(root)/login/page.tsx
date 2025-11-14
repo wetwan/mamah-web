@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
@@ -22,8 +22,8 @@ const Login = () => {
   const [serverError, setServerError] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
 
-  const setUser = useAuth((s) => s.setUser);
-  const settoken = useAuth((s) => s.setToken);
+  const { setUser, setToken } = useAuth();
+
   const isLoggedIn = useAuth((s) => !!s.token);
 
   const form = useForm<LoginData>({
@@ -40,9 +40,9 @@ const Login = () => {
       }
     },
     onSuccess: (data) => {
-      if (data.token && data.user) {
+      if (data.accessToken && data.user) {
         setUser(data.user);
-        settoken(data.token);
+        setToken(data.accessToken);
       }
       router.push("/");
     },

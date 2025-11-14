@@ -5,6 +5,7 @@ import ProductItem from "@/components/productItem";
 import Promo from "@/components/promo";
 import axios from "axios";
 
+
 import React from "react";
 
 const Home = async () => {
@@ -13,6 +14,8 @@ const Home = async () => {
   );
 
   const { products } = data;
+
+
 
   return (
     <div>

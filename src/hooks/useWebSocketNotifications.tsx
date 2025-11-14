@@ -1,40 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 "use client";
 
-import { useNotificationStore } from "@/context/notificationStore";
-import { useAuth } from "@/context/userStore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "react-toastify";
-
-interface NotificationPayload {
-  type:
-    | "ORDER_STATUS_UPDATE"
-    | "ORDER_CANCELLED"
-    | "INVENTORY_ALERT"
-    | "NEW_PRODUCT_CREATED"
-    | "NEW_ORDER"
-    | "CONNECTION_SUCCESS"
-    | "NOTIFICATION_HISTORY";
-  message?: string;
-  orderId?: string;
-  status?: string;
-  alertCount?: number;
-  productName?: string;
-  category?: string;
-  userId?: string;
-  totalPrice?: number;
-  timestamp?: string;
-  isAuthenticated?: boolean;
-  role?: string;
-  notifications?: any[];
-  count?: number;
-}
+import { useAuth } from "@/context/userStore";
+import { useNotificationStore } from "@/context/notificationStore";
+import { Notification } from "../types/tpes";
 
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:5000";
 
-const useWebSocketNotifications = (
+export const useWebSocketNotifications = (
   token: string | null,
   userId: string | null,
   userRole: string | null
@@ -42,200 +17,208 @@ const useWebSocketNotifications = (
   const { addNotification } = useNotificationStore();
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const reconnectAttemptsRef = useRef(0);
-  const MAX_RECONNECT_ATTEMPTS = 5;
-  const RECONNECT_INTERVAL = 5000;
+  const isConnectingRef = useRef(false);
 
-  useEffect(() => {
-    if (!token) {
+  const MAX_RECONNECT_ATTEMPTS = 5;
+  const BASE_RECONNECT_INTERVAL = 5000;
+
+  // Calculate exponential backoff
+  const getReconnectDelay = useCallback(() => {
+    const delay = Math.min(
+      BASE_RECONNECT_INTERVAL * Math.pow(2, reconnectAttemptsRef.current),
+      30000 // Max 30 seconds
+    );
+    return delay;
+  }, []);
+
+  // Clean up intervals
+  const cleanupHeartbeat = useCallback(() => {
+    if (heartbeatIntervalRef.current) {
+      clearInterval(heartbeatIntervalRef.current);
+      heartbeatIntervalRef.current = null;
+    }
+  }, []);
+
+  const cleanupReconnect = useCallback(() => {
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
+  }, []);
+
+  // Show notification toast based on type
+  const showNotificationToast = useCallback((data: Notification) => {
+    const message = `${data.title}: ${data.message}`;
+    const options = {
+      position: "top-right" as const,
+      autoClose: 5000,
+    };
+
+    switch (data.type) {
+      case "ORDER_STATUS_UPDATE":
+      case "ORDER_CANCELLED":
+      case "USER_LOGIN":
+        toast.info(message, options);
+        break;
+
+      case "INVENTORY_ALERT":
+        toast.warn(message, {
+          ...options,
+          autoClose: false,
+        });
+        break;
+
+      case "NEW_PRODUCT_CREATED":
+      case "NEW_PRODUCT_UPDATED":
+      case "NEW_ORDER":
+      case "NEW_ORDER_PAYMENT":
+      case "NEW_USER_CREATED":
+        toast.success(message, options);
+        break;
+
+      default:
+        toast(message, options);
+    }
+  }, []);
+
+  const connect = useCallback(() => {
+    // Prevent multiple simultaneous connection attempts
+    if (isConnectingRef.current) {
+      console.log("⏳ Connection attempt already in progress");
       return;
     }
 
-    const connect = () => {
-      // Close existing connection if any
-      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-        wsRef.current.close();
-      }
+    // Close existing connection
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.close();
+    }
 
-      const socketUrl = `${WS_URL}?token=${token}`;
-      const ws = new WebSocket(socketUrl);
-      wsRef.current = ws;
+    isConnectingRef.current = true;
+    cleanupHeartbeat();
+    cleanupReconnect();
 
-      // Heartbeat to keep connection alive
-      let heartbeatInterval: NodeJS.Timeout;
+    const ws = new WebSocket(`${WS_URL}?token=${token}`);
+    wsRef.current = ws;
 
-      ws.onopen = () => {
-        console.log("✅ WebSocket Connected.");
-        setIsConnected(true);
-        reconnectAttemptsRef.current = 0; // Reset reconnect attempts
+    ws.onopen = () => {
+      console.log("✅ WebSocket Connected");
+      setIsConnected(true);
+      isConnectingRef.current = false;
+      reconnectAttemptsRef.current = 0;
 
-        if (reconnectTimeoutRef.current) {
-          clearTimeout(reconnectTimeoutRef.current);
-          reconnectTimeoutRef.current = null;
+      // Start heartbeat
+      heartbeatIntervalRef.current = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: "PING" }));
         }
-
-        // Send heartbeat ping every 25 seconds
-        heartbeatInterval = setInterval(() => {
-          if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({ type: "PING" }));
-          }
-        }, 25000);
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data: NotificationPayload = JSON.parse(event.data.toString());
-
-          // Handle different notification types
-          switch (data.type) {
-            case "CONNECTION_SUCCESS":
-              if (!data.isAuthenticated) {
-                toast.warning("Connected as guest. Please login.");
-              }
-              break;
-
-            case "NOTIFICATION_HISTORY":
-              if (data.notifications && data.notifications.length > 0) {
-                data.notifications.forEach((notif) => addNotification(notif));
-              }
-              break;
-
-            case "ORDER_STATUS_UPDATE":
-              if (userRole === "admin" || data.userId === userId) {
-                toast.info(
-                  `Order #${data.orderId?.slice(
-                    -4
-                  )} status changed to: ${data.status?.toUpperCase()}`,
-                  {
-                    position: "top-right",
-                  }
-                );
-                addNotification(data);
-              }
-              break;
-
-            case "ORDER_CANCELLED":
-              if (
-                userRole === "admin" ||
-                userRole === "sales" ||
-                data.userId === userId
-              ) {
-                toast.error(
-                  `Order #${data.orderId?.slice(-4)} was cancelled: ${
-                    data.message || "Payment timeout"
-                  }`,
-                  {
-                    position: "top-right",
-                  }
-                );
-                addNotification(data);
-              }
-              break;
-
-            case "NEW_ORDER":
-              toast.success(
-                `🎉 New Order Received! Order #${data.orderId?.slice(-4)} - $${
-                  data.totalPrice
-                }`,
-                {
-                  position: "top-right",
-                }
-              );
-              addNotification(data);
-
-              break;
-
-            case "INVENTORY_ALERT":
-              if (userRole === "admin" || userRole === "sales") {
-                toast.warn(
-                  `⚠️ INVENTORY ALERT: ${data.alertCount} product(s) are low in stock!`,
-                  {
-                    position: "top-right",
-                    autoClose: false,
-                  }
-                );
-                addNotification(data);
-              }
-              break;
-
-            case "NEW_PRODUCT_CREATED":
-              toast.info(
-                `New Product Added: ${data.productName} (Category: ${data.category})`,
-                {
-                  position: "top-right",
-                }
-              );
-              addNotification(data);
-              break;
-
-            default:
-              // Add to notification store even if type is unknown
-              addNotification(data);
-          }
-        } catch (error) {
-          const errMsg = error instanceof Error ? error.message : String(error);
-          console.error("Error parsing WebSocket message:", errMsg);
-    
-        }
-      };
-
-      ws.onerror = (error) => {
-        console.error("❌ WebSocket Error:", error);
-        setIsConnected(false);
-      };
-
-      ws.onclose = (event) => {
-        console.log(
-          `❌ WebSocket Closed. Code: ${event.code}. Reason: ${event.reason}`
-        );
-        setIsConnected(false);
-
-        // Clear heartbeat interval
-        if (heartbeatInterval) {
-          clearInterval(heartbeatInterval);
-        }
-
-        // Attempt to reconnect
-        if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
-          reconnectAttemptsRef.current++;
-          console.log(
-            `🔄 Reconnecting... Attempt ${reconnectAttemptsRef.current}/${MAX_RECONNECT_ATTEMPTS}`
-          );
-          reconnectTimeoutRef.current = setTimeout(() => {
-            connect();
-          }, RECONNECT_INTERVAL);
-        } else {
-          console.error(
-            "❌ Max reconnection attempts reached. Please refresh the page."
-          );
-          toast.error(
-            "Connection lost. Please refresh the page to reconnect.",
-            {
-              position: "top-center",
-              autoClose: false,
-            }
-          );
-        }
-      };
+      }, 25000);
     };
+
+    ws.onmessage = (event) => {
+      try {
+        const data: Notification = JSON.parse(event.data);
+
+        // Check if notification is relevant to this user
+        const isRelevant =
+          data.isGlobal ||
+          (data.userIds && userId && data.userIds.includes(userId));
+
+        if (isRelevant) {
+          const notification = {
+            ...data,
+            timestamp: data.timestamp || new Date().toISOString(),
+            isRead: false,
+          };
+
+          addNotification(notification);
+          showNotificationToast(notification);
+        }
+      } catch (err) {
+        console.error("❌ Error parsing WebSocket message:", err);
+      }
+    };
+
+    ws.onerror = (err) => {
+      console.error("❌ WebSocket Error:", err);
+      setIsConnected(false);
+      isConnectingRef.current = false;
+    };
+
+    ws.onclose = (event) => {
+      console.log(
+        `❌ WebSocket Closed. Code: ${event.code}, Reason: ${
+          event.reason || "Unknown"
+        }`
+      );
+      setIsConnected(false);
+      isConnectingRef.current = false;
+      cleanupHeartbeat();
+
+      // Attempt reconnection with exponential backoff
+      if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
+        const delay = getReconnectDelay();
+        reconnectAttemptsRef.current++;
+
+        console.log(
+          `🔄 Reconnecting in ${delay / 1000}s (attempt ${
+            reconnectAttemptsRef.current
+          }/${MAX_RECONNECT_ATTEMPTS})`
+        );
+
+        reconnectTimeoutRef.current = setTimeout(connect, delay);
+      } else {
+        toast.error("Connection lost. Please refresh to reconnect.", {
+          position: "top-center",
+          autoClose: false,
+          toastId: "ws-connection-lost", // Prevent duplicate toasts
+        });
+      }
+    };
+  }, [
+    token,
+    userId,
+    addNotification,
+    showNotificationToast,
+    cleanupHeartbeat,
+    cleanupReconnect,
+    getReconnectDelay,
+  ]);
+
+  useEffect(() => {
+    if (!token) {
+      console.log("⏸️ No token, skipping WebSocket connection");
+      return;
+    }
 
     connect();
 
-    // Cleanup function
     return () => {
-      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-        wsRef.current.close(1000, "Component Unmounted");
+      console.log("🧹 Cleaning up WebSocket connection");
+
+      // Clean up timers
+      cleanupHeartbeat();
+      cleanupReconnect();
+
+      // Close WebSocket
+      if (wsRef.current) {
+        if (wsRef.current.readyState === WebSocket.OPEN) {
+          wsRef.current.close(1000, "Component unmounted");
+        }
+        wsRef.current = null;
       }
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-      }
+
+      isConnectingRef.current = false;
+      setIsConnected(false);
     };
-  }, [token, userId, userRole, addNotification]);
+  }, [token, connect, cleanupHeartbeat, cleanupReconnect]);
 
   return { isConnected };
 };
 
+// Component to mount WebSocket in the app
 export const NotificationListener = () => {
   const { token, user } = useAuth();
   const { isConnected } = useWebSocketNotifications(
@@ -244,8 +227,14 @@ export const NotificationListener = () => {
     user?.role || null
   );
 
-  // Optionally render connection status indicator
-  return null; // No UI needed
-};
+  // Optional: Show connection status in dev mode
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        `WebSocket status: ${isConnected ? "Connected" : "Disconnected"}`
+      );
+    }
+  }, [isConnected]);
 
-export default useWebSocketNotifications;
+  return null;
+};

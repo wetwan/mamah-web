@@ -26,24 +26,27 @@ const SignUp = () => {
     resolver: zodResolver(signUpSchema),
   });
 
-  const setUser = useAuth((s) => s.setUser);
-  const settoken = useAuth((s) => s.setToken);
+  const { setUser, setToken } = useAuth();
+
   const isLoggedIn = useAuth((s) => !!s.token);
 
   const mutation = useMutation({
     mutationFn: signUpUser,
     onError: (error: any) => {
+      console.log(error);
       if (axios.isAxiosError(error)) {
+        console.log(error);
         setServerError(error.response?.data?.message || "sign up failed");
       } else {
         setServerError("An unexpected error occurred");
       }
     },
     onSuccess: (data) => {
-      if (data.token && data.user) {
+      if (data.accessToken && data.user) {
         setUser(data.user);
-        settoken(data.token);
+        setToken(data.accessToken);
       }
+
       router.push("/");
     },
   });
