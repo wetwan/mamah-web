@@ -20,6 +20,7 @@ const Cart = ({
   const total = cartProducts.reduce((sum, item) => {
     return sum + item.product.finalPrice * item.quantity;
   }, 0);
+  
   const router = useRouter();
   return (
     <div
@@ -35,14 +36,14 @@ const Cart = ({
         <div className="py-20 flex flex-col items-center justify-center gap-4">
           <p className="font-bold text-red-300 text-xl uppercase">
             {" "}
-            no item in you chat yet!{" "}
+            no item in you cart yet!{" "}
           </p>
           <Link
             href={"/shop"}
             onClick={() => setOpenCart(false)}
             className="bg-[#7971ea] text-white py-3 px-12 font-light capitalize "
           >
-            vist shop
+            visit shop
           </Link>
         </div>
       )}
@@ -53,37 +54,43 @@ const Cart = ({
             you have {cartProducts.length} in your cart
           </h3>
           <div className="">
-            {cartProducts.map((item) => (
-              <div key={item.id} className="">
-                <div className="flex items-start gap-4 my-4 relative">
-                  <div className="h-[60px] w-[60px] bg-amber-200 p-2 rounded">
-                    <img
-                      src={item.product.images[0]}
-                      alt={item.product.name}
-                      height={500}
-                      width={500}
-                      className="w-full h-full object-contain"
-                    />
+            {cartProducts.map((item) => {
+              // Safely extract color name
+              const colorName = item?.selectedColor?.name || 
+                              (typeof item?.selectedColor === 'string' ? item.selectedColor : '');
+              
+              return (
+                <div key={item.id} className="">
+                  <div className="flex items-start gap-4 my-4 relative">
+                    <div className="h-[60px] w-[60px] bg-amber-200 p-2 rounded">
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        height={500}
+                        width={500}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="">
+                      <p className="capitalize font-medium text-[15px] tracking-wide">
+                        {item.product.name} {item.selectedSize}{" "}
+                        {colorName}
+                      </p>
+                      <p className="text-gray-600 font-medium">
+                        {item.quantity} × ₦{item.product.finalPrice.toFixed(2)}
+                      </p>
+                    </div>
+                    <div
+                      className="justify-end mr-auto absolute top-0 right-3 cursor-pointer"
+                      onClick={() => removeItem(item.id)}
+                    >
+                      <X size={16} />
+                    </div>
                   </div>
-                  <div className="">
-                    <p className="capitalize font-medium text-[15px] tracking-wide">
-                      {item.product.name} {item.selectedSize}{" "}
-                      {item?.selectedColor?.name}
-                    </p>
-                    <p className="text-gray-600 font-medium">
-                      {item.quantity} × ₦{item.product.finalPrice.toFixed(2)}
-                    </p>
-                  </div>
-                  <div
-                    className="justify-end mr-auto absolute top-0 right-3"
-                    onClick={() => removeItem(item.id)}
-                  >
-                    <X size={16} />
-                  </div>
+                  <hr />
                 </div>
-                <hr />
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="flex w-full mt-4 items-center justify-between">
             <p className="font-medium text-lg">Subtotal:</p>

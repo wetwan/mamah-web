@@ -100,6 +100,7 @@ const MenuIcons = () => {
   // Show ping animation when there are new real-time notifications
   const hasNewNotifications = realtimeUnread > 0;
 
+
   return (
     <>
       <ul className="flex items-center gap-3 md:w-1/3 justify-end">
