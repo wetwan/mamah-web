@@ -13,6 +13,22 @@ export const signUpSchema = z.object({
     lastName: z.string().min(3, 'First name most have atleast 3 characters'),
     address: z.string().min(3, 'First name most have atleast 3 characters'),
     phone: z.string().min(3, 'First name most have atleast 3 characters'),
+    address2: z
+        .string()
+        .min(3, "Address Line 2 must have at least 3 characters"),
+
+    country: z
+        .string()
+        .min(2, "Country must be selected")
+        .nonempty("Country is required"),
+    state: z
+        .string()
+        .min(2, "State/Region must be selected")
+        .nonempty("State/Region is required"),
+    poster: z
+        .string()
+        .min(3, "Postal/Zip Code must have at least 3 characters")
+
 });
 
 export const shippingSchema = z.object({

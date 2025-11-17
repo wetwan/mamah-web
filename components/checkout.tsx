@@ -155,7 +155,7 @@ const Checkout: React.FC = () => {
   useEffect(() => {
     if (user) {
       reset({
-        country: "",
+        country: '',
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         address1: user.address || "",

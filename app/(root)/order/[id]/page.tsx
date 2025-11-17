@@ -25,7 +25,7 @@ import { orderProps } from "@/src/types/tpes";
 import Loading from "./loading";
 import { useParams } from "next/navigation";
 
-const formatDate = (dateString: string | null) => {
+const formatDate = (dateString: string | null | Date) => {
   if (!dateString) return "N/A";
   try {
     const date = new Date(dateString);
@@ -125,7 +125,7 @@ const OrderDetails = () => {
       key: "paid",
       label: "Payment Confirmed",
       description: "Payment has been successfully processed and verified.",
-      date: order?.paidAt,
+      date: order?.createdAt,
       isCompleted: order?.isPaid,
       isCurrent: order?.isPaid && order?.status?.toLowerCase() === "processing",
     },
