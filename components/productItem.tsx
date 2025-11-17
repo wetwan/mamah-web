@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
@@ -6,6 +7,86 @@ import React from "react";
 import Link from "next/link";
 import { ShopdataProp } from "@/src/types/tpes";
 import { useRouter } from "next/navigation";
+import { useLocalPrice } from "@/src/hooks/useLocalPrice";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+const useExchangeRate = () => {
+  return useQuery({
+    queryKey: ["exchange-rate"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}get-price/1`
+      );
+      return {
+        currency: res.data.currency,
+        symbol: res.data.symbol,
+        rate: res.data.raw,
+        country: res.data.country,
+      };
+    },
+    staleTime: 1000 * 60 * 60,
+    gcTime: 1000 * 60 * 60 * 2,
+  });
+};
+
+// Format price with symbol
+const formatPrice = (
+  price: number,
+  rate: number,
+  symbol: string,
+  currency: string
+) => {
+  const converted = price * rate;
+
+  // Format based on currency
+  const formatted = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(converted);
+
+  return `${symbol}${formatted}`;
+};
+
+const ProductPrice = ({ price }: { price: number }) => {
+  const { data: exchangeData, isLoading, error } = useExchangeRate();
+  // const { data: exchangeData, isLoading, error } = useLocalPrice(1);
+
+  console.log(exchangeData);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <h3 className="text-[#7971ea] font-medium capitalize animate-pulse">
+        ₦{price.toFixed(2)}
+      </h3>
+    );
+  }
+
+
+  if (error || !exchangeData || exchangeData.currency === "NGN") {
+    return (
+      <h3 className="text-[#7971ea] font-medium capitalize">
+        ₦{price.toFixed(2)}
+      </h3>
+    );
+  }
+  const convertedPrice = formatPrice(
+    price,
+    exchangeData.rate,
+    exchangeData.symbol,
+    exchangeData.currency
+  );
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <h3 className="text-[#7971ea] font-medium capitalize">
+        {convertedPrice}
+      </h3>
+      <span className="text-xs text-gray-400">≈ ₦{price.toFixed(2)}</span>
+    </div>
+  );
+};
 
 const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
   const router = useRouter();
@@ -54,9 +135,7 @@ const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
               <h3 className="text-gray-400 mb-4 ">
                 {product.description.slice(0, 20)}
               </h3>
-              <h3 className="text-[#7971ea] font-medium capitalize">
-                ₦{product.finalPrice.toFixed(2)}
-              </h3>
+              <ProductPrice price={product.finalPrice} />
             </div>
           </div>
         ))}

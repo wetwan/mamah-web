@@ -8,8 +8,11 @@ import { useCart } from "@/context/cartStore";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ShopdataProp } from "@/src/types/tpes";
+import { useLocalPrice } from "@/src/hooks/useLocalPrice";
 
 const ProductDetails = ({ item }: { item: ShopdataProp }) => {
+  const { data } = useLocalPrice(item?.finalPrice || 0);
+  const { data: data2 } = useLocalPrice(item?.price || 0);
   const [selectedcolor, setSelectedcolor] = useState<any>(null);
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [addQuanitity, setAddQuanitity] = useState<number>(1);
@@ -61,14 +64,16 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
 
       {/* PRICE */}
       <div className="flex items-center gap-3">
-        {item.price !== item.finalPrice && (
+        {item.price !== item.finalPrice && data2 && (
           <p className="text-gray-500 line-through text-md">
-            ₦{item?.price?.toFixed(2)}
+            {data2.formatted}
           </p>
         )}
-        <p className="text-2xl font-semibold text-blue-600 p-1 cursor-pointer">
-          ₦{item?.finalPrice?.toFixed(2)}
-        </p>
+        {data && (
+          <p className="text-2xl font-semibold text-blue-600 p-1 cursor-pointer">
+            {data.formatted}
+          </p>
+        )}
       </div>
 
       {/* COLORS */}

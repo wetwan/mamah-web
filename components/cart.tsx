@@ -20,7 +20,7 @@ const Cart = ({
   const total = cartProducts.reduce((sum, item) => {
     return sum + item.product.finalPrice * item.quantity;
   }, 0);
-  
+
   const router = useRouter();
   return (
     <div
@@ -56,9 +56,12 @@ const Cart = ({
           <div className="">
             {cartProducts.map((item) => {
               // Safely extract color name
-              const colorName = item?.selectedColor?.name || 
-                              (typeof item?.selectedColor === 'string' ? item.selectedColor : '');
-              
+              const colorName =
+                item?.selectedColor?.name ||
+                (typeof item?.selectedColor === "string"
+                  ? item.selectedColor
+                  : "");
+
               return (
                 <div key={item.id} className="">
                   <div className="flex items-start gap-4 my-4 relative">
@@ -73,7 +76,7 @@ const Cart = ({
                     </div>
                     <div className="">
                       <p className="capitalize font-medium text-[15px] tracking-wide">
-                        {item.product.name} {item.selectedSize}{" "}
+                        {item.product.name} {item.selectedSize?.name}{" "}
                         {colorName}
                       </p>
                       <p className="text-gray-600 font-medium">

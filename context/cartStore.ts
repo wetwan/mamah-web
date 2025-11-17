@@ -7,7 +7,12 @@ export type ProductColor = {
     name: string;
     hex?: string;
     available: boolean;
-    _id: string; // Assuming this is the unique ID for the color
+    _id: string; 
+};
+export type ProductSize = {
+    name: string;
+    available: boolean;
+    _id: string; 
 };
 
 export type CartItem = {
@@ -15,7 +20,7 @@ export type CartItem = {
     product: ShopdataProp;
     quantity: number;
     selectedColor?: ProductColor;
-    selectedSize?: string;
+    selectedSize?: ProductSize;
 };
 
 type CartStore = {
@@ -24,7 +29,7 @@ type CartStore = {
         product: ShopdataProp,
         quantity: number,
         selectedColor?: ProductColor,
-        selectedSize?: string,
+        selectedSize?: ProductSize,
 
     ) => void;
     removeProduct: (cartItemId: string) => void;

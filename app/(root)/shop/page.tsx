@@ -4,7 +4,6 @@ import { Category, SortSelect } from "@/components/filter";
 import axios from "axios";
 import { PaginationDemo } from "@/components/pagenation";
 
-
 type SearchParams = {
   cat?: string;
   color?: string;
@@ -21,7 +20,16 @@ export default async function Shop({
 }: {
   searchParams: SearchParams;
 }) {
-  const { cat, color, size, min, max, sort, page = "1", search } = searchParams;
+  const {
+    cat,
+    color,
+    size,
+    min,
+    max,
+    sort,
+    page = "1",
+    search,
+  } = await searchParams;
 
   const query = new URLSearchParams();
 
