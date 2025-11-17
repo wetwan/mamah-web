@@ -34,7 +34,6 @@ import { useLocalPrice2 } from "@/src/hooks/useLocalPrice";
 const CartPage = () => {
   const { removeProduct: removeItem, item: cartProducts } = useCart();
 
-
   const columns: ColumnDef<CartItem>[] = [
     {
       id: "sn",
@@ -135,7 +134,7 @@ const CartPage = () => {
       ),
       cell: ({ row }) => (
         <span className="table-cell font-semibold">
-          {row.original.product.displayPrice.symbol}{" "}
+          {row.original?.product?.displayPrice?.symbol}{" "}
           {(
             row.original.quantity *
             row.original.product.displayPrice.originalFinalPrice
@@ -281,15 +280,15 @@ const CartPage = () => {
               </h2>
               <div className="flex justify-between py-2 border-b">
                 <p>Subtotal</p>
-                <p>{data2?.formatted}</p>
+                {data2 && <p>{data2?.formatted}</p>}
               </div>
               <div className="flex justify-between py-2 border-b">
                 <p>Delivery</p>
-                <p>{data3?.formatted}</p>
+                {data3 && <p>{data3?.formatted}</p>}
               </div>
               <div className="flex justify-between py-2 font-semibold text-lg">
                 <p>Total</p>
-                <p>{data?.formatted}</p>
+                {data && <p>{data?.formatted}</p>}
               </div>
               <button
                 className="w-full bg-[#7971ea] text-white py-3 mt-4 rounded hover:bg-[#7971ea] uppercase tracking-wide"

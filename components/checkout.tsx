@@ -155,13 +155,13 @@ const Checkout: React.FC = () => {
   useEffect(() => {
     if (user) {
       reset({
-        country: '',
+        country: user.country || "",
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         address1: user.address || "",
-        address2: "",
-        state: "",
-        poster: "",
+        address2: user.address2 || "",
+        state: user.state || "",
+        poster: user.poster || "",
         email: user.email || "",
         phone: user.phone || "",
       });

@@ -17,6 +17,10 @@ interface User {
     address: string;
     phone: string;
     role: string
+    address2: string,
+    state: string,
+    poster: string,
+    country: string,
 }
 
 export const useAuth = create<AuthStore>()(
