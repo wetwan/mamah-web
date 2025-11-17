@@ -52,7 +52,7 @@ const ProductPrice = ({ price }: { price: number }) => {
   const { data: exchangeData, isLoading, error } = useExchangeRate();
   // const { data: exchangeData, isLoading, error } = useLocalPrice(1);
 
-  console.log(exchangeData);
+
 
   // Loading state
   if (isLoading) {
