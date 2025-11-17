@@ -41,22 +41,47 @@ interface BatchPriceResponse {
 }
 
 
-export const useLocalPrice = (price: number | null | undefined) => {
+export const useLocalPrice = () => {
 
 
-    return useQuery<PriceResponse>({
-        queryKey: ["local-price", price],
+    return useQuery({
+        queryKey: ["local-price"],
         queryFn: async () => {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}get-price/${price}`);
-            return res.data;
+            const res = await axios.get(
+                `${process.env.NEXT_PUBLIC_API_URL}get-price/1`
+            );
+            return {
+                currency: res.data.currency,
+                symbol: res.data.symbol,
+                rate: res.data.raw,
+                country: res.data.country,
+            };
         },
-        enabled: !!price && price > 0,
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 2,
         retry: 2,
         retryDelay: 3000,
     });
 };
+export const useLocalPrice2 = (price: number | undefined | null) => {
+
+
+    return useQuery<PriceResponse>({
+        queryKey: ["local-price", price],
+        queryFn: async () => {
+            const res = await axios.get(
+                `${process.env.NEXT_PUBLIC_API_URL}get-price/${price}`
+            );
+            return res.data
+        },
+        staleTime: 1000 * 60 * 60,
+        gcTime: 1000 * 60 * 60 * 2,
+        retry: 2,
+        retryDelay: 3000,
+    });
+};
+
+
 
 export const useBatchPrices = (prices: number[]) => {
 

@@ -32,7 +32,7 @@ import { orderProps } from "@/src/types/tpes";
 import { redirect, useRouter } from "next/navigation";
 
 // 💡 Utility function to format date
-const formatDate = (dateString: string) => {
+const formatDate = (dateString: string | Date) => {
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -158,9 +158,7 @@ export const columns: ColumnDef<orderProps>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <span className="font-bold text-sm">
-        ₦{row.original.totalPrice.toFixed(2)}
-      </span>
+      <span className="font-bold text-sm">{row.original.formattedTotal}</span>
     ),
   },
 ];
@@ -175,6 +173,8 @@ const Orders = () => {
     queryFn: () => getOrders(token!),
     enabled: !!token,
   });
+
+  console.log(data);
 
   const orders = data?.orders ?? [];
   const totalPages = data?.totalPages ?? 1;

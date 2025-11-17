@@ -6,6 +6,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/navigation";
 import { useCart, CartItem } from "@/context/cartStore";
 import { CheckoutForm } from "./stripe";
+import { useLocalPrice2 } from "@/src/hooks/useLocalPrice";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -36,6 +37,10 @@ const CheckoutDetails = ({
 }: Props) => {
   const { resetCart } = useCart();
   const router = useRouter();
+
+  const { data } = useLocalPrice2(total);
+  const { data: data2 } = useLocalPrice2(subtotal);
+  const { data: data3 } = useLocalPrice2(delivery);
 
   return (
     <div className="w-full">
@@ -74,23 +79,28 @@ const CheckoutDetails = ({
               <p>
                 {item.product.name} × {item.quantity}
               </p>
-              <p>₦{(item.product.finalPrice * item.quantity).toFixed(2)}</p>
+              <p>
+                {item.product.displayPrice.symbol}
+                {(
+                  item.quantity * item.product.displayPrice.originalFinalPrice
+                ).toFixed(2)}
+              </p>
             </div>
           ))}
 
           <div className="flex justify-between border-b mb-3 pb-2">
             <p className="font-semibold">Subtotal</p>
-            <p>₦{subtotal.toFixed(2)}</p>
+            {data2 && <p>{data2?.formatted}</p>}
           </div>
 
           <div className="flex justify-between border-b mb-3 pb-2">
             <p className="font-semibold">Delivery</p>
-            <p>₦{delivery.toFixed(2)}</p>
+            {data3 && <p>{data3?.formatted}</p>}
           </div>
 
           <div className="flex justify-between mt-3 pb-3 font-semibold">
             <p>Total</p>
-            <p>₦{total.toFixed(2)}</p>
+            {data && <p>{data?.formatted}</p>}
           </div>
         </div>
 

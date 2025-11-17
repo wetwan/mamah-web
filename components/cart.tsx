@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cartStore";
+import { useLocalPrice2 } from "@/src/hooks/useLocalPrice";
 
 const Cart = ({
   setOpenCart,
@@ -20,6 +21,8 @@ const Cart = ({
   const total = cartProducts.reduce((sum, item) => {
     return sum + item.product.finalPrice * item.quantity;
   }, 0);
+
+  const { data } = useLocalPrice2(total);
 
   const router = useRouter();
   return (
@@ -74,20 +77,23 @@ const Cart = ({
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <div className="">
-                      <p className="capitalize font-medium text-[15px] tracking-wide">
-                        {item.product.name} {item.selectedSize?.name}{" "}
-                        {colorName}
-                      </p>
-                      <p className="text-gray-600 font-medium">
-                        {item.quantity} × ₦{item.product.finalPrice.toFixed(2)}
-                      </p>
-                    </div>
-                    <div
-                      className="justify-end mr-auto absolute top-0 right-3 cursor-pointer"
-                      onClick={() => removeItem(item.id)}
-                    >
-                      <X size={16} />
+                    <div className="flex justify-between  w-full gap-4">
+                      <div className="">
+                        <p className="capitalize font-medium text-[15px] tracking-wide">
+                          {item.product.name} {item.selectedSize?.name}{" "}
+                          {colorName}
+                        </p>
+                        <p className="text-gray-600 font-medium flex items-center gap-1">
+                          {item.quantity} <X size={12} />
+                          {item.product.displayPrice.formatted}
+                        </p>
+                      </div>
+                      <div
+                        className="hover:text-red-700 cursor-pointer"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        <X size={16} />
+                      </div>
                     </div>
                   </div>
                   <hr />
@@ -97,7 +103,7 @@ const Cart = ({
           </div>
           <div className="flex w-full mt-4 items-center justify-between">
             <p className="font-medium text-lg">Subtotal:</p>
-            <p className="font-bold text-lg">₦{total.toFixed(2)}</p>
+            {data && <p className="font-medium text-lg">{data.formatted}</p>}
           </div>
           <Button
             onClick={() => {

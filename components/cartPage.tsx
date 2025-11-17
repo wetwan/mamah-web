@@ -1,11 +1,9 @@
-
 "use client";
-
 
 import Link from "next/link";
 import React, { useMemo } from "react";
 import Image from "next/image";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { X } from "lucide-react";
 
@@ -27,134 +25,144 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { CartItem, useCart } from "@/context/cartStore";
+import { useLocalPrice2 } from "@/src/hooks/useLocalPrice";
 
 // --- START: COLUMNS DEFINITION ---
 
 // Define the columns array, incorporating the product image and a remove button
-const columns: ColumnDef<CartItem>[] = [
-  {
-    id: "sn",
-    header: "S/N",
-    cell: ({ row }) => <span>{row.index + 1}</span>,
-  },
-
-  {
-    accessorKey: "product.images",
-    header: () => (
-      <Button variant="ghost" className="p-0 flex items-center gap-1 ">
-        Image
-      </Button>
-    ),
-    // Use the Next.js Image component for proper image display
-    cell: ({ row }) => (
-      <Image
-        src={row.original.product.images[0]}
-        alt={row.original.product.name}
-        width={50}
-        height={50}
-          sizes="(max-width: 768px) 50px, 70px" 
-        className="w-14 h-14 object-cover rounded-md"
-      />
-    ),
-  },
-  {
-    accessorKey: "product.name",
-    header: () => (
-      <Button variant="ghost" className="p-0 flex items-center gap-1 ">
-        Title
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <span className="table-cell capitalize">{row.original.product.name}</span>
-    ),
-  },
-  {
-    // Changed "product." accessorKey to product.finalPrice for displaying the unit price
-    accessorKey: "product.finalPrice",
-    header: () => (
-      <Button variant="ghost" className="p-0 flex items-center gap-1 ">
-        Price
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <span className="table-cell">
-        ₦{row.original.product.finalPrice.toFixed(2)}
-      </span>
-    ),
-  },
-  {
-    // Changed column header and accessor key to reflect "Quantity"
-    accessorKey: "quantity",
-    header: () => (
-      <Button variant="ghost" className="p-0 flex items-center gap-1 ">
-        Quantity
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <span className="table-cell">{row.original.quantity}</span>
-    ),
-  },
-  {
-    accessorKey: "selectedColor.name", // Use the direct accessor key
-    header: () => (
-      <Button variant="ghost" className="p-0 flex items-center gap-1 ">
-        Color
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <span className="table-cell capitalize">
-        {row.original.selectedColor?.name || "N/A"}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "selectedSize", // Use the direct accessor key
-    header: () => (
-      <Button variant="ghost" className="p-0 flex items-center gap-1 ">
-        Size
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <span className="table-cell uppercase">
-        {row.original.selectedSize?.name || "N/A"}
-      </span>
-    ),
-  },
-  {
-    id: "total",
-    header: () => (
-      <Button variant="ghost" className="p-0 flex items-center gap-1 ">
-        Total
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <span className="table-cell font-semibold">
-        ₦{(row.original.quantity * row.original.product.finalPrice).toFixed(2)}
-      </span>
-    ),
-  },
-  {
-    id: "remove",
-    header: "Remove",
-    cell: ({ row, table }) => {
-      const removeItem = (
-        table.options.meta as { removeItem: (id: string | number) => void }
-      ).removeItem;
-
-      return (
-        <button
-          onClick={() => removeItem(row.original.id)} // Assuming CartItem has an 'id'
-          className="text-red-500 hover:text-red-700 font-semibold"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      );
-    },
-  },
-];
 
 const CartPage = () => {
   const { removeProduct: removeItem, item: cartProducts } = useCart();
+
+
+  const columns: ColumnDef<CartItem>[] = [
+    {
+      id: "sn",
+      header: "S/N",
+      cell: ({ row }) => <span>{row.index + 1}</span>,
+    },
+
+    {
+      accessorKey: "product.images",
+      header: () => (
+        <Button variant="ghost" className="p-0 flex items-center gap-1 ">
+          Image
+        </Button>
+      ),
+      // Use the Next.js Image component for proper image display
+      cell: ({ row }) => (
+        <Image
+          src={row.original.product.images[0]}
+          alt={row.original.product.name}
+          width={50}
+          height={50}
+          sizes="(max-width: 768px) 50px, 70px"
+          className="w-14 h-14 object-cover rounded-md"
+        />
+      ),
+    },
+    {
+      accessorKey: "product.name",
+      header: () => (
+        <Button variant="ghost" className="p-0 flex items-center gap-1 ">
+          Title
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="table-cell capitalize">
+          {row.original.product.name}
+        </span>
+      ),
+    },
+    {
+      // Changed "product." accessorKey to product.finalPrice for displaying the unit price
+      accessorKey: "product.finalPrice",
+      header: () => (
+        <Button variant="ghost" className="p-0 flex items-center gap-1 ">
+          Price
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="table-cell">
+          {row.original.product.displayPrice.formatted}
+        </span>
+      ),
+    },
+    {
+      // Changed column header and accessor key to reflect "Quantity"
+      accessorKey: "quantity",
+      header: () => (
+        <Button variant="ghost" className="p-0 flex items-center gap-1 ">
+          Quantity
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="table-cell">{row.original.quantity}</span>
+      ),
+    },
+    {
+      accessorKey: "selectedColor.name", // Use the direct accessor key
+      header: () => (
+        <Button variant="ghost" className="p-0 flex items-center gap-1 ">
+          Color
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="table-cell capitalize">
+          {row.original.selectedColor?.name || "N/A"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "selectedSize", // Use the direct accessor key
+      header: () => (
+        <Button variant="ghost" className="p-0 flex items-center gap-1 ">
+          Size
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="table-cell uppercase">
+          {row.original.selectedSize?.name || "N/A"}
+        </span>
+      ),
+    },
+    {
+      id: "total",
+      header: () => (
+        <Button variant="ghost" className="p-0 flex items-center gap-1 ">
+          Total
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="table-cell font-semibold">
+          {row.original.product.displayPrice.symbol}{" "}
+          {(
+            row.original.quantity *
+            row.original.product.displayPrice.originalFinalPrice
+          ).toFixed(2)}
+        </span>
+      ),
+    },
+    {
+      id: "remove",
+      header: "Remove",
+      cell: ({ row, table }) => {
+        const removeItem = (
+          table.options.meta as { removeItem: (id: string | number) => void }
+        ).removeItem;
+
+        return (
+          <button
+            onClick={() => removeItem(row.original.id)} // Assuming CartItem has an 'id'
+            className="text-red-500 hover:text-red-700 font-semibold"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        );
+      },
+    },
+  ];
+
   const router = useRouter();
 
   const subtotal = useMemo(() => {
@@ -179,6 +187,9 @@ const CartPage = () => {
     },
   });
 
+  const { data } = useLocalPrice2(total);
+  const { data: data2 } = useLocalPrice2(subtotal);
+  const { data: data3 } = useLocalPrice2(delivery);
 
   return (
     <div className="min-h-screen">
@@ -270,15 +281,15 @@ const CartPage = () => {
               </h2>
               <div className="flex justify-between py-2 border-b">
                 <p>Subtotal</p>
-                <p>₦{subtotal.toFixed(2)}</p>
+                <p>{data2?.formatted}</p>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <p>Delivery</p>
-                <p>₦{delivery.toFixed(2)}</p>
+                <p>{data3?.formatted}</p>
               </div>
               <div className="flex justify-between py-2 font-semibold text-lg">
                 <p>Total</p>
-                <p>₦{total.toFixed(2)}</p>
+                <p>{data?.formatted}</p>
               </div>
               <button
                 className="w-full bg-[#7971ea] text-white py-3 mt-4 rounded hover:bg-[#7971ea] uppercase tracking-wide"

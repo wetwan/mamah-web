@@ -2,17 +2,29 @@ export interface OrderItem {
   _id: string;
   product: {
     _id: string;
-    id: string;
     name: string;
-    price: number;
-    finalPrice: number;
-    inStock: boolean;
     images: string[];
+    price: number;
   };
-  color: string;
+  quantity: number;
+  color: string | null;
   size: string | null;
   price: number;
-  quantity: number;
+}
+
+interface DisplayPrice {
+  currency: string;
+  symbol: string;
+  price: number;
+  finalPrice: number;
+  savings: number;
+  originalPrice: number;
+  originalFinalPrice: number;
+  formatted: string;
+  formattedBasePrice: string;
+  exchangeRate: number;
+  hasDiscount: boolean;
+  discountPercent: number;
 }
 
 export interface ShippingAddress {
@@ -33,32 +45,52 @@ export interface PaymentResult {
 export interface orderProps {
   _id: string;
   user: string;
-  createdBy: string;
-  creatorModel: "User" | "Admin";
   items: OrderItem[];
-  shippingAddress: ShippingAddress;
-  paymentMethod: string;
-  paymentResult: PaymentResult;
-  paymentIntentId: string;
   itemsPrice: number;
   shippingPrice: number;
   taxPrice: number;
   totalPrice: number;
-  status: string;
-  isPaid: boolean;
+  paymentMethod: string;
+  shippingAddress: {
+    address1: string;
+    address2: string;
+    country: string;
+    email: string;
+    fullName: string;
+    phone: string;
+    state: string;
+  };
+  currency: {
+    code: string;
+    symbol: string;
+    exchangeRate: number;
+  };
+  displayPrices: {
+    currency: string;
+    exchangeRate: number;
+    items: number;
+    originalTotal: number;
+    shipping: number;
+    symbol: string;
+    tax: number;
+    total: number;
+  };
+  formattedTotal: string;
   isDelivered: boolean;
-  paidAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  isPaid: boolean;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
   deliveredAt: string;
 }
 
-interface ColorAvailability {
+export interface ColorAvailability {
   name: string;
   available: boolean;
   _id?: string; // Added _id based on the 'item' structure
 }
-interface SizeAvailability {
+export interface SizeAvailability {
   name: string;
   available: boolean;
   _id?: string; // Added _id based on the 'item' structure
@@ -85,16 +117,16 @@ export interface CategoryProp {
 export interface Notification {
   _id: string;
   type:
-    | "ORDER_STATUS_UPDATE"
-    | "ORDER_CANCELLED"
-    | "INVENTORY_ALERT"
-    | "NEW_PRODUCT_CREATED"
-    | "NEW_ORDER"
-    | "USER_LOGIN"
-    | "NEW_PRODUCT_UPDATED"
-    | "NEW_USER_CREATED"
-    | "NEW_ORDER_PAYMENT"
-    | "ORDER_STATUS_UPDATE";
+  | "ORDER_STATUS_UPDATE"
+  | "ORDER_CANCELLED"
+  | "INVENTORY_ALERT"
+  | "NEW_PRODUCT_CREATED"
+  | "NEW_ORDER"
+  | "USER_LOGIN"
+  | "NEW_PRODUCT_UPDATED"
+  | "NEW_USER_CREATED"
+  | "NEW_ORDER_PAYMENT"
+  | "ORDER_STATUS_UPDATE";
   title: string;
   message: string;
   relatedId?: string;
@@ -127,10 +159,11 @@ export interface ShopdataProp {
   averageRating: number;
   numOfReviews: number;
   reviews: Review[];
-  createdAt: string; // Changed from number to ISO string
-  updatedAt: string; // Changed from number to ISO string
-  __v: number; // New metadata field
-  finalPrice: number; // New calculated field
-  inStock: boolean; // New status field
-  id: string; // New field (often redundant with _id)
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  finalPrice: number;
+  inStock: boolean;
+  id: string;
+  displayPrice: DisplayPrice;
 }

@@ -52,8 +52,6 @@ const ProductPrice = ({ price }: { price: number }) => {
   const { data: exchangeData, isLoading, error } = useExchangeRate();
   // const { data: exchangeData, isLoading, error } = useLocalPrice(1);
 
-
-
   // Loading state
   if (isLoading) {
     return (
@@ -134,6 +132,9 @@ const ProductItem = ({ products }: { products: ShopdataProp[] }) => {
                 {product.description.slice(0, 20)}
               </h3>
               <ProductPrice price={product.finalPrice} />
+              <h3 className="text-[#7971ea] font-medium capitalize">
+                {product.displayPrice.formatted}
+              </h3>
             </div>
           </div>
         ))}

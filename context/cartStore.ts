@@ -1,26 +1,16 @@
-import { ShopdataProp } from "@/src/types/tpes";
+import { ColorAvailability, ShopdataProp, SizeAvailability } from "@/src/types/tpes";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 
-export type ProductColor = {
-    name: string;
-    hex?: string;
-    available: boolean;
-    _id: string; 
-};
-export type ProductSize = {
-    name: string;
-    available: boolean;
-    _id: string; 
-};
+
 
 export type CartItem = {
     id: string;
     product: ShopdataProp;
     quantity: number;
-    selectedColor?: ProductColor;
-    selectedSize?: ProductSize;
+    selectedColor?: ColorAvailability;
+    selectedSize?: SizeAvailability;
 };
 
 type CartStore = {
@@ -28,8 +18,8 @@ type CartStore = {
     addProduct: (
         product: ShopdataProp,
         quantity: number,
-        selectedColor?: ProductColor,
-        selectedSize?: ProductSize,
+        selectedColor?: ColorAvailability,
+        selectedSize?: SizeAvailability,
 
     ) => void;
     removeProduct: (cartItemId: string) => void;

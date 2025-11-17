@@ -267,7 +267,7 @@ const Notifications = ({
 
   // Fetch server notifications
   const { data, isLoading, isError } = useQuery<NotificationData>({
-    queryKey: ["notifications"], // FIXED
+    queryKey: ["notifications"], 
     queryFn: () => getNotify(token as string),
     enabled: !!token,
     refetchInterval: 30000,
