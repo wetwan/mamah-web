@@ -63,7 +63,6 @@ const ProductPrice = ({ price }: { price: number }) => {
     );
   }
 
-
   if (error || !exchangeData || exchangeData.currency === "NGN") {
     return (
       <h3 className="text-[#7971ea] font-medium capitalize">
@@ -83,7 +82,6 @@ const ProductPrice = ({ price }: { price: number }) => {
       <h3 className="text-[#7971ea] font-medium capitalize">
         {convertedPrice}
       </h3>
-      <span className="text-xs text-gray-400">≈ ₦{price.toFixed(2)}</span>
     </div>
   );
 };
