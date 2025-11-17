@@ -139,7 +139,7 @@ const Checkout: React.FC = () => {
           product: item.product._id,
           quantity: item.quantity,
           color: item.selectedColor?.name,
-          size: item.selectedSize,
+          size: item.selectedSize?.name,
         })),
         shippingAddress: { ...data, fullName } as unknown as shippingData,
         paymentMethod: option,
