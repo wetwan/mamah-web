@@ -116,7 +116,7 @@ const columns: ColumnDef<CartItem>[] = [
     ),
     cell: ({ row }) => (
       <span className="table-cell uppercase">
-        {row.original.selectedSize || "N/A"}
+        {row.original.selectedSize?.name || "N/A"}
       </span>
     ),
   },
