@@ -186,9 +186,9 @@ const CartPage = () => {
     },
   });
 
-  const { data } = useLocalPrice2(total);
-  const { data: data2 } = useLocalPrice2(subtotal);
-  const { data: data3 } = useLocalPrice2(delivery);
+  const { data, isLoading } = useLocalPrice2(total);
+  const { data: data2, isLoading: isLoading2 } = useLocalPrice2(subtotal);
+  const { data: data3, isLoading: isLoading3 } = useLocalPrice2(delivery);
 
   return (
     <div className="min-h-screen">
@@ -280,15 +280,15 @@ const CartPage = () => {
               </h2>
               <div className="flex justify-between py-2 border-b">
                 <p>Subtotal</p>
-                {data2 && <p>{data2?.formatted}</p>}
+                {data2 && !isLoading2 && <p>{data2?.formatted}</p>}
               </div>
               <div className="flex justify-between py-2 border-b">
                 <p>Delivery</p>
-                {data3 && <p>{data3?.formatted}</p>}
+                {data3 && !isLoading3 && <p>{data3?.formatted}</p>}
               </div>
               <div className="flex justify-between py-2 font-semibold text-lg">
                 <p>Total</p>
-                {data && <p>{data?.formatted}</p>}
+                {data && !isLoading && <p>{data?.formatted}</p>}
               </div>
               <button
                 className="w-full bg-[#7971ea] text-white py-3 mt-4 rounded hover:bg-[#7971ea] uppercase tracking-wide"
