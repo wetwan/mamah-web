@@ -38,9 +38,9 @@ const CheckoutDetails = ({
   const { resetCart } = useCart();
   const router = useRouter();
 
-  const { data, isLoading } = useLocalPrice2(total);
-  const { data: data2, isLoading: isLoading2 } = useLocalPrice2(subtotal);
-  const { data: data3, isLoading: isLoading3 } = useLocalPrice2(delivery);
+  const { data } = useLocalPrice2(total);
+  const { data: data2 } = useLocalPrice2(subtotal);
+  const { data: data3 } = useLocalPrice2(delivery);
 
   return (
     <div className="w-full">
@@ -90,17 +90,17 @@ const CheckoutDetails = ({
 
           <div className="flex justify-between border-b mb-3 pb-2">
             <p className="font-semibold">Subtotal</p>
-            {data2 && !isLoading2 && <p>{data2?.formatted || "N/A"}</p>}
+            {data2 && <p>{data2.formatted}</p>}
           </div>
 
           <div className="flex justify-between border-b mb-3 pb-2">
             <p className="font-semibold">Delivery</p>
-            {data3 && !isLoading3 && <p>{data3?.formatted || "N/A"}</p>}
+            {data3 && <p>{data3.formatted}</p>}
           </div>
 
           <div className="flex justify-between mt-3 pb-3 font-semibold">
             <p>Total</p>
-            {data && !isLoading && <p>{data?.formatted || "N/A"}</p>}
+            {data && <p>{data.formatted}</p>}
           </div>
         </div>
 
