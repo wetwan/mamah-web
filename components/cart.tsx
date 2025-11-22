@@ -22,7 +22,7 @@ const Cart = ({
     return sum + item.product.finalPrice * item.quantity;
   }, 0);
 
-  const { data , isLoading } = useLocalPrice2(total);
+  const { data, isLoading } = useLocalPrice2(total);
 
   const router = useRouter();
   return (
@@ -85,7 +85,7 @@ const Cart = ({
                         </p>
                         <p className="text-gray-600 font-medium flex items-center gap-1">
                           {item.quantity} <X size={12} />
-                          {item.product.displayPrice.formatted}
+                          {item.product.displayPrice?.formatted || "N/A"}
                         </p>
                       </div>
                       <div
@@ -103,7 +103,9 @@ const Cart = ({
           </div>
           <div className="flex w-full mt-4 items-center justify-between">
             <p className="font-medium text-lg">Subtotal:</p>
-            {data &&!isLoading && <p className="font-medium text-lg">{data.formatted}</p>}
+            {data && !isLoading && (
+              <p className="font-medium text-lg">{data.formatted}</p>
+            )}
           </div>
           <Button
             onClick={() => {

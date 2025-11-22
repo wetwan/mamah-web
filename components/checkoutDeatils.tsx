@@ -80,7 +80,7 @@ const CheckoutDetails = ({
                 {item.product.name} × {item.quantity}
               </p>
               <p>
-                {item.product.displayPrice.symbol}
+                {item.product.displayPrice?.symbol}
                 {(
                   item.quantity * item.product.displayPrice.originalFinalPrice
                 ).toFixed(2)}
@@ -90,17 +90,17 @@ const CheckoutDetails = ({
 
           <div className="flex justify-between border-b mb-3 pb-2">
             <p className="font-semibold">Subtotal</p>
-            {data2 && !isLoading2 && <p>{data2?.formatted}</p>}
+            {data2 && !isLoading2 && <p>{data2?.formatted || "N/A"}</p>}
           </div>
 
           <div className="flex justify-between border-b mb-3 pb-2">
             <p className="font-semibold">Delivery</p>
-            {data3 && !isLoading3 && <p>{data3?.formatted}</p>}
+            {data3 && !isLoading3 && <p>{data3?.formatted || "N/A"}</p>}
           </div>
 
           <div className="flex justify-between mt-3 pb-3 font-semibold">
             <p>Total</p>
-            {data && !isLoading && <p>{data?.formatted}</p>}
+            {data && !isLoading && <p>{data?.formatted || "N/A"}</p>}
           </div>
         </div>
 

@@ -83,7 +83,7 @@ const CartPage = () => {
       ),
       cell: ({ row }) => (
         <span className="table-cell">
-          {row.original.product.displayPrice.formatted}
+          {row.original.product.displayPrice?.formatted || "N/A"}{" "}
         </span>
       ),
     },

@@ -48,13 +48,13 @@ const Checkout: React.FC = () => {
 
   const subtotal = useMemo(
     () =>
-      cartProducts.reduce(
-        (acc, item) => acc + item.product.finalPrice * item.quantity,
-        0
-      ),
+      cartProducts.reduce((acc, item) => {
+
+        const ngnPrice = item.product.displayPrice.originalFinalPrice;
+        return acc + ngnPrice * item.quantity;
+      }, 0),
     [cartProducts]
   );
-
   const total = subtotal + delivery;
 
   const { mutate: handleCheckoutOrder, isPending } = useMutation({
