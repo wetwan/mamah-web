@@ -63,12 +63,12 @@ const ProductDetails = ({ item }: { item: ShopdataProp }) => {
       <div className="flex items-center gap-3">
         {item.price !== item.finalPrice && (
           <p className="text-gray-500 line-through text-md">
-            {item.displayPrice.formatted}
+            {item.displayPrice?.formatted}
           </p>
         )}
 
         <p className="text-2xl font-semibold text-blue-600 p-1 cursor-pointer">
-          {item.displayPrice.formattedBasePrice}
+          {item.displayPrice?.formattedBasePrice}
         </p>
       </div>
 

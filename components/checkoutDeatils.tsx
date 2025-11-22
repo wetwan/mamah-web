@@ -82,7 +82,7 @@ const CheckoutDetails = ({
               <p>
                 {item.product.displayPrice?.symbol}
                 {(
-                  item.quantity * item.product.displayPrice.originalFinalPrice
+                  item.quantity * item.product.displayPrice?.originalFinalPrice
                 ).toFixed(2)}
               </p>
             </div>

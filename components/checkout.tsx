@@ -50,7 +50,7 @@ const Checkout: React.FC = () => {
     () =>
       cartProducts.reduce((acc, item) => {
 
-        const ngnPrice = item.product.displayPrice.originalFinalPrice;
+        const ngnPrice = item.product.displayPrice?.originalFinalPrice;
         return acc + ngnPrice * item.quantity;
       }, 0),
     [cartProducts]

@@ -137,7 +137,7 @@ const CartPage = () => {
           {row.original?.product?.displayPrice?.symbol}{" "}
           {(
             row.original.quantity *
-            row.original.product.displayPrice.originalFinalPrice
+            row.original.product.displayPrice?.originalFinalPrice
           ).toFixed(2)}
         </span>
       ),
