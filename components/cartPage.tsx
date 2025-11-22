@@ -27,10 +27,6 @@ import { Button } from "@/components/ui/button";
 import { CartItem, useCart } from "@/context/cartStore";
 import { useLocalPrice2 } from "@/src/hooks/useLocalPrice";
 
-// --- START: COLUMNS DEFINITION ---
-
-// Define the columns array, incorporating the product image and a remove button
-
 const CartPage = () => {
   const { removeProduct: removeItem, item: cartProducts } = useCart();
 
@@ -48,7 +44,6 @@ const CartPage = () => {
           Image
         </Button>
       ),
-      // Use the Next.js Image component for proper image display
       cell: ({ row }) => (
         <Image
           src={row.original.product.images[0]}
@@ -74,7 +69,6 @@ const CartPage = () => {
       ),
     },
     {
-      // Changed "product." accessorKey to product.finalPrice for displaying the unit price
       accessorKey: "product.finalPrice",
       header: () => (
         <Button variant="ghost" className="p-0 flex items-center gap-1 ">
@@ -83,12 +77,11 @@ const CartPage = () => {
       ),
       cell: ({ row }) => (
         <span className="table-cell">
-          {row.original.product.displayPrice?.formatted}{" "}
+          {row.original.product.displayPrice?.formatted || "N/A"}
         </span>
       ),
     },
     {
-      // Changed column header and accessor key to reflect "Quantity"
       accessorKey: "quantity",
       header: () => (
         <Button variant="ghost" className="p-0 flex items-center gap-1 ">
@@ -100,7 +93,7 @@ const CartPage = () => {
       ),
     },
     {
-      accessorKey: "selectedColor.name", // Use the direct accessor key
+      accessorKey: "selectedColor.name",
       header: () => (
         <Button variant="ghost" className="p-0 flex items-center gap-1 ">
           Color
@@ -113,7 +106,7 @@ const CartPage = () => {
       ),
     },
     {
-      accessorKey: "selectedSize", // Use the direct accessor key
+      accessorKey: "selectedSize",
       header: () => (
         <Button variant="ghost" className="p-0 flex items-center gap-1 ">
           Size
@@ -121,7 +114,7 @@ const CartPage = () => {
       ),
       cell: ({ row }) => (
         <span className="table-cell uppercase">
-          {row.original.selectedSize?.name}
+          {row.original.selectedSize?.name || "N/A"}
         </span>
       ),
     },
@@ -132,15 +125,21 @@ const CartPage = () => {
           Total
         </Button>
       ),
-      cell: ({ row }) => (
-        <span className="table-cell font-semibold">
-          {row.original?.product?.displayPrice?.symbol}{" "}
-          {(
-            row.original.quantity *
-            row.original.product.displayPrice?.originalFinalPrice
-          ).toFixed(2)}
-        </span>
-      ),
+      cell: ({ row }) => {
+        const priceData = row.original.product.displayPrice;
+
+        if (!priceData) {
+          return <span className="text-gray-400">N/A</span>;
+        }
+
+        const lineTotal = row.original.quantity * priceData.originalFinalPrice;
+
+        return (
+          <span className="table-cell font-semibold">
+            {priceData.symbol} {lineTotal.toFixed(2)}
+          </span>
+        );
+      },
     },
     {
       id: "remove",
@@ -152,7 +151,7 @@ const CartPage = () => {
 
         return (
           <button
-            onClick={() => removeItem(row.original.id)} // Assuming CartItem has an 'id'
+            onClick={() => removeItem(row.original.id)}
             className="text-red-500 hover:text-red-700 font-semibold"
           >
             <X className="w-5 h-5" />
@@ -180,7 +179,6 @@ const CartPage = () => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    // Pass the removeItem function via the `meta` option
     meta: {
       removeItem,
     },
@@ -189,12 +187,11 @@ const CartPage = () => {
   const { data, isLoading } = useLocalPrice2(total);
   const { data: data2, isLoading: isLoading2 } = useLocalPrice2(subtotal);
   const { data: data3, isLoading: isLoading3 } = useLocalPrice2(delivery);
-  console.log(data);
 
   return (
     <div className="min-h-screen">
       <div className="w-full py-6 bg-[#f8f9fa] px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 flex items-center gap-2 capitalize font-medium">
-        <Link href="/" className="text-[#7971ea]  ">
+        <Link href="/" className="text-[#7971ea]">
           Home
         </Link>
         <span>/</span>
@@ -203,11 +200,7 @@ const CartPage = () => {
 
       <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
         <section className="mt-20">
-          <Table
-            style={{
-              borderBlock: 1,
-            }}
-          >
+          <Table style={{ borderBlock: 1 }}>
             <TableHeader>
               {table.getHeaderGroups().map((hg) => (
                 <TableRow key={hg.id} className="py-4">
@@ -231,7 +224,6 @@ const CartPage = () => {
             <TableBody className="py-2">
               {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
-                  // Added key prop to TableRow
                   <TableRow key={row.id} className="py-2">
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id} className="py-2 px-3">
@@ -260,12 +252,12 @@ const CartPage = () => {
             {/* Promo Code */}
             <div className="flex-1">
               <p className="text-[#555] mb-2">
-                If you have a promo code, enter it here
+                If you have a coupon code, enter it here
               </p>
               <div className="flex bg-[#ebebeb] rounded overflow-hidden">
                 <input
                   type="text"
-                  placeholder="Promo code"
+                  placeholder="coupon code"
                   className="flex-1 bg-transparent outline-none pl-3 py-2 placeholder:text-gray-500"
                 />
                 <button className="bg-[#7971ea] text-white px-5 py-2 hover:bg-[#7971ea]">
@@ -281,18 +273,18 @@ const CartPage = () => {
               </h2>
               <div className="flex justify-between py-2 border-b">
                 <p>Subtotal</p>
-                {data2 && <p>{data2?.formatted}</p>}
+                <p>{isLoading2 || !data2 ? "Loading..." : data2.formatted}</p>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <p>Delivery</p>
-                {data3 && <p>{data3?.formatted}</p>}
+                <p>{isLoading3 || !data3 ? "Loading..." : data3.formatted}</p>
               </div>
               <div className="flex justify-between py-2 font-semibold text-lg">
                 <p>Total</p>
-                {data && <p>{data?.formatted}</p>}
+                <p>{isLoading || !data ? "Loading..." : data.formatted}</p>
               </div>
               <button
-                className="w-full bg-[#7971ea] text-white py-3 mt-4 rounded hover:bg-[#7971ea] uppercase tracking-wide"
+                className="w-full bg-[#7971ea] text-white py-3 mt-4 rounded hover:bg-[#7971ea] uppercase tracking-wide disabled:bg-gray-400 disabled:cursor-not-allowed"
                 onClick={() => {
                   router.push("/checkout");
                 }}

@@ -38,9 +38,10 @@ const CheckoutDetails = ({
   const { resetCart } = useCart();
   const router = useRouter();
 
-  const { data } = useLocalPrice2(total);
-  const { data: data2 } = useLocalPrice2(subtotal);
-  const { data: data3 } = useLocalPrice2(delivery);
+  // 🛡️ Fix: Destructure isLoading to handle UI states gracefully
+  const { data, isLoading } = useLocalPrice2(total);
+  const { data: data2, isLoading: isLoading2 } = useLocalPrice2(subtotal);
+  const { data: data3, isLoading: isLoading3 } = useLocalPrice2(delivery);
 
   return (
     <div className="w-full">
@@ -50,13 +51,13 @@ const CheckoutDetails = ({
         <p className="font-light text-black">
           Enter your coupon code if you have one
         </p>
-        <div className="flex justify-center items-center sm:w-[80%]  border mt-6 h-[55px] rounded">
+        <div className="flex justify-center items-center  border mt-6 h-[55px] rounded">
           <input
             type="text"
             placeholder="coupon code"
-            className="placeholder:capitalize border w-[70%] h-full px-3 py-4 outline-none"
+            className="placeholder:capitalize border w-[80%] h-full px-2  outline-none"
           />
-          <button className="capitalize border sm:w-[35%] w-[45%] h-full border-[#7971ea] bg-[#7971ea] text-white">
+          <button className="capitalize border sm:w-[40%] w-[50%] h-full border-[#7971ea] bg-[#7971ea] text-white">
             check coupon
           </button>
         </div>
@@ -71,36 +72,57 @@ const CheckoutDetails = ({
             <p>Total</p>
           </div>
 
-          {cartProducts.map((item) => (
-            <div
-              className="border-b mb-3 pb-2 flex justify-between"
-              key={item.id}
-            >
-              <p>
-                {item.product.name} × {item.quantity}
-              </p>
-              <p>
-                {item.product.displayPrice?.symbol}
-                {(
-                  item.quantity * item.product.displayPrice?.originalFinalPrice
-                ).toFixed(2)}
-              </p>
-            </div>
-          ))}
+          {cartProducts.map((item) => {
+             // 🛡️ Fix: Safely extract price data for this item
+             const priceData = item.product.displayPrice;
+             const unitPrice = priceData?.originalFinalPrice || 0;
+             const symbol = priceData?.symbol || ""; 
+             // Calculate line total safely
+             const lineTotal = (item.quantity * unitPrice).toFixed(2);
+
+             return (
+              <div
+                className="border-b mb-3 pb-2 flex justify-between"
+                key={item.id}
+              >
+                <p>
+                  {item.product.name} × {item.quantity}
+                </p>
+                <p>
+                  
+                  {symbol}
+                  {lineTotal}
+                </p>
+              </div>
+            );
+          })}
 
           <div className="flex justify-between border-b mb-3 pb-2">
             <p className="font-semibold">Subtotal</p>
-            {data2 && <p>{data2.formatted}</p>}
+             
+            <p>
+              {isLoading2 
+                ? "Calculating..." 
+                : data2?.formatted || subtotal.toFixed(2)}
+            </p>
           </div>
 
           <div className="flex justify-between border-b mb-3 pb-2">
             <p className="font-semibold">Delivery</p>
-            {data3 && <p>{data3.formatted}</p>}
+            <p>
+              {isLoading3 
+                ? "Calculating..." 
+                : data3?.formatted || delivery.toFixed(2)}
+            </p>
           </div>
 
           <div className="flex justify-between mt-3 pb-3 font-semibold">
             <p>Total</p>
-            {data && <p>{data.formatted}</p>}
+            <p>
+              {isLoading 
+                ? "Calculating..." 
+                : data?.formatted || total.toFixed(2)}
+            </p>
           </div>
         </div>
 
@@ -132,7 +154,7 @@ const CheckoutDetails = ({
 
           {/* Only show Stripe form when card is selected, payment initialized, and we have clientSecret */}
           {option === "card" && clientSecret && (
-            <div className="border p-4 rounded   bg-gray-50">
+            <div className="border p-4 rounded bg-gray-50">
               <Elements stripe={stripePromise} options={{ clientSecret }}>
                 <CheckoutForm
                   orderId={orderId}
